@@ -39,7 +39,7 @@ enable.py
 SampleMacros/
 NatlinkSource
 MobileTools
-MiscTools/
+MiscScripts/
 MacroSystem/gramparser.py
 MacroSystem/natlinkmain.py
 MacroSystem/natlinkutils.py
