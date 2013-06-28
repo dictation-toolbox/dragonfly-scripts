@@ -33,3 +33,16 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Ignore Natlink files
+enable.py
+SampleMacros/
+NatlinkSource
+MobileTools
+MiscTools/
+MacroSystem/gramparser.py
+MacroSystem/natlinkmain.py
+MacroSystem/natlinkutils.py
+MacroSystem/*.dll
+MacroSystem/natlink.pyd
+
