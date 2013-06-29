@@ -1,0 +1,65 @@
+#
+# Dragonfly config for Window control
+#
+
+#--- Language section ------------------------------------------------------
+
+lang.name_win = 'name (window | win) <name>'
+# Command to give the foreground window a name;
+# must contain the <name> extra.
+# Default: 'name (window | win) <name>'
+
+lang.focus_win = 'focus <win_names> | bring <win_names> to [the] (top | foreground)'
+# Command to bring a named window to the
+# foreground.
+# Default: 'focus <win_names> | bring <win_names>
+# to [the] (top | foreground)'
+
+lang.translate_win = 'place <win_selector> <position> [on <mon_selector>]'
+# Command to translate a window.
+# Default: 'place <win_selector> <position> [on
+# <mon_selector>]'
+
+lang.resize_win = 'place <win_selector> [from] <position> [to] <position> [on <mon_selector>]'
+# Command to move and resize a window.
+# Default: 'place <win_selector> [from] <position>
+# [to] <position> [on <mon_selector>]'
+
+lang.stretch_win = 'stretch <win_selector> [to] <position>'
+# Command to stretch a window.
+# Default: 'stretch <win_selector> [to]
+# <position>'
+
+lang.win_selector = 'window | win | [window] <win_names>'
+# Partial command for specifying a window; must
+# contain the <win_names> extra.
+# Default: 'window | win | [window] <win_names>'
+
+lang.mon_selector = '(this | current) monitor | [monitor] <mon_names>'
+# Partial command for specifying a monitor; must
+# contain the <mon_names> extra.
+# Default: '(this | current) monitor | [monitor]
+# <mon_names>'
+
+lang.left = 'left'
+# Word for left side of monitor.
+# Default: 'left'
+
+lang.right = 'right'
+# Word for right side of monitor.
+# Default: 'right'
+
+lang.top = 'top'
+# Word for top side of monitor.
+# Default: 'top'
+
+lang.bottom = 'bottom'
+# Word for bottom side of monitor.
+# Default: 'bottom'
+
+#--- Settings section ------------------------------------------------------
+
+settings.grid = 10
+# The number of grid divisions a monitor is
+# divided up into when placing windows.
+# Default: 10
