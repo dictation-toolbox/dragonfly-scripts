@@ -29,20 +29,12 @@ nosetests.xml
 # Translations
 *.mo
 
-# Mr Developer
+# Mr Developer / Eclipse
 .mr.developer.cfg
 .project
 .pydevproject
 
 # Ignore Natlink files
-enable.py
-SampleMacros/
-NatlinkSource
-MobileTools
-MiscScripts/
-MacroSystem/gramparser.py
-MacroSystem/natlinkmain.py
-MacroSystem/natlinkutils.py
-MacroSystem/*.dll
-MacroSystem/natlink.pyd
+core/
+_vocola_main.py
 
