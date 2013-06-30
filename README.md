@@ -1,28 +1,40 @@
-dragonfly-scripts
-=================
+# dragonfly-scripts
 
-My dragonfly scripts for Dragon NaturallySpeaking.
+**There's not much to see here, yet.**
 
-There's nothing to see here yet. Come back later...
----------------------------------------------------
+## What?
 
-I am currently running Dragon NaturallySpeaking 11, on Windows XP(32-bit).
-I will soon try on Windows 7 64-bit.
-I have been using Python 2.5 for Natlink/Dragonfly, but am switching to Python 2.6.
+My collection of dragonfly Python-scripts, that I use with Dragon NaturallySpeaking.
 
+What is Dragonfly?
+* A speech recognition framework
+* A Python package
 
+[Dragonfly documentation](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html)
 
-Installation of NatLink⁄Vocola 2⁄Unimacro:
+## Why?
+
+Due to repetitive strain injury (RSI), I started using speech recognition to be able to control my computer and especially for coding.
+Dragonfly used in conjunction with Natlink, adds some powerful tools to the speech recognition program.
+
+## Who?
+
+I am a software engineer, lately focused mostly on web development, with Python on the backend.
+I am currently running Dragon NaturallySpeaking 11, on Windows 7 64-bit.
+
+# How?
+
+Installation of NatLink/Vocola 2/Unimacro:
 http://qh.antenna.nl/unimacro/installation/installation.html
-- Configuration.
-- Information about common problems.
+* Configuration.
+* Information about common problems.
 
 Python 2.6
 http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonneededfornatlink2.6.exe/download
-- Self extracting zip.
-- Install Pythonwin (click on, e.g., pywin32-212.win32-py2.6.exe).
-- Install wxPython (click on, e.g., wxPython2.8-win32-ansi-2.8.10.1-py26.exe, extracts to a temporary folder.)
-- Installing PyXML (PyXML-0.8.4.win32-py2.6.exe) is only needed if you are going to use VoiceCode
+* Self extracting zip.
+* Install Pythonwin (click on, e.g., pywin32-212.win32-py2.6.exe).
+* Install wxPython (click on, e.g., wxPython2.8-win32-ansi-2.8.10.1-py26.exe, extracts to a temporary folder.)
+* Installing PyXML (PyXML-0.8.4.win32-py2.6.exe) is only needed if you are going to use VoiceCode
 
 Natlink repository:
 http://sourceforge.net/projects/natlink/files/natlink/
@@ -34,7 +46,8 @@ However, restarting Natlink or perhaps Dragon NaturallySpeaking, then running th
 
 Dragonfly:
 https://pypi.python.org/pypi/dragonfly
-- Select the desired python version to install into.
+* Select the desired python version to install into.
+
 
 
 
