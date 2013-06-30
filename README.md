@@ -4,29 +4,35 @@
 
 ## What?
 
-My collection of dragonfly Python-scripts, that I use with Dragon NaturallySpeaking.
+My collection of [Dragonfly](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html) Python-scripts, that I use with [Dragon NaturallySpeaking Professional](http://www.nuance.com/for-business/by-product/dragon/dragon-for-the-pc/dragon-professional/index.htm).
 
-What is Dragonfly?
+##### What is [Dragonfly](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html)?
 * A speech recognition framework
 * A Python package
+* A Natlink extension/add-on/toolkit
 
-[Dragonfly documentation](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html)
+##### So what's Natlink?
+Natlink is an extension to Dragon NaturallySpeaking to allow scripting beyond the Visual Basic Scripts that the speech recognition program normally supports.
+
+##### What's Vocola 2, Unimacro and Voicecode?
+Like Dragonfly, they are extensions for writing macros/scripts for Dragon NaturallySpeaking, built on top of Natlink. They can be used simultaneously with Dragonfly, but it is unclear to what extent, and how stable that is.
+The installation file for Natlink mentioned below, contains Vocola 2 and Unimacro, but they can easily be activated/deactivated through configuration.
 
 ## Why?
 
-Due to repetitive strain injury (RSI), I started using speech recognition to be able to control my computer and especially for coding.
+Due to repetitive strain injury (RSI), I started using speech recognition to be able to control my computer, especially for coding.
 Dragonfly used in conjunction with Natlink, adds some powerful tools to the speech recognition program.
 
 ## Who?
 
 I am a software engineer, lately focused mostly on web development, with Python on the backend.
-I am currently running Dragon NaturallySpeaking 11, on Windows 7 64-bit.
+I am currently running Dragon NaturallySpeaking 11 (soon to be 12), on Windows 7 64-bit. I would rather be sitting on Linux using Vim, but ended up on Windows mostly using Eclipse.
 
 ## How?
 
-First, I'm using [Dragon naturally speaking](http://www.nuance.com/dragon/index.htm)
+I'm using [Dragon NaturallySpeaking](http://www.nuance.com/for-business/by-product/dragon/dragon-for-the-pc/dragon-professional/index.htm)
 for speech recognition.
-Natlink and Dragonfly can be used with Windows Speech Recognition (WSR), but that is not covered here.
+Dragonfly can be used with Windows Speech Recognition (WSR), but that is not covered here.
 
 ### Installing Natlink and Dragonfly
 
