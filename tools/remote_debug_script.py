@@ -1,9 +1,3 @@
-#
-# This file is a command-module for Dragonfly.
-# (c) Copyright 2008 by Christo Butcher
-# Licensed under the LGPL, see <http://www.gnu.org/licenses/>
-#
-
 """
 Debug-module enables remote debugging for Eclipse
 =================================================
