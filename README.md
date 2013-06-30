@@ -22,12 +22,13 @@ Dragonfly used in conjunction with Natlink, adds some powerful tools to the spee
 I am a software engineer, lately focused mostly on web development, with Python on the backend.
 I am currently running Dragon NaturallySpeaking 11, on Windows 7 64-bit.
 
-# How?
+## How?
 
-Installation of NatLink/Vocola 2/Unimacro:
-http://qh.antenna.nl/unimacro/installation/installation.html
-* Configuration.
-* Information about common problems.
+First, I'm using [Dragon naturally speaking](http://www.nuance.com/dragon/index.htm)
+for speech recognition.
+Natlink and Dragonfly can be used with Windows Speech Recognition (WSR), but that is not covered here.
+
+### Installing Natlink and Dragonfly
 
 Python 2.6
 http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonneededfornatlink2.6.exe/download
@@ -35,6 +36,11 @@ http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonn
 * Install Pythonwin (click on, e.g., pywin32-212.win32-py2.6.exe).
 * Install wxPython (click on, e.g., wxPython2.8-win32-ansi-2.8.10.1-py26.exe, extracts to a temporary folder.)
 * Installing PyXML (PyXML-0.8.4.win32-py2.6.exe) is only needed if you are going to use VoiceCode
+
+Installation of NatLink/Vocola 2/Unimacro:
+http://qh.antenna.nl/unimacro/installation/installation.html
+* Configuration.
+* Information about common problems.
 
 Natlink repository:
 http://sourceforge.net/projects/natlink/files/natlink/
