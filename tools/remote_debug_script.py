@@ -16,7 +16,15 @@ This path needs to be included in the Python path.
 
 Usage:
 ------
-Simply import this module in your scripts, and to set breakpoints, i hope.
+Simply import this module in your scripts, and to set breakpoints.
+
+Tip:
+----
+Switch off debugging for normal use.
+While this debugging method works, I have experienced frequent crashes when
+debugging is left on.
+Leaving debugging on would potentially reduce performance and increase
+response time.
 
 """
 

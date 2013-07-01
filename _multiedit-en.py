@@ -63,6 +63,8 @@ within this callback is very simple:
 
 """
 
+import tools.remote_debug_script  # @UnusedImport
+
 try:
     import pkg_resources
     pkg_resources.require("dragonfly >= 0.6.5beta1.dev-r99")
