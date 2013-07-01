@@ -13,6 +13,10 @@ Example:
 'C:\Program Files\eclipse\plugins\org.python.pydev_2.7.5.2013052819\pysrc'
 This path needs to be included in the Python path.
 
+To be able to import this module, you may also need to add the path to
+the Natlink MacroSystem folder.
+You may also have to add package files, i.e. empty-files with the name:
+"__init__.py" to each folder containing your python files.
 
 Usage:
 ------
@@ -42,6 +46,7 @@ if REMOTE_DEBUG:
         pydevd.settrace(ADDRESS, port=PORT, suspend=False,
             # Redirect stdout and stderr to eclipse console
             stdoutToServer=True, stderrToServer=True)
+        sys.stdout.write(">>> Pydevd remote debugging activated.\r\n")
     except ImportError:
         sys.stderr.write("Err: Failed to import Eclipse debug module, pydevd")
     except:

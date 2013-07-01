@@ -45,7 +45,7 @@ Usage examples
 
 #import pkg_resources
 #pkg_resources.require("dragonfly >= 0.6.5beta1.dev-r76")
-import tools.remote_debug_script  # @UnusedImport
+
 import time
 from dragonfly import (Grammar, Alternative, RuleRef, DictListRef,
                        Dictation, Compound, Integer, Rule, CompoundRule,
