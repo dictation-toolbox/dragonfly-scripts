@@ -2,8 +2,8 @@
 Debug-module enables remote debugging for Eclipse
 =================================================
 
-This module enables remote debugging for Eclipse. This means debugging an
-external process, even over a network connection.
+This module enables remote debugging for Eclipse.
+http://pydev.org/manual_adv_remote_debugger.html
 
 The Eclipse plug-in PyDev comes with a remote debugging file: pydevd
 To identify where PyDev remote debugger Python files are, look in the
@@ -13,15 +13,11 @@ Example:
 'C:\Program Files\eclipse\plugins\org.python.pydev_2.7.5.2013052819\pysrc'
 This path needs to be included in the Python path.
 
-To be able to import this module, you may also need to add the path to
-the Natlink MacroSystem folder.
-You may also have to add package files, i.e. empty-files with the name:
-"__init__.py" to each folder containing your python files.
-
 Usage:
 ------
-This module is loaded globally. To activate/deactivate the remote debugging,
-set the parameter REMOTE_DEBUG to True or False, save the module then reload
+When this module is placed in the MacrosSystem, it is loaded globally.
+To activate/deactivate the remote debugging, set the parameter
+REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
 
 Tip:
