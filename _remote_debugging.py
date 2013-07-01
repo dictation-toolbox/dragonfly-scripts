@@ -19,6 +19,7 @@ When this module is placed in the MacrosSystem, it is loaded globally.
 To activate/deactivate the remote debugging, set the parameter
 REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
+Once the script is loaded, you can set breakpoints in the Eclipse/PyDev IDE. 
 
 Tip:
 ----
