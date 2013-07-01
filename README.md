@@ -8,8 +8,7 @@ My collection of [Dragonfly](http://dragonfly-modules.googlecode.com/svn/trunk/c
 
 ##### What is [Dragonfly](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html)?
 * A speech recognition framework
-* A Python package
-* A Natlink extension/add-on/toolkit
+* A Python package, that can be used in conjuction with Natlink
 
 ##### So what's Natlink?
 Natlink is an extension to Dragon NaturallySpeaking to allow scripting beyond the Visual Basic Scripts that the speech recognition program normally supports.
