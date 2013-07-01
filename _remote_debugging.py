@@ -20,11 +20,13 @@ You may also have to add package files, i.e. empty-files with the name:
 
 Usage:
 ------
-Simply import this module in your scripts, and to set breakpoints.
+This module is loaded globally. To activate/deactivate the remote debugging,
+set the parameter REMOTE_DEBUG to True or False, save the module then reload
+via the "Messages from Python Macros"-window or restart DNS.
 
 Tip:
 ----
-Switch off debugging for normal use.
+*Switch off debugging for normal use.*
 While this debugging method works, I have experienced frequent crashes when
 debugging is left on.
 Leaving debugging on would potentially reduce performance and increase
