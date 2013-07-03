@@ -49,12 +49,11 @@ I am using Python 2.6, because using NatLink and Dragonfly with 2.7 still seems 
 #### Installing Python 2.6 and Pythonwin
 
 ##### Alternative 1:
-The pure Python package for 2.6 can be downloaded here: http://www.python.org/download/releases/2.6.6/
-Pythonwin / Python Win32 Extensions: http://sourceforge.net/projects/pywin32/files/pywin32/
-Choose the latest build (218 at the time of writing this), then select the correct installer for your system. I use pywin32-218.win32-py2.6.exe (even though the system is 64-bit).
+*The pure Python package for 2.6 can be downloaded here: http://www.python.org/download/releases/2.6.6/
+*Pythonwin / Python Win32 Extensions: http://sourceforge.net/projects/pywin32/files/pywin32/. Choose the latest build (218 at the time of writing this), then select the correct installer for your system. I use pywin32-218.win32-py2.6.exe (even though the system is 64-bit).
 
 ##### Alternative 2:
-A package containing Python 2.6, Pythonwin, wxPython and PyXML can be found here: http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonneededfornatlink2.6.exe/download.
+*A package containing Python 2.6, Pythonwin, wxPython and PyXML can be found here: http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonneededfornatlink2.6.exe/download.
 *I don't think wxPython is needed for Natlink/Dragonfly. PyXML is only used for VoiceCode*
 
 #### Installing Natlink:
