@@ -41,8 +41,8 @@ For starters I'm using [Dragon NaturallySpeaking](http://www.nuance.com/for-busi
 Dragonfly is also supposed to be compatible with Windows Speech Recognition (WSR), but I haven't tried that.
 
 ### Installing Natlink and Dragonfly
-> I recommend sticking to 32-bit. I have experienced problems with Dragon NaturallySpeaking when it comes to 64-bit. Particularly with Eclipse.
-> The problem was caused by the Java virtual machine, that was in 64-bit. The most annoying problem I had, double typing of the first character or loss of the first character, was fixed by installing the Java virtual machine 32-bit version instead.
+> I recommend avoiding 64-bit on any of the packages you install, including Python. Also avoid 64-bit Java, on any applications you want to use when running Dragon naturally speaking. I have experienced problems with Dragon NaturallySpeaking when it comes to 64-bit. Particularly with Eclipse.
+> The problems was caused by the Java virtual machine, that was in 64-bit. The most annoying problem I had, double typing of the first character or loss of the first character, was fixed by installing the Java virtual machine 32-bit version instead.
 > I'm about to switch to Windows 7 64-bit, but will still stick to 32-bit Python and Java VM 32-bit. I'm hoping Dragon NaturallySpeaking 12 have fixed some of the 64-bit issues.
 
 I am using Python 2.6, because using NatLink and Dragonfly with 2.7 still seems untested and undocumented. 
@@ -65,12 +65,14 @@ This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.ht
 [Natlink repository](http://sourceforge.net/projects/natlink/files/natlink/)
 
 > Following the instructions from the Unimacro site, when I started the "Configure Natlink Via GUI" program, I got several warning messages.
-> However, restarting Natlink or perhaps Dragon NaturallySpeaking, then running the configuration program again, solved that issue.
+> However,  restarting Dragon NaturallySpeaking (or perhaps just reloading Natlink), then running the configuration program again, solved that issue.
 
 #### Installing Dragonfly:
 Python library site: [Dragonfly](https://pypi.python.org/pypi/dragonfly), I used the `dragonfly-0.6.5.win32.exe` installer.
 Dragonfly’s installer will install the library in your Python’s local site-packages directory under the dragonfly subdirectory.
-##### NOTE: If you have multiple Python versions, make sure you install all packages into the correct python version.
+
+
+*NOTE: If you have multiple Python versions, make sure you install all packages into the correct python version.*
 
 ## And then?
 ...
