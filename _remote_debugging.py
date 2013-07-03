@@ -2,8 +2,7 @@
 Debug-module
 ===========
 
-This module enables remote debugging for Eclipse.
-Look here for instructions:
+This module enables remote debugging for Eclipse. Look here for instructions:
 http://pydev.org/manual_adv_remote_debugger.html
 
 The Eclipse plug-in PyDev comes with a remote debugging file: pydevd
@@ -15,7 +14,8 @@ Example:
 This path needs to be included in the Windows Pythonpath.
 * Go to the Control Panel -> System -> Advanced -> Environment Variables.
 * In the System variables panel, edit or add the variable "PYTHONPATH".
-* Add the path to the variables value. Separating eventual previous paths with a semicolon.
+* Add the path to the variables value.
+  Separating eventual previous paths with a semicolon.
 * Restart applications that are dependent on the PYTHONPATH variable.
 
 Usage:
