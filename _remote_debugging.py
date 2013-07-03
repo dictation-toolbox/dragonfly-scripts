@@ -11,11 +11,16 @@ directory where you have Eclipse:
 `C:\...\eclipse\plugins\org.python.pydev_x.y.z.xxxxxxxxxx\pysrc\`
 Example:
 'C:\Program Files\eclipse\plugins\org.python.pydev_2.7.5.2013052819\pysrc'
-This path needs to be included in the Python path.
+This path needs to be included in the Windows Pythonpath.
+
+* Go to the Control Panel -> System -> Advanced -> Environment Variables.
+* In the System variables panel, edit or add the variable "PYTHONPATH".
+* Add the path to the variables value. Separating eventual previous paths with a semicolon.
+* Restart applications that are dependent on the PYTHONPATH variable.
 
 Usage:
 ------
-When this module is placed in the MacrosSystem, it is loaded globally.
+When this module is placed in the MacrosSystem folder, it is loaded when Natlink starts.
 To activate/deactivate the remote debugging, set the parameter
 REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
