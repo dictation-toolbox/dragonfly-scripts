@@ -62,13 +62,19 @@ I am using Python 2.6, because using NatLink and Dragonfly with 2.7 still seems 
 
 #### Installing Natlink:
 This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.html), has a lot of information on the installation and configuration of Natlink. The site is mostly focused on Unimacro and Vocola 2:
+
 [Natlink repository](http://sourceforge.net/projects/natlink/files/natlink/)
 
-> Following the instructions from the Unimacro site, when I started the "Configure Natlink Via GUI" program, I got several warning messages.
-> However,  restarting Dragon NaturallySpeaking (or perhaps just reloading Natlink), then running the configuration program again, solved that issue.
+Once Natlink is installed, to configuration utilities we show up in the start menu. One is a command line tool, the other is a GUI tool.
+
+> On my windows XP 32-bit machine, when I was following the instructions from the Unimacro site, when I started the "Configure Natlink Via GUI" program, I got several warning messages.
+> However, restarting Dragon NaturallySpeaking (or perhaps just reloading Natlink), then running the configuration program again, solved that issue.
+> I have seen the GUI configuration tool freeze completely on Windows 7 64-bit, but the command line tool worked fine.
 
 #### Installing Dragonfly:
-Python library site: [Dragonfly](https://pypi.python.org/pypi/dragonfly), I used the `dragonfly-0.6.5.win32.exe` installer.
+Python library site: [Dragonfly](https://pypi.python.org/pypi/dragonfly)
+
+I used the `dragonfly-0.6.5.win32.exe` installer.
 Dragonfly’s installer will install the library in your Python’s local site-packages directory under the dragonfly subdirectory.
 
 
