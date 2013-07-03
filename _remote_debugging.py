@@ -12,7 +12,6 @@ directory where you have Eclipse:
 Example:
 'C:\Program Files\eclipse\plugins\org.python.pydev_2.7.5.2013052819\pysrc'
 This path needs to be included in the Windows Pythonpath.
-
 * Go to the Control Panel -> System -> Advanced -> Environment Variables.
 * In the System variables panel, edit or add the variable "PYTHONPATH".
 * Add the path to the variables value. Separating eventual previous paths with a semicolon.
