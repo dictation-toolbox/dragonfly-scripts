@@ -1,8 +1,9 @@
 """
-Debug-module enables remote debugging for Eclipse
-=================================================
+Debug-module
+===========
 
 This module enables remote debugging for Eclipse.
+Look here for instructions:
 http://pydev.org/manual_adv_remote_debugger.html
 
 The Eclipse plug-in PyDev comes with a remote debugging file: pydevd
@@ -19,7 +20,10 @@ This path needs to be included in the Windows Pythonpath.
 
 Usage:
 ------
-When this module is placed in the MacrosSystem folder, it is loaded when Natlink starts.
+Place this module in the MacrosSystem folder.
+Start the debug server in Eclipse.
+Start Dragon NaturallySpeaking/Natlink.
+The pydevd.settrace method will then connect to the debug server in Eclipse.
 To activate/deactivate the remote debugging, set the parameter
 REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
