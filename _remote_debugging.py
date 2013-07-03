@@ -15,7 +15,7 @@ This path needs to be included in the Windows Pythonpath.
 * Go to the Control Panel -> System -> Advanced -> Environment Variables.
 * In the System variables panel, edit or add the variable "PYTHONPATH".
 * Add the path to the variables value.
-  Separating eventual previous paths with a semicolon.
+  Separate from eventual previous path with a semicolon.
 * Restart applications that are dependent on the PYTHONPATH variable.
 
 Usage:
