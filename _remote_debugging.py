@@ -27,9 +27,7 @@ The pydevd.settrace method will then connect to the debug server in Eclipse.
 To activate/deactivate the remote debugging, set the parameter
 REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
-Once the script is loaded, you can set breakpoints in the Eclipse/PyDev IDE. 
-
-Tip:
+Once the script is loaded, you can set breakpoints in the Eclipse/PyDev IDE.:
 ----
 *Switch off debugging for normal use.*
 While this debugging method works, I have experienced frequent crashes when
@@ -58,3 +56,6 @@ if REMOTE_DEBUG:
         sys.stderr.write("Err: Failed to import Eclipse debug module, pydevd")
     except:
         sys.stderr.write("Eclipse debug server is not responding.")
+else:
+    sys.stdout.write(">>> Debugging is off.\r\n")
+    
