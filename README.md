@@ -1,6 +1,6 @@
 # dragonfly-scripts
 
-So far, this repository contains only standard modules provided with the [Dragonfly modules documentation](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html).
+So far, this repository contains only modules provided with the Dragonfly [command-modules repository](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html).
 The only addition/change is a debug module.
 
 
@@ -25,8 +25,14 @@ The installation file for Natlink mentioned below, contains Vocola 2 and Unimacr
 
 ## Why?
 
+#### Why speech recognition?
 Due to repetitive strain injury (RSI), I started using speech recognition to be able to control my computer, especially for coding.
 Dragonfly used in conjunction with Natlink, adds some powerful tools to the speech recognition program.
+
+#### Why Dragonfly?
+* It seems to execute much faster than the Visual Basic scripts that Dragon NaturallySpeaking normally supports.
+* I never could get external files working in Visual Basic scripts, making it hard to write reusable code.
+* Python, even older versions, trumps Visual Basic scripts any day of the week.
 
 ## Who?
 
@@ -38,7 +44,7 @@ I would rather be sitting on Linux using Vim, but ended up on Windows mostly usi
 
 For starters I'm using [Dragon NaturallySpeaking](http://www.nuance.com/for-business/by-product/dragon/dragon-for-the-pc/dragon-professional/index.htm) 11, for speech recognition.
 
-Dragonfly is also supposed to be compatible with Windows Speech Recognition (WSR), but I haven't tried that.
+Dragonfly is also supposed to be compatible with Windows Speech Recognition (WSR), but I haven't tried that so it won't be covered here.
 
 ### Installing Natlink and Dragonfly
 > I recommend avoiding 64-bit on any of the packages you install, including Python. Also avoid 64-bit Java, on any applications you want to use when running Dragon naturally speaking. I have experienced problems with Dragon NaturallySpeaking when it comes to 64-bit. Particularly with Eclipse.
@@ -61,9 +67,9 @@ I am using Python 2.6, because using NatLink and Dragonfly with 2.7 still seems 
 *I don't think wxPython is needed for Natlink/Dragonfly. PyXML is only used for VoiceCode*
 
 #### Installing Natlink:
-This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.html), has a lot of information on the installation and configuration of Natlink. The site is mostly focused on Unimacro and Vocola 2:
+This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.html), has a lot of information on the installation and configuration of Natlink. The site is mostly focused on Unimacro and Vocola 2.
 
-[Natlink repository](http://sourceforge.net/projects/natlink/files/natlink/)
+You can get Natlink here: [Natlink repository](http://sourceforge.net/projects/natlink/files/natlink/)
 
 Once Natlink is installed, to configuration utilities we show up in the start menu. One is a command line tool, the other is a GUI tool.
 
