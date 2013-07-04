@@ -71,7 +71,7 @@ This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.ht
 
 You can get Natlink here: [Natlink repository](http://sourceforge.net/projects/natlink/files/natlink/)
 
-Once Natlink is installed, to configuration utilities we show up in the start menu. One is a command line tool, the other is a GUI tool.
+Once Natlink is installed, two configuration utilities will show up in the start menu. One is a command line tool, the other is a GUI tool.
 
 > On my windows XP 32-bit machine, when I was following the instructions from the Unimacro site, when I started the "Configure Natlink Via GUI" program, I got several warning messages.
 > However, restarting Dragon NaturallySpeaking (or perhaps just reloading Natlink), then running the configuration program again, solved that issue.
