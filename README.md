@@ -61,10 +61,11 @@ I am using Python 2.6, because using NatLink and Dragonfly with 2.7 still seems 
 ##### Alternative 1:
 * The pure Python package for 2.6 can be downloaded here: http://www.python.org/download/releases/2.6.6/
 * Pythonwin / Python Win32 Extensions: http://sourceforge.net/projects/pywin32/files/pywin32/. Choose the latest build (218 at the time of writing this), then select the correct installer for your system. I use pywin32-218.win32-py2.6.exe (even though the system is 64-bit).
+* If you will be running scripts that use GUI functionality, you need wxPython. http://wxpython.org/download.php#stable. I used `wxPython2.8-win32-unicode-py26`.
 
 ##### Alternative 2:
 * A package containing Python 2.6, Pythonwin, wxPython and PyXML can be found here: http://sourceforge.net/projects/natlink/files/pythonfornatlink/python2.6/pythonneededfornatlink2.6.exe/download.
-*I don't think wxPython is needed for Natlink/Dragonfly. PyXML is only used for VoiceCode*
+*wxPython is only needed if you will be running scripts that use GUI functionality. PyXML is only used for VoiceCode*
 
 #### Installing Natlink:
 This site, [Unimacro](http://qh.antenna.nl/unimacro/installation/installation.html), has a lot of information on the installation and configuration of Natlink. The site is mostly focused on Unimacro and Vocola 2.
