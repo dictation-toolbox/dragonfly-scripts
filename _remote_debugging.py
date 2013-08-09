@@ -39,7 +39,7 @@ response time.
 
 import sys
 
-REMOTE_DEBUG = True  # Switch remote debugging on or off
+REMOTE_DEBUG = False  # Switch remote debugging on or off
 ADDRESS = 'localhost'  # 'localhost' or IP number, ex: '10.0.0.3'
 PORT = 5678  # Eclipse standard debug server port.
 
@@ -58,4 +58,3 @@ if REMOTE_DEBUG:
         sys.stderr.write("Eclipse debug server is not responding.")
 else:
     sys.stdout.write(">>> Debugging is off.\r\n")
-    
