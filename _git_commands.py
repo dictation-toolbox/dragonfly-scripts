@@ -1,9 +1,6 @@
 
 from dragonfly import *  # @UnusedWildImport
 
-config = Config("Git commands")
-namespace = config.load()
-
 
 class SeriesMappingRule(CompoundRule):
 
@@ -32,6 +29,8 @@ gitcmd = {
     "commit": "commit",
     "config": "config",
     "(diff|difference|differentiate)": "diff",
+    "fetch": "fetch",
+    "grep": "grep",
     "help": "help",
     "(init|initialize)": "init",
     "log": "log",
@@ -40,27 +39,36 @@ gitcmd = {
     "push": "push",
     "rebase": "rebase",
     "remote": "remote",
+    "reset": "reset",
     "(remove|R M)": "rm",
+    "revert": "revert",
+    "show": "show",
     "status": "status",
     "tag": "tag",
 }
 
 gitopt = {
     "all": "--all",
+    "base": "--base",
     "dry run": "--dry-run",
     "delete": "--delete",
     "color": "--color",
+    "continue": "--continue",
     "force": "--force",
-    "List": "--list",
+    "hard": "--hard",
+    "list": "--list",
     "no (check out|checkout)": "--no-checkout",
     "no color": "--no-color",
     "no tags": "--no-tags",
     "message": "--message",
+    "ours": "--ours",
     "patch": "--patch",
     "porcelain": "--porcelain",
     "quiet": "--quiet",
     "short": "--short",
+    "skip": "--skip",
     "tags": "--tags",
+    "theirs": "--theirs",
     "track": "--track",
     "verbose": "--verbose",
     "version": "--version",
@@ -85,7 +93,11 @@ series_rule = SeriesMappingRule(
         "git config add <text>": Text("git config --add %(text)s "),
         "git config list": Text("git config --list\n"),
         "git (diff|difference|differentiate)": Text("git diff\n"),
-        "git help": Text("git --help \n"),
+        "git (diff|difference|differentiate) <text>": Text("git diff $(text)s"),  # @IgnorePep8
+        "git fetch": Text("git fetch\n"),
+        "git fetch <text>": Text("git fetch %(text)s "),
+        "git grep": Text("git grep \"\"") + Key("left:1"),
+        "git help": Text("git --help\n"),
         "git help <gitcmd>": Text("git --help %(gitcmd)s\n"),
         "git (init|initialize)": Text("git init\n"),
         "git (init|initialize) bare": Text("git init --bare\n"),
@@ -109,6 +121,10 @@ series_rule = SeriesMappingRule(
         "git remote (remove|R M) <text>": Text("git remote rm %(text)s"),
         "git (remove|R M)": Text("git rm "),
         "git (remove|R M) <text>": Text("git rm %(text)s"),
+        "git reset hard": Text("git reset --hard"),
+        "git revert": Text("git revert "),
+        "git revert head": Text("git revert HEAD"),
+        "git show": Text("git show "),
         "git (status|S T)": Text("git status\n"),
         "git (status|S T) <gitopt>": Text("git status %(gitopt)s\n"),
         "git tag": Text("git tag "),
