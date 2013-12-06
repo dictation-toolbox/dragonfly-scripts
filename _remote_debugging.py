@@ -2,6 +2,9 @@
 Debug-module
 ===========
 
+* WARNING: Debugging dragonfly is highly unstable and completely unreliable! *
+* Switch off debugging for normal use. *
+
 This module enables remote debugging for Eclipse. Look here for instructions:
 http://pydev.org/manual_adv_remote_debugger.html
 
@@ -27,13 +30,12 @@ The pydevd.settrace method will then connect to the debug server in Eclipse.
 To activate/deactivate the remote debugging, set the parameter
 REMOTE_DEBUG to True or False, save the module then reload
 via the "Messages from Python Macros"-window or restart DNS.
-Once the script is loaded, you can set breakpoints in the Eclipse/PyDev IDE.:
+Once the script is loaded, you can set breakpoints in the Eclipse/PyDev IDE.
 ----
-*Switch off debugging for normal use.*
+* Switch off debugging for normal use. *
 While this debugging method works, I have experienced frequent crashes when
-debugging is left on.
-Leaving debugging on would potentially reduce performance and increase
-response time.
+debugging is left on. Leaving debugging on would potentially reduce performance
+and increase response time.
 
 """
 
@@ -53,8 +55,9 @@ if REMOTE_DEBUG:
             stdoutToServer=True, stderrToServer=True)
         sys.stdout.write(">>> Pydevd remote debugging activated.\r\n")
     except ImportError:
-        sys.stderr.write("Err: Failed to import Eclipse debug module, pydevd")
+        sys.stderr.write(
+            "Err: Failed to import Eclipse debug module, pydevd.\r\n")
     except:
-        sys.stderr.write("Eclipse debug server is not responding.")
+        sys.stderr.write("Eclipse debug server is not responding.\r\n")
 else:
     sys.stdout.write(">>> Debugging is off.\r\n")
