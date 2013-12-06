@@ -37,10 +37,10 @@ config.cmd.map = Item({
         "make (directory|dir) <text>": Text("mkdir %(text)s"),
         "move": Text("mv "),
         "move <text>": Text("mv %(text)s"),
+        "(remove|remove file|R M)": Text("rm "),
+        "(remove|remove file|R M) <text>": Text("rm %(text)s"),
         "remove (directory|dir)": Text("rm -rf "),
         "remove (directory|dir) <text>": Text("rm -rf %(text)s"),
-        "(remove file|R M)": Text("rm "),
-        "(remove file|R M) <text>": Text("rm %(text)s"),
         "sudo": Text("sudo "),
         "touch": Text("touch "),
         "touch <text>": Text("touch %(text)s"),
@@ -79,7 +79,7 @@ class RepeatRule(CompoundRule):
     extras = [sequence, IntegerRef("n", 1, 100)]
     defaults = {"n": 1}
 
-    def _process_recognition(self, node, extras):
+    def _process_recognition(self, node, extras):  # @UnusedVariable
         sequence = extras["sequence"]   # A sequence of actions.
         count = extras["n"]             # An integer repeat count.
         for i in range(count):  # @UnusedVariable
