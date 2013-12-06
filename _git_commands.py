@@ -109,6 +109,8 @@ series_rule = SeriesMappingRule(
         "git merge <text>": Text("git merge %(text)s"),
         "git (move|M V)": Text("git mv "),
         "git (move|M V) <text>": Text("git mv %(text)s"),
+        "git pull": Text("git pull\n"),
+        "git pull origin <text>": Text("git pull origin %(text)s"),
         "git push": Text("git push\n"),
         "git push all": Text("git push --all\n"),
         "git push origin <text>": Text("git push origin %(text)s"),
