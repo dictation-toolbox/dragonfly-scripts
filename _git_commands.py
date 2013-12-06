@@ -86,6 +86,8 @@ series_rule = SeriesMappingRule(
         "git branch delete <text>": Text("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
         "git (check out|checkout) <text>": Text("git checkout %(text)s"),
+        "git clone": Text("git clone "),
+        "git clone <text>": Text("git clone %(text)s"),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
         "git config": Text("git config "),
