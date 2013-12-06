@@ -132,14 +132,15 @@ series_rule = SeriesMappingRule(
         "git (status|S T)": Text("git status\n"),
         "git (status|S T) <gitopt>": Text("git status %(gitopt)s\n"),
         "git tag": Text("git tag "),
+        "git tag (annotate|annotated)": Text("git tag -a -m \"\" ") + Key("left:2"),  # @IgnorePep8
 
-        "git command <gitcmd>": Text("git %(gitcmd)s"),
-        "git option <gitopt>": Text(" %(gitopt)s"),
+        "git command <gitcmd>": Text("git %(gitcmd)s "),
+        "git option <gitopt>": Text(" %(gitopt)s "),
 
-        "git <gitcmd>": Text("git %(gitcmd)s "),
-        "git <gitcmd> <gitopt>": Text("git %(gitcmd)s %(gitopt)s "),
-        "git <gitcmd> <text>": Text("git %(gitcmd)s %(text)s "),
-        "git <gitcmd> <gitopt> <text>": Text("git %(gitcmd)s %(gitopt)s %(text)s"),  # @IgnorePep8
+#         "git <gitcmd>": Text("git %(gitcmd)s "),
+#         "git <gitcmd> <gitopt>": Text("git %(gitcmd)s %(gitopt)s "),
+#         "git <gitcmd> <text>": Text("git %(gitcmd)s %(text)s "),
+#         "git <gitcmd> <gitopt> <text>": Text("git %(gitcmd)s %(gitopt)s %(text)s"),  # @IgnorePep8
     },
     extras=[
         IntegerRef("n", 1, 100),
