@@ -82,7 +82,7 @@ series_rule = SeriesMappingRule(
         "git blame": Text("git blame "),
         "git branch": Text("git branch\n"),
         "git branch track": Text("git branch -- track "),
-        "git branch new <text>": Text("git branch %(text)s"),
+        "git branch <text>": Text("git branch %(text)s"),
         "git branch delete <text>": Text("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
         "git (check out|checkout) <text>": Text("git checkout %(text)s"),
@@ -133,6 +133,7 @@ series_rule = SeriesMappingRule(
         "git (status|S T) <gitopt>": Text("git status %(gitopt)s\n"),
         "git tag": Text("git tag "),
         "git tag (annotate|annotated)": Text("git tag -a -m \"\" ") + Key("left:2"),  # @IgnorePep8
+        "git tag delete": Text("git tag -d "),
 
         "git command <gitcmd>": Text("git %(gitcmd)s "),
         "git option <gitopt>": Text(" %(gitopt)s "),
