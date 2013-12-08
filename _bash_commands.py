@@ -37,6 +37,7 @@ config.cmd.map = Item({
         "make (directory|dir) <text>": Text("mkdir %(text)s"),
         "move": Text("mv "),
         "move <text>": Text("mv %(text)s"),
+        "(print working directory|P W D)": Text("pwd\n"),
         "(remove|remove file|R M)": Text("rm "),
         "(remove|remove file|R M) <text>": Text("rm %(text)s"),
         "remove (directory|dir)": Text("rm -rf "),
