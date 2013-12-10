@@ -8,17 +8,17 @@
 Command-module for cursor movement and **editing**
 ============================================================================
 
-This module allows the user to control the cursor and 
-efficiently perform multiple text editing actions within a 
+This module allows the user to control the cursor and
+efficiently perform multiple text editing actions within a
 single phrase.
 
 
 Example commands
 ----------------------------------------------------------------------------
 
-*Note the "/" characters in the examples below are simply 
-to help the reader see the different parts of each voice 
-command.  They are not present in the actual command and 
+*Note the "/" characters in the examples below are simply
+to help the reader see the different parts of each voice
+command.  They are not present in the actual command and
 should not be spoken.*
 
 Example: **"up 4 / down 1 page / home / space 2"**
@@ -31,31 +31,31 @@ Example: **"left 7 words / backspace 3 / insert hello Cap world"**
    the text "hello World".
 
 Example: **"home / space 4 / down / 43 times"**
-   This command will insert 4 spaces at the beginning of 
-   of this and the next 42 lines.  The final "43 times" 
+   This command will insert 4 spaces at the beginning of
+   of this and the next 42 lines.  The final "43 times"
    repeats everything in front of it that many times.
 
 
 Discussion of this module
 ----------------------------------------------------------------------------
 
-This command-module creates a powerful voice command for 
-editing and cursor movement.  This command's structure can 
+This command-module creates a powerful voice command for
+editing and cursor movement.  This command's structure can
 be represented by the following simplified language model:
 
  - *CommandRule* -- top-level rule which the user can say
     - *repetition* -- sequence of actions (name = "sequence")
-       - *KeystrokeRule* -- rule that maps a single 
+       - *KeystrokeRule* -- rule that maps a single
          spoken-form to an action
     - *optional* -- optional specification of repeat count
        - *integer* -- repeat count (name = "n")
        - *literal* -- "times"
 
-The top-level command rule has a callback method which is 
-called when this voice command is recognized.  The logic 
+The top-level command rule has a callback method which is
+called when this voice command is recognized.  The logic
 within this callback is very simple:
 
-1. Retrieve the sequence of actions from the element with 
+1. Retrieve the sequence of actions from the element with
    the name "sequence".
 2. Retrieve the repeat count from the element with the name
    "n".
@@ -69,7 +69,7 @@ try:
 except ImportError:
     pass
 
-from dragonfly import *
+from dragonfly import *  # @UnusedWildImport
 
 
 #---------------------------------------------------------------------------
@@ -85,54 +85,57 @@ release = Key("shift:up, ctrl:up")
 #---------------------------------------------------------------------------
 # Set up this module's configuration.
 
-config            = Config("multi edit")
-config.cmd        = Section("Language section")
-config.cmd.map    = Item(
+config = Config("multi edit")
+config.cmd = Section("Language section")
+config.cmd.map = Item(
     # Here we define the *default* command map.  If you would like to
     #  modify it to your personal taste, please *do not* make changes
     #  here.  Instead change the *config file* called "_multiedit.txt".
     {
-     # Spoken-form    ->    ->    ->     Action object
-     "up [<n>]":                         Key("up:%(n)d"),
-     "down [<n>]":                       Key("down:%(n)d"),
-     "left [<n>]":                       Key("left:%(n)d"),
-     "right [<n>]":                      Key("right:%(n)d"),
-     "page up [<n>]":                    Key("pgup:%(n)d"),
-     "page down [<n>]":                  Key("pgdown:%(n)d"),
-     "up <n> (page | pages)":            Key("pgup:%(n)d"),
-     "down <n> (page | pages)":          Key("pgdown:%(n)d"),
-     "left <n> (word | words)":          Key("c-left:%(n)d"),
-     "right <n> (word | words)":         Key("c-right:%(n)d"),
-     "home":                             Key("home"),
-     "end":                              Key("end"),
-     "doc home":                         Key("c-home"),
-     "doc end":                          Key("c-end"),
+        # Spoken-form    ->    ->    ->      Action object
+         "up [<n>]":                         Key("up:%(n)d"),
+         "down [<n>]":                       Key("down:%(n)d"),
+         "left [<n>]":                       Key("left:%(n)d"),
+         "right [<n>]":                      Key("right:%(n)d"),
+         "page up [<n>]":                    Key("pgup:%(n)d"),
+         "page down [<n>]":                  Key("pgdown:%(n)d"),
+         "up <n> (page | pages)":            Key("pgup:%(n)d"),
+         "down <n> (page | pages)":          Key("pgdown:%(n)d"),
+         "left <n> (word | words)":          Key("c-left:%(n)d"),
+         "right <n> (word | words)":         Key("c-right:%(n)d"),
+         "home":                             Key("home"),
+         "end":                              Key("end"),
+         "doc home":                         Key("c-home"),
+         "doc end":                          Key("c-end"),
 
-     "space [<n>]":                      release + Key("space:%(n)d"),
-     "enter [<n>]":                      release + Key("enter:%(n)d"),
-     "tab [<n>]":                        Key("tab:%(n)d"),
-     "delete [<n>]":                     release + Key("del:%(n)d"),
-     "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),
-     "backspace [<n>]":                  release + Key("backspace:%(n)d"),
-     "pop up":                           release + Key("apps"),
+         "space [<n>]":                      release + Key("space:%(n)d"),
+         "enter [<n>]":                      release + Key("enter:%(n)d"),
+         "tab [<n>]":                        Key("tab:%(n)d"),
+         "delete [<n>]":                     release + Key("del:%(n)d"),
+         "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
+         "backspace [<n>]":                  release + Key("backspace:%(n)d"),
+         "pop up":                           release + Key("apps"),
 
-     "paste":                            release + Key("c-v"),
-     "duplicate <n>":                    release + Key("c-c, c-v:%(n)d"),
-     "copy":                             release + Key("c-c"),
-     "cut":                              release + Key("c-x"),
-     "select all":                       release + Key("c-a"),
-     "[hold] shift":                     Key("shift:down"),
-     "release shift":                    Key("shift:up"),
-     "[hold] control":                   Key("ctrl:down"),
-     "release control":                  Key("ctrl:up"),
-     "release [all]":                    release,
+         "paste":                            release + Key("c-v"),
+         "duplicate <n>":                    release + Key("c-c, c-v:%(n)d"),
+         "copy":                             release + Key("c-c"),
+         "cut":                              release + Key("c-x"),
+         "select all":                       release + Key("c-a"),
+         "undo <n> [times]":                 release + Key("c-z:%(n)d"),
+         "redo":                             release + Key("c-y"),
+         "redo <n> [times]":                 release + Key("c-y:%(n)d"),
+         "[hold] shift":                     Key("shift:down"),
+         "release shift":                    Key("shift:up"),
+         "[hold] control":                   Key("ctrl:down"),
+         "release control":                  Key("ctrl:up"),
+         "release [all]":                    release,
 
-     "say <text>":                       release + Text("%(text)s"),
-     "mimic <text>":                     release + Mimic(extra="text"),
+         "say <text>":                       release + Text("%(text)s"),
+         "mimic <text>":                     release + Mimic(extra="text"),
     },
     namespace={
-     "Key":   Key,
-     "Text":  Text,
+        "Key":   Key,
+        "Text":  Text,
     }
 )
 namespace = config.load()
@@ -145,20 +148,20 @@ namespace = config.load()
 format_functions = {}
 if namespace:
     for name, function in namespace.items():
-     if name.startswith("format_") and callable(function):
-        spoken_form = function.__doc__.strip()
+        if name.startswith("format_") and callable(function):
+            spoken_form = function.__doc__.strip()
 
-        # We wrap generation of the Function action in a function so
-        #  that its *function* variable will be local.  Otherwise it
-        #  would change during the next iteration of the namespace loop.
-        def wrap_function(function):
-            def _function(dictation):
-                formatted_text = function(dictation)
-                Text(formatted_text).execute()
-            return Function(_function)
+            # We wrap generation of the Function action in a function so
+            #  that its *function* variable will be local.  Otherwise it
+            #  would change during the next iteration of the namespace loop.
+            def wrap_function(function):
+                def _function(dictation):
+                    formatted_text = function(dictation)
+                    Text(formatted_text).execute()
+                return Function(_function)
 
-        action = wrap_function(function)
-        format_functions[spoken_form] = action
+            action = wrap_function(function)
+            format_functions[spoken_form] = action
 
 
 # Here we define the text formatting rule.
@@ -167,8 +170,8 @@ if namespace:
 if format_functions:
     class FormatRule(MappingRule):
 
-        mapping  = format_functions
-        extras   = [Dictation("dictation")]
+        mapping = format_functions
+        extras = [Dictation("dictation")]
 
 else:
     FormatRule = None
@@ -177,35 +180,35 @@ else:
 #---------------------------------------------------------------------------
 # Here we define the keystroke rule.
 
-# This rule maps spoken-forms to actions.  Some of these 
-#  include special elements like the number with name "n" 
-#  or the dictation with name "text".  This rule is not 
+# This rule maps spoken-forms to actions.  Some of these
+#  include special elements like the number with name "n"
+#  or the dictation with name "text".  This rule is not
 #  exported, but is referenced by other elements later on.
-#  It is derived from MappingRule, so that its "value" when 
-#  processing a recognition will be the right side of the 
+#  It is derived from MappingRule, so that its "value" when
+#  processing a recognition will be the right side of the
 #  mapping: an action.
 # Note that this rule does not execute these actions, it
 #  simply returns them when it's value() method is called.
 #  For example "up 4" will give the value Key("up:4").
 # More information about Key() actions can be found here:
-#  http://dragonfly.googlecode.com/svn/trunk/dragonfly/documentation/actionkey.html
+#  http://dragonfly.googlecode.com/svn/trunk/dragonfly/documentation/actionkey.html  # @IgnorePep8
 class KeystrokeRule(MappingRule):
 
     exported = False
 
-    mapping  = config.cmd.map
-    extras   = [
-                IntegerRef("n", 1, 100),
-                Dictation("text"),
-                Dictation("text2"),
-               ]
+    mapping = config.cmd.map
+    extras = [
+        IntegerRef("n", 1, 100),
+        Dictation("text"),
+        Dictation("text2"),
+    ]
     defaults = {
-                "n": 1,
-               }
-    # Note: when processing a recognition, the *value* of 
-    #  this rule will be an action object from the right side 
-    #  of the mapping given above.  This is default behavior 
-    #  of the MappingRule class' value() method.  It also 
+        "n": 1,
+    }
+    # Note: when processing a recognition, the *value* of
+    #  this rule will be an action object from the right side
+    #  of the mapping given above.  This is default behavior
+    #  of the MappingRule class' value() method.  It also
     #  substitutes any "%(...)." within the action spec
     #  with the appropriate spoken values.
 
@@ -236,22 +239,22 @@ sequence = Repetition(single_action, min=1, max=16, name="sequence")
 #---------------------------------------------------------------------------
 # Here we define the top-level rule which the user can say.
 
-# This is the rule that actually handles recognitions. 
-#  When a recognition occurs, it's _process_recognition() 
-#  method will be called.  It receives information about the 
-#  recognition in the "extras" argument: the sequence of 
+# This is the rule that actually handles recognitions.
+#  When a recognition occurs, it's _process_recognition()
+#  method will be called.  It receives information about the
+#  recognition in the "extras" argument: the sequence of
 #  actions and the number of times to repeat them.
 class RepeatRule(CompoundRule):
 
     # Here we define this rule's spoken-form and special elements.
-    spec     = "<sequence> [[[and] repeat [that]] <n> times]"
-    extras   = [
-                sequence,                 # Sequence of actions defined above.
-                IntegerRef("n", 1, 100),  # Times to repeat the sequence.
-               ]
+    spec = "<sequence> [[[and] repeat [that]] <n> times]"
+    extras = [
+        sequence,  # Sequence of actions defined above.
+        IntegerRef("n", 1, 100),  # Times to repeat the sequence.
+    ]
     defaults = {
-                "n": 1,                   # Default repeat count.
-               }
+        "n": 1,  # Default repeat count.
+    }
 
     # This method gets called when this rule is recognized.
     # Arguments:
@@ -259,10 +262,10 @@ class RepeatRule(CompoundRule):
     #  - extras -- dict of the "extras" special elements:
     #     . extras["sequence"] gives the sequence of actions.
     #     . extras["n"] gives the repeat count.
-    def _process_recognition(self, node, extras):
+    def _process_recognition(self, node, extras):  # @UnusedVariable
         sequence = extras["sequence"]   # A sequence of actions.
         count = extras["n"]             # An integer repeat count.
-        for i in range(count):
+        for i in range(count):  # @UnusedVariable
             for action in sequence:
                 action.execute()
         release.execute()
@@ -275,8 +278,10 @@ grammar = Grammar("multi edit")   # Create this module's grammar.
 grammar.add_rule(RepeatRule())    # Add the top-level rule.
 grammar.load()                    # Load the grammar.
 
+
 # Unload function which will be called at unload time.
 def unload():
     global grammar
-    if grammar: grammar.unload()
+    if grammar:
+        grammar.unload()
     grammar = None
