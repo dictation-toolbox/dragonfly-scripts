@@ -78,7 +78,7 @@ series_rule = SeriesMappingRule(
     mapping={
         "git add": Text("git add "),
         "git add <text>": Text("git add %(text)s"),
-        "git add all": Text("git add .\n"),
+        "git add (all|period|dot)": Text("git add .\n"),
         "git blame": Text("git blame "),
         "git branch": Text("git branch\n"),
         "git branch track": Text("git branch -- track "),

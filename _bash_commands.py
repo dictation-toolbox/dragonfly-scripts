@@ -8,10 +8,16 @@ except ImportError:
 from dragonfly import *  # @UnusedWildImport
 
 
+def directory_up(n):
+    repeat = ['..' for i in range(n)]  # @UnusedVariable
+    txt = "cd %s\n" % ("/".join(repeat))
+    Text(txt).execute()
+
+
 config = Config("Bash commands")
 config.cmd = Section("Language section")
-config.cmd.map = Item({
-        "(break|control C)": Key("c-c"),
+config.cmd.map = Item(
+    {
         "cat": Text("cat "),
         "cat <text>": Text("cat %(text)s"),
         "(change (directory|dir)|C D)": Text("cd "),
@@ -19,16 +25,7 @@ config.cmd.map = Item({
         "(copy|C P)": Text("cp "),
         "(copy|C P) recursive": Text("cp -r "),
         "diff": Text("diff "),
-        "directory up [one]": Text("cd ..\n"),
-        "directory up two": Text("cd ../..\n"),
-        "directory up three": Text("cd ../../..\n"),
-        "directory up four": Text("cd ../../../..\n"),
-        "directory up five": Text("cd ../../../../..\n"),
-        "directory up six": Text("cd ../../../../../..\n"),
-        "directory up seven": Text("cd ../../../../../../..\n"),
-        "directory up eight": Text("cd ../../../../../../../..\n"),
-        "directory up nine": Text("cd ../../../../../../../../..\n"),
-        "directory up ten": Text("cd ../../../../../../../../../..\n"),
+        "directory up <n> [times]": Function(directory_up),
         "grep": Text("grep "),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
         "list files": Text("ls -la\n"),
@@ -45,13 +42,12 @@ config.cmd.map = Item({
         "sudo": Text("sudo "),
         "touch": Text("touch "),
         "touch <text>": Text("touch %(text)s"),
-        
     },
     namespace={
-     "Key": Key,
-     "Text": Text,
-    }
-)
+        "Key": Key,
+        "Text": Text,
+        "Function": Function,
+})
 
 
 class KeystrokeRule(MappingRule):
