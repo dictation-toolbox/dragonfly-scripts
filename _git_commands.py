@@ -110,12 +110,15 @@ series_rule = SeriesMappingRule(
         "git log graph limit <n>": Text("git log --graph --oneline --decorate --all -n %(n)d\n"),  # @IgnorePep8
         "git merge": Text("git merge "),
         "git merge <text>": Text("git merge %(text)s"),
+        "git merge (no (fast forward|F F))": Text("git merge --no-ff "),
+        "git merge (no (fast forward|F F)) <text>": Text("git merge --no-ff %(text)s"),  # @IgnorePep8
         "git (move|M V)": Text("git mv "),
         "git (move|M V) <text>": Text("git mv %(text)s"),
         "git pull": Text("git pull\n"),
         "git pull origin <text>": Text("git pull origin %(text)s"),
         "git push": Text("git push\n"),
         "git push all": Text("git push --all\n"),
+        "git push origin ": Text("git push origin "),
         "git push origin <text>": Text("git push origin %(text)s"),
         "git push tags": Text("git push --tags\n"),
         "git (rebase|re-base)": Text("git rebase "),
