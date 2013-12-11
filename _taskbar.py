@@ -74,7 +74,7 @@ class TaskRule(MappingRule):
                "(minimize | min) task <n>":    Key("apps/10, n"),
                "(maximize | max) task <n>":    Key("apps/10, x"),
               }
-    extras = [IntegerRef("n", 1, 12)]
+    extras = [IntegerRef("n", 1, 50)]
 
     def _process_recognition(self, value, extras):
         count = extras["n"] - 1
