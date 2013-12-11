@@ -65,6 +65,7 @@ gitopt = {
     "patch": "--patch",
     "porcelain": "--porcelain",
     "quiet": "--quiet",
+    "remote": "--remote",
     "short": "--short",
     "skip": "--skip",
     "tags": "--tags",
@@ -77,6 +78,7 @@ gitopt = {
 series_rule = SeriesMappingRule(
     mapping={
         "git add": Text("git add "),
+        "git archive": Text("git archive --format=tar "),
         "git add <text>": Text("git add %(text)s"),
         "git add (all|period|dot)": Text("git add .\n"),
         "git blame": Text("git blame "),
@@ -145,7 +147,7 @@ series_rule = SeriesMappingRule(
         "git tag delete": Text("git tag -d "),
 
         "git command <gitcmd>": Text("git %(gitcmd)s "),
-        "git option <gitopt>": Text(" %(gitopt)s "),
+        "git option <gitopt>": Text(" %(gitopt)s"),
 
 #         "git <gitcmd>": Text("git %(gitcmd)s "),
 #         "git <gitcmd> <gitopt>": Text("git %(gitcmd)s %(gitopt)s "),

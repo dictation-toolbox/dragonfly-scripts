@@ -37,8 +37,8 @@ config.cmd.map = Item(
         "(print working directory|P W D)": Text("pwd\n"),
         "(remove|remove file|R M)": Text("rm "),
         "(remove|remove file|R M) <text>": Text("rm %(text)s"),
-        "remove (directory|dir)": Text("rm -rf "),
-        "remove (directory|dir) <text>": Text("rm -rf %(text)s"),
+        "remove (directory|dir|folder|recursive)": Text("rm -rf "),
+        "remove (directory|dir|folder|recursive) <text>": Text("rm -rf %(text)s"),  # @IgnorePep8
         "sudo": Text("sudo "),
         "touch": Text("touch "),
         "touch <text>": Text("touch %(text)s"),
