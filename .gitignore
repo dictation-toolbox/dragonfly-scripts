@@ -39,3 +39,6 @@ nosetests.xml
 core/
 _vocola_main.py
 
+# Ignore personal and work specific files.
+_work.py
+_personal.py
