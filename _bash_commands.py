@@ -18,8 +18,6 @@ config = Config("Bash commands")
 config.cmd = Section("Language section")
 config.cmd.map = Item(
     {
-        "cat": Text("cat "),
-        "cat <text>": Text("cat %(text)s"),
         "(change (directory|dir)|C D)": Text("cd "),
         "(change (directory|dir)|C D) <text>": Text("cd %(text)s"),
         "(copy|C P)": Text("cp "),
