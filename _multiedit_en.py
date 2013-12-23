@@ -81,7 +81,6 @@ from dragonfly import *  # @UnusedWildImport
 
 release = Key("shift:up, ctrl:up")
 
-
 #---------------------------------------------------------------------------
 # Set up this module's configuration.
 
@@ -108,6 +107,7 @@ config.cmd.map = Item(
          "doc home":                         Key("c-home"),
          "doc end":                          Key("c-end"),
 
+         "space":                            release + Key("space"),
          "space [<n>]":                      release + Key("space:%(n)d"),
          "enter [<n>]":                      release + Key("enter:%(n)d"),
          "tab [<n>]":                        Key("tab:%(n)d"),
