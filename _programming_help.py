@@ -166,6 +166,7 @@ def _restore_clipboard(text):
 
 
 char = {
+    "(bar|vertical bar)": "|",
     "(dash|minus|hyphen)": "-",
     "(dot|period)": ".",
     "comma": ",",
@@ -211,6 +212,7 @@ series_rule = SeriesMappingRule(
         # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
+        "double escape": Key("escape, escape"),  # Exiting menus.
         # Code formatting.
         "camel case <text>": Function(camel_case_text),
         "camel case <n> [words]": Function(camel_case_count),
@@ -233,6 +235,10 @@ series_rule = SeriesMappingRule(
         "close JavaScript comment": Text(" */"),
         "JavaScript comment": Text("// "),
         "variable (declare|declaration)": Text("var "),
+        "JavaScript and": Text(" && "),
+        "JavaScript or": Text(" || "),
+        "JavaScript equals": Text(" === "),
+        "jQuery variable": Text("$()") + Key("left:1"),
         # Python specific / generic programming languages.
         "python comment": Text("# "),
         "python separator": Text("# --------------------------------------------------"),  # @IgnorePep8
