@@ -46,7 +46,7 @@ series_rule = SeriesMappingRule(
     }
 )
 global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Git commands", context=global_context)
+grammar = Grammar("Programming terms", context=global_context)
 grammar.add_rule(series_rule)
 grammar.load()
 
