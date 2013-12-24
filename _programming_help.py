@@ -243,7 +243,7 @@ series_rule = SeriesMappingRule(
         "python comment": Text("# "),
         "python separator": Text("# --------------------------------------------------"),  # @IgnorePep8
         "python doc string": Text('"""Doc string."""') + Key("left:14, s-right:11"),  # @IgnorePep8
-        "python (def|define)": Text("def "),
+        "python (def|define|definition)": Text("def "),
         "variable assign": Text(" = "),
         "variable (plus|add)": Text(" + "),
         "variable (plus|add) equals": Text(" += "),
