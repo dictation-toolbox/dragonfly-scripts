@@ -1,5 +1,8 @@
 # dragonfly-scripts
 
+__Note: This text is currently not accurate, will be updated soon.__
+
+
 So far, this repository contains mostly modules provided with the Dragonfly [command-modules repository](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html).
 
 My additions are a Git commands module and a debug module.
