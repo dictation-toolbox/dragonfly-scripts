@@ -165,7 +165,7 @@ def _restore_clipboard(text):
     clipboard.copy_to_system()
 
 
-char = {
+charMap = {
     "(bar|vertical bar)": "|",
     "(dash|minus|hyphen)": "-",
     "(dot|period)": ".",
@@ -243,6 +243,7 @@ series_rule = SeriesMappingRule(
         "python comment": Text("# "),
         "python separator": Text("# --------------------------------------------------"),  # @IgnorePep8
         "python doc string": Text('"""Doc string."""') + Key("left:14, s-right:11"),  # @IgnorePep8
+        "python (def|define)": Text("def "),
         "variable assign": Text(" = "),
         "variable (plus|add)": Text(" + "),
         "variable (plus|add) equals": Text(" += "),
@@ -259,13 +260,14 @@ series_rule = SeriesMappingRule(
         "variable (dimension|dim)": Text("dim "),
         # Lorem ipsum.
         "Lorem ipsum [short]": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit."),  # @IgnorePep8
-        "Lorem ipsum medium": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "),  # @IgnorePep8
+        "Lorem ipsum medium": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."),  # @IgnorePep8
         "Lorem ipsum long": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),  # @IgnorePep8
+        "Lorem ipsum long fast": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),  # @IgnorePep8
     },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
-        Choice("char", char),
+        Choice("char", charMap),
     ],
     defaults={
         "n": 1
