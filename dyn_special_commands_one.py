@@ -1,11 +1,28 @@
+import os
+import winsound
+
 from dragonfly import *  # @UnusedWildImport
 
 
-def notification():
-    print("Dynamic module one loaded.")
-    import winsound
-#     winsound.MessageBeep(winsound.MB_OK)
-    winsound.PlaySound("SystemExit", winsound.SND_APPLICATION)
+WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
+SOUND_PATH = os.path.join(WORKING_PATH, "resources/sound/")
+SOUND_NOTIFY_LOADED = os.path.join(SOUND_PATH, "notify_load.wav")
+SOUND_NOTIFY_UNLOADED = os.path.join(SOUND_PATH, "notify_unload.wav")
+
+
+def notify_module_loaded():
+    print("--> Module loaded: Special Commands One")
+    play_sound(SOUND_NOTIFY_LOADED)
+
+
+def notify_module_unloaded():
+    print("<-- Module unloaded: Special Commands One")
+    play_sound(SOUND_NOTIFY_UNLOADED)
+
+
+def play_sound(sound):
+    flags = winsound.SND_FILENAME | winsound.SND_NODEFAULT | winsound.SND_ASYNC
+    winsound.PlaySound(sound, flags)
 
 
 class SeriesMappingRule(CompoundRule):
@@ -31,6 +48,7 @@ special_commands_one = SeriesMappingRule(
     mapping={
         # Experimentation:
         "show me the money": Text("$ONE$\n"),
+        "notify me": Function(notify_module_loaded),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -52,14 +70,14 @@ def dynamic_enable():
     global grammar
     if grammar:
         grammar.enable()
-        print('...one loaded.')
+        notify_module_loaded()
 
 
 def dynamic_disable():
     global grammar
     if grammar:
         grammar.disable()
-        print('...one unloaded.')
+        notify_module_unloaded()
 
 
 # Unload function which will be called at unload time.
