@@ -10,10 +10,10 @@ def directory_up(n):
 def control_break():
     try:
         Key("ctrl:down").execute()
-        Pause("10").execute()
+        Pause("10").execute()  # Pause needed for Git-bash, Console2, etc.
         Key("c").execute()
     finally:
-        Pause("10").execute()
+        Pause("10").execute()  # Pause needed for Git-bash, Console2, etc.
         Key("ctrl:up").execute()
 
 
