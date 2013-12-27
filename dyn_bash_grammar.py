@@ -1,10 +1,3 @@
-
-try:
-    import pkg_resources
-    pkg_resources.require("dragonfly >= 0.6.5beta1.dev-r99")
-except ImportError:
-    pass
-
 from dragonfly import *  # @UnusedWildImport
 
 
@@ -14,10 +7,28 @@ def directory_up(n):
     Text(txt).execute()
 
 
-config = Config("Bash commands")
-config.cmd = Section("Language section")
-config.cmd.map = Item(
-    {
+class SeriesMappingRule(CompoundRule):
+
+    def __init__(self, mapping, extras=None, defaults=None):
+        mapping_rule = MappingRule(mapping=mapping, extras=extras,
+            defaults=defaults, exported=False)
+        single = RuleRef(rule=mapping_rule)
+        series = Repetition(single, min=1, max=16, name="series")
+
+        compound_spec = "<series>"
+        compound_extras = [series]
+        CompoundRule.__init__(self, spec=compound_spec,
+            extras=compound_extras, exported=True)
+
+    def _process_recognition(self, node, extras):  # @UnusedVariable
+        series = extras["series"]
+        for action in series:
+            action.execute()
+
+
+special_commands_one = SeriesMappingRule(
+    mapping={
+        # Keywords:
         "(change (directory|dir)|C D)": Text("cd "),
         "(change (directory|dir)|C D) <text>": Text("cd %(text)s"),
         "(copy|C P)": Text("cp "),
@@ -38,7 +49,7 @@ config.cmd.map = Item(
         "(R M|remove file) <text>": Text("rm %(text)s"),
         "remove (directory|dir|folder|recursive)": Text("rm -rf "),
         "remove (directory|dir|folder|recursive) <text>": Text("rm -rf %(text)s"),  # @IgnorePep8
-        "L N": Text("ln "),
+        "(link|L N)": Text("ln "),
         "soft link": Text("ln -s "),
         "sudo": Text("sudo "),
         "tail": Text("tail "),
@@ -56,52 +67,41 @@ config.cmd.map = Item(
         "X M L lint schema": Text("xmllint -schema "),
         "X M L lint schema <text>": Text("xmllint -schema %(text)s"),
     },
-    namespace={
-        "Key": Key,
-        "Text": Text,
-        "Function": Function,
-})
-
-
-class KeystrokeRule(MappingRule):
-    exported = False
-    mapping = config.cmd.map
-    extras = [
+    extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
-        Dictation("text2"),
-    ]
-    defaults = {
-        "n": 1,
+    ],
+    defaults={
+        "n": 1
     }
+)
 
-
-alternatives = []
-alternatives.append(RuleRef(rule=KeystrokeRule()))
-single_action = Alternative(alternatives)
-sequence = Repetition(single_action, min=1, max=16, name="sequence")
-
-
-class RepeatRule(CompoundRule):
-
-    # Here we define this rule's spoken-form and special elements.
-    spec = "<sequence> [[[and] repeat [that]] <n> times]"
-    extras = [sequence, IntegerRef("n", 1, 100)]
-    defaults = {"n": 1}
-
-    def _process_recognition(self, node, extras):  # @UnusedVariable
-        sequence = extras["sequence"]   # A sequence of actions.
-        count = extras["n"]             # An integer repeat count.
-        for i in range(count):  # @UnusedVariable
-            for action in sequence:
-                action.execute()
-
-
-grammar = Grammar("Bash commands")
-grammar.add_rule(RepeatRule())
+global_context = None  # Context is None, so grammar will be globally active.
+grammar = Grammar("Python grammar", context=global_context)
+grammar.add_rule(special_commands_one)
 grammar.load()
+grammar.disable()
 
 
+def dynamic_enable():
+    global grammar
+    if grammar.enabled:
+        return False
+    else:
+        grammar.enable()
+        return True
+
+
+def dynamic_disable():
+    global grammar
+    if grammar.enabled:
+        grammar.disable()
+        return True
+    else:
+        return False
+
+
+# Unload function which will be called at unload time.
 def unload():
     global grammar
     if grammar:
