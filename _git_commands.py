@@ -52,6 +52,7 @@ gitopt = {
     "base": "--base",
     "dry run": "--dry-run",
     "delete": "--delete",
+    "cache": "--cache",
     "color": "--color",
     "continue": "--continue",
     "force": "--force",
@@ -97,8 +98,8 @@ series_rule = SeriesMappingRule(
         "git config add": Text("git config --add "),
         "git config add <text>": Text("git config --add %(text)s "),
         "git config list": Text("git config --list\n"),
-        "git (diff|difference|differentiate)": Text("git diff\n"),
-        "git (diff|difference|differentiate) <text>": Text("git diff $(text)s"),  # @IgnorePep8
+        "git (diff|difference|differentiate)": Text("git diff "),
+        "git (diff|difference|differentiate) <text>": Text("git diff %(text)s"),  # @IgnorePep8
         "git fetch": Text("git fetch\n"),
         "git fetch <text>": Text("git fetch %(text)s "),
         "git grep": Text("git grep \"\"") + Key("left:1"),
