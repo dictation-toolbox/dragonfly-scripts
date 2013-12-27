@@ -8,13 +8,13 @@ from dragonfly import *  # @UnusedWildImport
 
 import dyn_python_grammar
 import dyn_javascript_grammar
-
-dynamicLoaded = None
+import dyn_bash_grammar
 
 
 moduleMapping = {
     "python": dyn_python_grammar,
     "javascript": dyn_javascript_grammar,
+    "bash": dyn_bash_grammar
 }
 
 incompatibleModules = {
@@ -46,8 +46,8 @@ def notify_module_disabled(moduleName, sound=True):
         play_sound(SOUND_NOTIFY_DEACTIVATE)
 
 
-def notify_module_already_enabled(moduleName, sound=True):
-    print("Module already enabled.")
+def notify_module_action_aborted(message, sound=True):
+    print(message)
     if sound:
         play_sound(SOUND_NOTIFY_MESSAGE)
 
@@ -58,27 +58,33 @@ def play_sound(sound):
 
 
 def enable_module(module):
-    global dynamicLoaded
     disable_incompatible_modules(module)
     status = module.dynamic_enable()
     moduleName = module.__name__
     if status:
         notify_module_enabled(moduleName)
     else:
-        notify_module_already_enabled(moduleName)
+        notify_module_action_aborted("Module %s already enabled." % moduleName)
 
 
 def disable_module(module):
+    status = module.dynamic_disable()
     moduleName = module.__name__
-    global dynamicLoaded
-    notify_module_disabled(moduleName)
+    if status:
+        notify_module_disabled(moduleName)
+    else:
+        notify_module_action_aborted("Module %s was not enabled." % moduleName)
 
 
 def disable_incompatible_modules(enableModule):
-    for module in incompatibleModules[enableModule]:
+    for module in incompatibleModules.get(enableModule, {}):
         status = module.dynamic_disable()
+        moduleName = module.__name__
         if status:
-            notify_module_disabled(module.__name__, sound=False)
+            notify_module_disabled(moduleName, sound=False)
+        else:
+            notify_module_action_aborted(
+                "Module %s was not enabled." % moduleName, sound=False)
 
 
 class SeriesMappingRule(CompoundRule):
