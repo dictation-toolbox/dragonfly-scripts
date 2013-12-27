@@ -120,7 +120,7 @@ series_rule = SeriesMappingRule(
     }
 )
 global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Dynamic loader", context=global_context)
+grammar = Grammar("Dynamic manager", context=global_context)
 grammar.add_rule(series_rule)
 grammar.load()
 
