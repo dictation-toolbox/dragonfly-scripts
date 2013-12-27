@@ -81,9 +81,6 @@ def disable_incompatible_modules(enableModule):
             notify_module_disabled(module.__name__, sound=False)
 
 
-
-
-
 class SeriesMappingRule(CompoundRule):
 
     def __init__(self, mapping, extras=None, defaults=None):
