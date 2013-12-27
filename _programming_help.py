@@ -69,8 +69,8 @@ def snake_case_count(n):
     cutText = _select_and_cut_text(n)
     if cutText:
         endSpace = cutText.endswith(' ')
-        text = _cleanup_text(cutText)
-        newText = '_'.join(text.lower().split(' '))
+        text = _cleanup_text(cutText.lower())
+        newText = '_'.join(text.split(' '))
         if endSpace:
             newText = newText + ' '
         Text(newText).execute()
@@ -122,6 +122,38 @@ def expand_count(n):
         newText = cutText
         if endSpace:
             newText = newText + ' '
+        Text(newText).execute()
+    else:  # Failed to get text from clipboard.
+        Key('c-v').execute()  # Restore cut out text.
+    _restore_clipboard(saveText)
+
+
+def uppercase_text(text):
+    newText = ''.join(text.words)
+    Text(newText.upper()).execute()
+
+
+def uppercase_count(n):
+    saveText = _get_clipboard_text()
+    cutText = _select_and_cut_text(n)
+    if cutText:
+        newText = cutText.upper()
+        Text(newText).execute()
+    else:  # Failed to get text from clipboard.
+        Key('c-v').execute()  # Restore cut out text.
+    _restore_clipboard(saveText)
+
+
+def lowercase_text(text):
+    newText = ''.join(text.words)
+    Text(newText.lower()).execute()
+
+
+def lowercase_count(n):
+    saveText = _get_clipboard_text()
+    cutText = _select_and_cut_text(n)
+    if cutText:
+        newText = cutText.lower()
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -223,6 +255,10 @@ series_rule = SeriesMappingRule(
         "squash <text>": Function(squash_text),
         "squash <n> [words]": Function(squash_count),
         "expand <n> [words]": Function(expand_count),
+        "uppercase <text>": Function(uppercase_text),
+        "uppercase <n> [words]": Function(uppercase_count),
+        "lowercase <text>": Function(lowercase_text),
+        "lowercase <n> [words]": Function(lowercase_count),
         # Text corrections.
         "(add|fix) missing space": Key("c-left, space, c-right"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
