@@ -7,6 +7,16 @@ def directory_up(n):
     Text(txt).execute()
 
 
+def control_break():
+    try:
+        Key("ctrl:down").execute()
+        Pause("10").execute()
+        Key("c").execute()
+    finally:
+        Pause("10").execute()
+        Key("ctrl:up").execute()
+
+
 class SeriesMappingRule(CompoundRule):
 
     def __init__(self, mapping, extras=None, defaults=None):
@@ -31,6 +41,7 @@ special_commands_one = SeriesMappingRule(
         # Keywords:
         "(change (directory|dir)|C D)": Text("cd "),
         "(change (directory|dir)|C D) <text>": Text("cd %(text)s"),
+        "control break": Function(control_break),
         "(copy|C P)": Text("cp "),
         "(copy|C P) recursive": Text("cp -r "),
         "diff": Text("diff "),
