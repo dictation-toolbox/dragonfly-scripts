@@ -3,12 +3,6 @@
 __Note: There is currently a lot of heavy experimenting going on in this repository, so it is not stable. And there will most likely be a lot of tweaking in the weeks to come.__
 
 
-So far, this repository contains mostly modules provided with the Dragonfly [command-modules repository](http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/index.html).
-
-My additions are a Git commands module and a debug module.
-
-
-
 ---
 
 ## What?
