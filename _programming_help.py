@@ -1,9 +1,3 @@
-"""
-Notice: These helping macros are mainly focused on the programming languages
-        that I use.
-        (That is Python, JavaScript, HTML, CSS and unfortunately VBScript)
-
-"""
 from dragonfly import *  # @UnusedWildImport
 
 
@@ -42,6 +36,18 @@ series_rule = SeriesMappingRule(
         "Lorem ipsum medium": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."),  # @IgnorePep8
         "Lorem ipsum long": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),  # @IgnorePep8
         "Lorem ipsum long fast": Text("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),  # @IgnorePep8
+        # File extensions.
+        "dot (py|pie|P Y)": Text(".py"),
+        "dot T X T": Text(".txt"),
+        "dot S H": Text(".sh"),
+        # Web url extensions.
+        "dot S E": Text(".se"),
+        # Protocols.
+        "protocol H T T P": Text("http://"),
+        "protocol H T T P S": Text("https://"),
+        "protocol (git|G I T)": Text("git://"),
+        "protocol F T P": Text("ftp://"),
+        "protocol S S H": Text("ssh://"),
     },
     extras=[
         IntegerRef("n", 1, 100),
