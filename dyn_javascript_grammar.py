@@ -1,13 +1,6 @@
 from dragonfly import *  # @UnusedWildImport
 
 
-def notification():
-    print("Dynamic module two loaded.")
-    import winsound
-#     winsound.MessageBeep(winsound.MB_OK)
-    winsound.PlaySound("SystemExit", winsound.SND_APPLICATION)
-
-
 class SeriesMappingRule(CompoundRule):
 
     def __init__(self, mapping, extras=None, defaults=None):
@@ -29,8 +22,38 @@ class SeriesMappingRule(CompoundRule):
 
 special_commands_two = SeriesMappingRule(
     mapping={
-        # Experimentation:
-        "show me the money": Text("$$TWO$$\n"),
+        # Keywords:
+        "and": Text(" && "),
+        "or": Text(" || "),
+        "comment": Text("// "),
+        "open comment": Text("/* "),
+        "close comment": Text(" */"),
+        "equals": Text(" == "),
+        "equals (strict|strictly|exact|exactly)": Text(" === "),
+        "else": Text("else"),
+        "else if": Text("else if("),
+        "if": Text("if("),
+        "for": Text("for("),
+        "false": Text("false"),
+        "function": Text("function "),
+        "(jQuery (variable|var)|dollar paren)": Text("$()") + Key("left"),
+        "new": Text("new "),
+        "not equals": Text(" != "),
+        "not (strict|strictly|exact|exactly) equals": Text(" !== "),
+        "return": Text("return "),
+        "throw": Text("throw"),
+        "true": Text("true"),
+        "(variable|var)": Text("var"),
+        "assign": Text(" = "),
+        "(plus|add)": Text(" + "),
+        "(plus|add) equals": Text(" += "),
+        "(minus|subtract)": Text(" - "),
+        "(minus|subtract) equals": Text(" -= "),
+        "less than": Text(" < "),
+        "less equals": Text(" <= "),
+        "greater than": Text(" > "),
+        "greater equals": Text(" >= "),
+        "modulo": Key("space") + Key("percent") + Key("space"),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -42,7 +65,7 @@ special_commands_two = SeriesMappingRule(
 )
 
 global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("special_commands_two", context=global_context)
+grammar = Grammar("JavaScript grammar", context=global_context)
 grammar.add_rule(special_commands_two)
 grammar.load()
 grammar.disable()
@@ -50,16 +73,20 @@ grammar.disable()
 
 def dynamic_enable():
     global grammar
-    if grammar:
+    if grammar.enabled:
+        return False
+    else:
         grammar.enable()
-        print('...two loaded.')
+        return True
 
 
 def dynamic_disable():
     global grammar
-    if grammar:
+    if grammar.enabled:
         grammar.disable()
-        print('...two unloaded.')
+        return True
+    else:
+        return False
 
 
 # Unload function which will be called at unload time.

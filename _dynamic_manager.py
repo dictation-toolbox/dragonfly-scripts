@@ -1,49 +1,87 @@
 """
 
 """
+import os
+import winsound
 
 from dragonfly import *  # @UnusedWildImport
 
-import dyn_special_commands_one
-import dyn_special_commands_two
+import dyn_python_grammar
+import dyn_javascript_grammar
 
 dynamicLoaded = None
 
 
-def load_one():
+moduleMapping = {
+    "python": dyn_python_grammar,
+    "javascript": dyn_javascript_grammar,
+}
+
+incompatibleModules = {
+    dyn_python_grammar: [
+        dyn_javascript_grammar
+    ],
+    dyn_javascript_grammar: [
+        dyn_python_grammar
+    ]
+}
+
+
+WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
+SOUND_PATH = os.path.join(WORKING_PATH, "resources/sound/")
+SOUND_NOTIFY_ACTIVATE = os.path.join(SOUND_PATH, "notify_activate.wav")
+SOUND_NOTIFY_DEACTIVATE = os.path.join(SOUND_PATH, "notify_deactivate.wav")
+SOUND_NOTIFY_MESSAGE = os.path.join(SOUND_PATH, "notify_message.wav")
+
+
+def notify_module_enabled(moduleName, sound=True):
+    print("--> Module enabled: %s" % moduleName)
+    if sound:
+        play_sound(SOUND_NOTIFY_ACTIVATE)
+
+
+def notify_module_disabled(moduleName, sound=True):
+    print("<-- Module disabled: %s" % moduleName)
+    if sound:
+        play_sound(SOUND_NOTIFY_DEACTIVATE)
+
+
+def notify_module_already_enabled(moduleName, sound=True):
+    print("Module already enabled.")
+    if sound:
+        play_sound(SOUND_NOTIFY_MESSAGE)
+
+
+def play_sound(sound):
+    flags = winsound.SND_FILENAME | winsound.SND_NODEFAULT | winsound.SND_ASYNC
+    winsound.PlaySound(sound, flags)
+
+
+def enable_module(module):
     global dynamicLoaded
-    print("Loading one...")
-    if dynamicLoaded == "one":
-        print("One already loaded.")
-        return
-    if dynamicLoaded == "two":
-        dyn_special_commands_two.dynamic_disable()
-    dyn_special_commands_one.dynamic_enable()
-    dynamicLoaded = "one"
+    disable_incompatible_modules(module)
+    status = module.dynamic_enable()
+    moduleName = module.__name__
+    if status:
+        notify_module_enabled(moduleName)
+    else:
+        notify_module_already_enabled(moduleName)
 
 
-def unload_one():
+def disable_module(module):
+    moduleName = module.__name__
     global dynamicLoaded
-    dyn_special_commands_one.dynamic_disable()
-    dynamicLoaded = None
+    notify_module_disabled(moduleName)
 
 
-def load_two():
-    global dynamicLoaded
-    print("Loading two...")
-    if dynamicLoaded == "two":
-        print("Two already loaded.")
-        return
-    if dynamicLoaded == "one":
-        dyn_special_commands_one.dynamic_disable()
-    dyn_special_commands_two.dynamic_enable()
-    dynamicLoaded = "two"
+def disable_incompatible_modules(enableModule):
+    for module in incompatibleModules[enableModule]:
+        status = module.dynamic_disable()
+        if status:
+            notify_module_disabled(module.__name__, sound=False)
 
 
-def unload_two():
-    global dynamicLoaded
-    dyn_special_commands_two.dynamic_disable()
-    dynamicLoaded = None
+
 
 
 class SeriesMappingRule(CompoundRule):
@@ -66,14 +104,13 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        "load special commands one": Function(load_one),
-        "unload special commands one": Function(unload_one),
-        "load special commands two": Function(load_two),
-        "unload special commands two": Function(unload_two),
+        "enable <module> grammar": Function(enable_module),
+        "disable <module> grammar": Function(disable_module),
     },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
+        Choice("module", moduleMapping),
     ],
     defaults={
         "n": 1

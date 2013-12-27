@@ -1,28 +1,4 @@
-import os
-import winsound
-
 from dragonfly import *  # @UnusedWildImport
-
-
-WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
-SOUND_PATH = os.path.join(WORKING_PATH, "resources/sound/")
-SOUND_NOTIFY_LOADED = os.path.join(SOUND_PATH, "notify_load.wav")
-SOUND_NOTIFY_UNLOADED = os.path.join(SOUND_PATH, "notify_unload.wav")
-
-
-def notify_module_loaded():
-    print("--> Module loaded: Special Commands One")
-    play_sound(SOUND_NOTIFY_LOADED)
-
-
-def notify_module_unloaded():
-    print("<-- Module unloaded: Special Commands One")
-    play_sound(SOUND_NOTIFY_UNLOADED)
-
-
-def play_sound(sound):
-    flags = winsound.SND_FILENAME | winsound.SND_NODEFAULT | winsound.SND_ASYNC
-    winsound.PlaySound(sound, flags)
 
 
 class SeriesMappingRule(CompoundRule):
@@ -46,9 +22,33 @@ class SeriesMappingRule(CompoundRule):
 
 special_commands_one = SeriesMappingRule(
     mapping={
-        # Experimentation:
-        "show me the money": Text("$ONE$\n"),
-        "notify me": Function(notify_module_loaded),
+        # Keywords:
+        "and": Text(" and "),
+        "or": Text(" or "),
+        "comment": Text("# "),
+        "(def|define|definition)": Text("def "),
+        "doc string": Text('"""Doc string."""') + Key("left:14, s-right:11"),
+        "else": Text("else:\n"),
+        "(el if|else if)": Text("elif "),
+        "equals": Text(" == "),
+        "false": Text("False"),
+        "for": Text("for"),
+        "if": Text("if"),
+        "import": Text("import"),
+        "not equals": Text(" != "),
+        "raise exception": Text("raise Exception()") + Key("left"),
+        "return": Text("return"),
+        "true": Text("True"),
+        "assign": Text(" = "),
+        "(plus|add)": Text(" + "),
+        "(plus|add) equals": Text(" += "),
+        "(minus|subtract)": Text(" - "),
+        "(minus|subtract) equals": Text(" -= "),
+        "less than": Text(" < "),
+        "less equals": Text(" <= "),
+        "greater than": Text(" > "),
+        "greater equals": Text(" >= "),
+        "modulo": Key("space") + Key("percent") + Key("space"),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -60,7 +60,7 @@ special_commands_one = SeriesMappingRule(
 )
 
 global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("special_commands_one", context=global_context)
+grammar = Grammar("Python grammar", context=global_context)
 grammar.add_rule(special_commands_one)
 grammar.load()
 grammar.disable()
@@ -68,16 +68,20 @@ grammar.disable()
 
 def dynamic_enable():
     global grammar
-    if grammar:
+    if grammar.enabled:
+        return False
+    else:
         grammar.enable()
-        notify_module_loaded()
+        return True
 
 
 def dynamic_disable():
     global grammar
-    if grammar:
+    if grammar.enabled:
         grammar.disable()
-        notify_module_unloaded()
+        return True
+    else:
+        return False
 
 
 # Unload function which will be called at unload time.
