@@ -203,7 +203,8 @@ def _restore_clipboard(text):
 
 def reload_natlink():
     win = Window.get_foreground()
-    FocusWindow("natspeak", "Messages from Python Macros").execute()
+    FocusWindow(executable="natspeak",
+        title="Messages from Python Macros").execute()
     Pause("10").execute()
     Key("a-f, r").execute()
     Pause("10").execute()
@@ -319,7 +320,6 @@ class KeystrokeRule(MappingRule):
     extras = [
         IntegerRef("n", 1, 100),
         Dictation("text"),
-        Dictation("text2"),
         Choice("char", charMap),
     ]
     defaults = {
