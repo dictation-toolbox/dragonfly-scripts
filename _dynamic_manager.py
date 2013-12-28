@@ -6,23 +6,23 @@ import winsound
 
 from dragonfly import *  # @UnusedWildImport
 
-import dyn_python_grammar
-import dyn_javascript_grammar
-import dyn_bash_grammar
+import dyn_lang_python_grammar
+import dyn_lang_javascript_grammar
+import dyn_appl_bash_grammar
 
 
 moduleMapping = {
-    "python": dyn_python_grammar,
-    "javascript": dyn_javascript_grammar,
-    "bash": dyn_bash_grammar
+    "python": dyn_lang_python_grammar,
+    "javascript": dyn_lang_javascript_grammar,
+    "bash": dyn_appl_bash_grammar
 }
 
 incompatibleModules = {
-    dyn_python_grammar: [
-        dyn_javascript_grammar
+    dyn_lang_python_grammar: [
+        dyn_lang_javascript_grammar
     ],
-    dyn_javascript_grammar: [
-        dyn_python_grammar
+    dyn_lang_javascript_grammar: [
+        dyn_lang_python_grammar
     ]
 }
 
