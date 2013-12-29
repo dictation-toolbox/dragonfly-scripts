@@ -6,21 +6,22 @@ from Tkconstants import *  # @UnusedWildImport
 
 class TransparentWin(tk.Tk):
 
-    def __init__(self, baseName=""):
-        tk.Tk.__init__(self, baseName=baseName)
-#         self.Drag = Drag(self)
-        self.focus_force()
+    def __init__(self, baseName="", screenName=None, posX=0, posY=0,
+            totalWidth=1000, totalHeight=600):
+        tk.Tk.__init__(self, baseName=baseName, screenName=screenName)
         self.overrideredirect(True)  # Removes the title bar.
         self.resizable(False, False)
         self.wm_attributes("-topmost", True)
         self.attributes("-alpha", 0.5)
         self.wm_title("Mouse Grid")
-        self.wm_geometry('+' + str(0) + '+' + str(0))
+        geometry = "%dx%d+%d+%d" % (totalWidth, totalHeight, posX, posY)
+        self.wm_geometry(geometry)
         self.config(bg='#000000')
         # Border quirk, default border is 2. Simply give it -2 to cancel it.
 #         canvas = Tk.Canvas(self, bg='#ffffff', bd=-2)
-        totalWidth = 1280
-        totalHeight = 978
+        self._canvas = tk.Canvas(self, width=totalWidth, height=totalHeight,
+            bg='white', bd=-2)  # Border quirk, default border is 2.
+        self._canvas.pack()
         self.draw_grid(totalWidth, totalHeight)
 
     def draw_grid(self, totalWidth, totalHeight):
@@ -28,9 +29,6 @@ class TransparentWin(tk.Tk):
         sqX = totalWidth / numSq
         sqY = totalHeight / numSq
         thickevery = 3
-        canvas = tk.Canvas(self, width=totalWidth, height=totalHeight,
-            bg='white', bd=-2)  # Border quirk, default border is 2.
-        canvas.pack()
 
         x1 = 0
         x2 = totalWidth
@@ -53,7 +51,7 @@ class TransparentWin(tk.Tk):
             if yDiff > 0:
                 addToY += 1
                 yDiff -= 1
-            canvas.create_line(x1, y1, x2, y2, fill=fill)
+            self._canvas.create_line(x1, y1, x2, y2, fill=fill)
         # Draw vertical lines.
         y1 = 0
         y2 = numSq * sqY
@@ -73,14 +71,15 @@ class TransparentWin(tk.Tk):
             if xDiff > 0:
                 addToX += 1
                 xDiff -= 1
-            canvas.create_line(x1, y1, x2, y2, fill=fill)
+            self._canvas.create_line(x1, y1, x2, y2, fill=fill)
         # Add the numbers.
         position = 1
         for posY in range(1, 4):
             for posX in range(1, 4):
-                canvas.create_text(((((posX - 1) * 3) + 1) * sqX) + (sqX / 2),
-                                   ((((posY - 1) * 3) + 1) * sqY) + (sqY / 2),
-                                   text=str(position))
+                self._canvas.create_text(
+                    ((((posX - 1) * 3) + 1) * sqX) + (sqX / 2),
+                    ((((posY - 1) * 3) + 1) * sqY) + (sqY / 2),
+                    text=str(position))
                 position += 1
 
     def exit(self):
@@ -99,7 +98,9 @@ class TransparentWin(tk.Tk):
 
 
 def __run__():
-    win = TransparentWin()
+    win = TransparentWin(posX=1400, posY=10, totalWidth=800,
+                         totalHeight=300)
+    win.update()
     win.mainloop()
 
 

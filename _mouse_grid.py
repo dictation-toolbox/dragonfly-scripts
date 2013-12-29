@@ -10,28 +10,47 @@ import grid_experiment
 WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
 GRID_WINDOWS = {}
 
+MONITORS = DictList("MONITORS")
+for i, m in enumerate(monitors):
+    MONITORS[str(i + 1)] = m
+MONITOR_COUNT = len(MONITORS)
 
-def mouse_grid(n):
+"""
+65537, Rectangle(0.0, 0.0, 1280.0, 948.0)
+65539, Rectangle(1280.0, 0.0, 1280.0, 978.0)
+"""
+
+
+def mouse_grid(num):
     print("mouse_grid")
-#     sys.argv = ["Main"]
-    win = grid_experiment.TransparentWin()
-    GRID_WINDOWS["1"] = win
-    win.update()
-#     thread.start_new_thread(win.mainloop, ())
-#     path = os.sep.join([WORKING_PATH, "grid_experiment.py"])
-#     print("exec: %s" % r"C:\Python26\python.exe " + path)
-#     GRID_WINDOWS['1'] = subprocess.Popen([r"C:\Python26\python.exe", path])
-    print("after process...")
+    if num:
+        if num <= MONITOR_COUNT:
+            print("Selected monitor: %s" % num)
+    for index, monitor in MONITORS.items():
+        if not index in GRID_WINDOWS.keys():
+            r = monitor.rectangle
+            win = grid_experiment.TransparentWin(posX=int(r.x), posY=int(r.y),
+                totalWidth=int(r.dx), totalHeight=int(r.dy))
+            win.update()
+            GRID_WINDOWS[index] = win
+        else:
+            win = GRID_WINDOWS[index]
+        win.deiconify()
+        win.lift()
+        win.focus_force()
 
 
 def close_grid():
     print("close_grid")
-    win = GRID_WINDOWS["1"]
-    win.exit()
+    for win in GRID_WINDOWS.values():
+        win.withdraw()
 
 
 def mouse_pos(n):
-    print("mouse_pos")
+    print("mouse_pos: %s" % n)
+    win = GRID_WINDOWS["1"]
+    newGeometry = ""
+    win.geometry(newGeometry)
 
 
 def left_click():
