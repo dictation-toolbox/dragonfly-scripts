@@ -13,13 +13,14 @@ class TransparentWin(tk.Tk):
         self.overrideredirect(True)  # Removes the title bar.
         self.resizable(False, False)
         self.wm_attributes("-topmost", True)
-        self.attributes("-alpha", 0.6)
-        self.wm_geometry('+' + str(10) + '+' + str(10))
+        self.attributes("-alpha", 0.5)
+        self.wm_title("Mouse Grid")
+        self.wm_geometry('+' + str(0) + '+' + str(0))
         self.config(bg='#000000')
         # Border quirk, default border is 2. Simply give it -2 to cancel it.
 #         canvas = Tk.Canvas(self, bg='#ffffff', bd=-2)
-        totalWidth = 1000
-        totalHeight = 800
+        totalWidth = 1280
+        totalHeight = 978
         self.draw_grid(totalWidth, totalHeight)
 
     def draw_grid(self, totalWidth, totalHeight):
@@ -27,16 +28,20 @@ class TransparentWin(tk.Tk):
         sqX = totalWidth / numSq
         sqY = totalHeight / numSq
         thickevery = 3
-        canvas = tk.Canvas(self, width=numSq * sqX, height=numSq * sqY,
-            bg='white', bd=-2)
+        canvas = tk.Canvas(self, width=totalWidth, height=totalHeight,
+            bg='white', bd=-2)  # Border quirk, default border is 2.
         canvas.pack()
-        # Draw horizontal lines.
+
         x1 = 0
-        x2 = numSq * sqX
+        x2 = totalWidth
+        xDiff = totalWidth - (numSq * sqX)
+        yDiff = totalHeight - (numSq * sqY)
         count = 1
+        # Draw horizontal lines.
+        addToY = 0
         for k in range(0, sqY * (numSq + 1), sqY):
-            y1 = k
-            y2 = k
+            k += addToY
+            y1 = y2 = k
             if k == 0 or k == totalWidth:
                 continue
             elif count == thickevery:
@@ -45,13 +50,18 @@ class TransparentWin(tk.Tk):
             else:
                 fill = "gray"
                 count += 1
+            if yDiff > 0:
+                addToY += 1
+                yDiff -= 1
             canvas.create_line(x1, y1, x2, y2, fill=fill)
         # Draw vertical lines.
         y1 = 0
         y2 = numSq * sqY
+        count = 1
+        addToX = 0
         for k in range(0, sqX * (numSq + 1), sqX):
-            x1 = k
-            x2 = k
+            k += addToX
+            x1 = x2 = k
             if k == 0 or k == totalHeight:
                 continue
             elif count == thickevery:
@@ -60,6 +70,9 @@ class TransparentWin(tk.Tk):
             else:
                 fill = "gray"
                 count += 1
+            if xDiff > 0:
+                addToX += 1
+                xDiff -= 1
             canvas.create_line(x1, y1, x2, y2, fill=fill)
         # Add the numbers.
         position = 1
@@ -83,53 +96,6 @@ class TransparentWin(tk.Tk):
 
     def callback(self, event):
         print "clicked at", event.x, event.y
-
-
-# class Drag:
-#
-#     def __init__(self, par, dissable=None, releasecmd=None):
-#         self.Par = par
-#         self.Dissable = dissable
-#         self.ReleaseCMD = releasecmd
-#         self.Par.bind('<Button-1>', self.relative_position)
-#         self.Par.bind('<ButtonRelease-1>', self.drag_unbind)
-#
-#     def relative_position(self, event):
-#         cx, cy = self.Par.winfo_pointerxy()
-#         x, y = self.Par.position()
-#         self.OriX = x
-#         self.OriY = y
-#         self.RelX = cx - x
-#         self.RelY = cy - y
-#         self.Par.bind('<Motion>', self.drag_wid)
-#
-#     def drag_wid(self, event):
-#         cx, cy = self.Par.winfo_pointerxy()
-#         d = self.Dissable
-#         if d == 'x':
-#             x = self.OriX
-#             y = cy - self.RelY
-#         elif d == 'y':
-#             x = cx - self.RelX
-#             y = self.OriY
-#         else:
-#             x = cx - self.RelX
-#             y = cy - self.RelY
-#         if x < 0:
-#             x = 0
-#         if y < 0:
-#             y = 0
-#         self.Par.wm_geometry('+' + str(x) + '+' + str(y))
-#
-#     def drag_unbind(self, event):
-#         self.Par.unbind('<Motion>')
-#         if self.ReleaseCMD != None:
-#             self.ReleaseCMD()
-#
-#     def dissable(self):
-#         self.Par.unbind('<Button-1>')
-#         self.Par.unbind('<ButtonRelease-1>')
-#         self.Par.unbind('<Motion>')
 
 
 def __run__():
