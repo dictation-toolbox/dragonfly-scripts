@@ -1,7 +1,11 @@
 import os
-import subprocess
+# import thread
+
+# import subprocess
 
 from dragonfly import *  # @UnusedWildImport
+
+import grid_experiment
 
 WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
 GRID_WINDOWS = {}
@@ -9,14 +13,21 @@ GRID_WINDOWS = {}
 
 def mouse_grid(n):
     print("mouse_grid")
-    path = os.sep.join([WORKING_PATH, "grid_experiment.py"])
-    print("exec: %s" % r"C:\Python26\python.exe " + path)
-    GRID_WINDOWS['1'] = subprocess.Popen([r"C:\Python26\python.exe", path])
+#     sys.argv = ["Main"]
+    win = grid_experiment.TransparentWin()
+    GRID_WINDOWS["1"] = win
+    win.update()
+#     thread.start_new_thread(win.mainloop, ())
+#     path = os.sep.join([WORKING_PATH, "grid_experiment.py"])
+#     print("exec: %s" % r"C:\Python26\python.exe " + path)
+#     GRID_WINDOWS['1'] = subprocess.Popen([r"C:\Python26\python.exe", path])
     print("after process...")
 
 
 def close_grid():
     print("close_grid")
+    win = GRID_WINDOWS["1"]
+    win.exit()
 
 
 def mouse_pos(n):
@@ -64,7 +75,7 @@ navigate_rule = MappingRule(
     }
 )
 
-context = AppContext(executable="python", title="Mouse Grid")
+context = AppContext(executable="natspeak", title="Mouse Grid")
 grammar2 = Grammar("Mouse grid navigation", context=context)
 grammar2.add_rule(navigate_rule)  # Add the top-level rule.
 grammar2.load()  # Load the grammar.

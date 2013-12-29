@@ -6,8 +6,8 @@ from Tkconstants import *  # @UnusedWildImport
 
 class TransparentWin(tk.Tk):
 
-    def __init__(self):
-        tk.Tk.__init__(self)
+    def __init__(self, baseName=""):
+        tk.Tk.__init__(self, baseName=baseName)
 #         self.Drag = Drag(self)
         self.focus_force()
         self.overrideredirect(True)  # Removes the title bar.
@@ -83,7 +83,7 @@ class TransparentWin(tk.Tk):
                                    text=str(position))
                 position += 1
 
-    def exit(self, event):
+    def exit(self):
         self.destroy()
 
 #     def position(self):
