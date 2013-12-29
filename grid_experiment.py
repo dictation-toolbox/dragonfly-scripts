@@ -13,7 +13,7 @@ class TransparentWin(tk.Tk):
         self.resizable(False, False)
         self.wm_attributes("-topmost", True)
         self.attributes("-alpha", 0.5)
-        self.wm_title("Mouse Grid")
+        self.wm_title("Grid overlay")
         geometry = "%dx%d+%d+%d" % (totalWidth, totalHeight, posX, posY)
         self.wm_geometry(geometry)
         self.config(bg='#000000')
