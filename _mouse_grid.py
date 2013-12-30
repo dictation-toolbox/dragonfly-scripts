@@ -1,25 +1,14 @@
-import os
-# import thread
-
-# import subprocess
 
 from dragonfly import *  # @UnusedWildImport
 
 import grid_experiment
 
-WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
 GRID_WINDOWS = {}
-
 MONITORS = DictList("MONITORS")
 for i, m in enumerate(monitors):
     MONITORS[str(i + 1)] = m
 MONITOR_COUNT = len(MONITORS)
 MONITOR_SELECTED = None
-
-"""
-65537, Rectangle(0.0, 0.0, 1280.0, 948.0)
-65539, Rectangle(1280.0, 0.0, 1280.0, 978.0)
-"""
 
 
 def mouse_grid(pos=None):
@@ -27,16 +16,26 @@ def mouse_grid(pos=None):
     global MONITORS
     global MONITOR_COUNT
     global MONITOR_SELECTED
+    if MONITOR_COUNT == 1 and pos == None:
+        pos = 1
     if pos:
         if pos <= MONITOR_COUNT:
             print("Selected monitor: %s" % pos)
             index = pos - 1
             monitor = MONITORS[str(pos)]
-            r = monitor.rectangle
-            win = grid_experiment.TransparentWin(posX=int(r.x), posY=int(r.y),
-                totalWidth=int(r.dx), totalHeight=int(r.dy))
-            win.update()
-            GRID_WINDOWS[index] = win
+            if not index in GRID_WINDOWS.keys():
+                r = monitor.rectangle
+                if MONITOR_COUNT == 1:
+                    monitorNum = None
+                else:
+                    monitorNum = str(pos)
+                win = grid_experiment.TransparentWin(posX=int(r.x),
+                    posY=int(r.y), totalWidth=int(r.dx), totalHeight=int(r.dy),
+                    monitorNum=monitorNum)
+                win.update()
+                GRID_WINDOWS[index] = win
+            else:
+                win = GRID_WINDOWS[index]
             win.deiconify()
             win.lift()
             win.focus_force()
@@ -47,7 +46,8 @@ def mouse_grid(pos=None):
         if not index in GRID_WINDOWS.keys():
             r = monitor.rectangle
             win = grid_experiment.TransparentWin(posX=int(r.x), posY=int(r.y),
-                totalWidth=int(r.dx), totalHeight=int(r.dy))
+                totalWidth=int(r.dx), totalHeight=int(r.dy),
+                monitorNum=str(index))
             win.update()
             GRID_WINDOWS[index] = win
         else:
@@ -82,8 +82,9 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
         variables = [pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
         MONITOR_SELECTED = pos1
         close_grid(exclude=pos1)
+        win = GRID_WINDOWS[str(MONITOR_SELECTED)]
+        win.remove_monitor_num()
     positions = [str(var) for var in variables if var != None]
-#     print("mouse_pos: %s" % (', '.join(positions)))
     for position in positions:
         _reposition_grid(position)
 
@@ -106,8 +107,7 @@ def right_click():
 
 init_rule = MappingRule(
     mapping={
-        "grid [<pos>]": Function(mouse_grid),
-        "grid": Function(mouse_grid),
+        "[mouse] grid [<pos>]": Function(mouse_grid),
     },
     extras=[
         IntegerRef("pos", 1, 10),
@@ -128,7 +128,7 @@ navigate_rule = MappingRule(
         "<pos1> [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>]": Function(mouse_pos),  # @IgnorePep8
         "[left] click": Function(left_click),
         "right click": Function(right_click),
-        "close grid": Function(close_grid),
+        "(close [[mouse] grid]|escape|cancel|stop|abort)": Function(close_grid),  # @IgnorePep8
     },
     extras=[  # Interval 1-9.
         IntegerRef("pos1", 1, 10),
