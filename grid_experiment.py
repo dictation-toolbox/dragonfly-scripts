@@ -31,7 +31,8 @@ class Grid:
         self.height = height
         self.calculate_axis()
 
-    def calculate_axis(self, columns=9):
+    def calculate_axis(self):
+        columns = 9
         stepX = self.width / columns
         stepY = self.height / columns
         xDiff = (self.width - 1) - (columns * stepX)
@@ -94,85 +95,15 @@ class TransparentWin(tk.Tk):
         # Add eventual monitor number.
         if self._grid.monitorNum:
             self.draw_monitor_number()
-        # Add the numbers.
-#         position = 1
-#         for posY in range(1, 4):
-#             for posX in range(1, 4):
-#                 self._canvas.create_text(
-#                     ((((posX - 1) * 3) + 1) * sqX) + (sqX / 2),
-#                     ((((posY - 1) * 3) + 1) * sqY) + (sqY / 2),
-#                     text=str(position))
-#                 position += 1
-
-
-
-#         xAxis = []
-#         yAxis = []
-#         totalWidth = self._totalWidth
-#         totalHeight = self._totalHeight
-#         numSq = 9
-#         sqX = totalWidth / numSq
-#         sqY = totalHeight / numSq
-#         thickevery = 3
-#
-#         x1 = 0
-#         x2 = totalWidth
-#         xDiff = totalWidth - (numSq * sqX)
-#         yDiff = totalHeight - (numSq * sqY)
-#         count = 1
-#         # Draw horizontal lines.
-#         addToY = 0
-#         for k in range(0, sqY * (numSq + 1), sqY):
-#             k += addToY
-#             y1 = y2 = k
-#             yAxis.append(k)
-#             if k == 0 or k == totalWidth:
-#                 continue
-#             elif count == thickevery:
-#                 fill = "black"
-#                 count = 1
-#             else:
-#                 fill = "gray"
-#                 count += 1
-#             if yDiff > 0:
-#                 addToY += 1
-#                 yDiff -= 1
-#             self._canvas.create_line(x1, y1, x2, y2, fill=fill)
-#         # Draw vertical lines.
-#         y1 = 0
-#         y2 = numSq * sqY
-#         count = 1
-#         addToX = 0
-#         for k in range(0, sqX * (numSq + 1), sqX):
-#             k += addToX
-#             x1 = x2 = k
-#             xAxis.append(k)
-#             if k == 0 or k == totalHeight:
-#                 continue
-#             elif count == thickevery:
-#                 fill = "black"
-#                 count = 1
-#             else:
-#                 fill = "gray"
-#                 count += 1
-#             if xDiff > 0:
-#                 addToX += 1
-#                 xDiff -= 1
-#             self._canvas.create_line(x1, y1, x2, y2, fill=fill)
-#         # Add eventual monitor number.
-#         if self._monitorNum:
-#             self.add_monitor_num()
-#         print("x: %s" % xAxis)
-#         print("y: %s" % yAxis)
-#         # Add the numbers.
-#         position = 1
-#         for posY in range(1, 4):
-#             for posX in range(1, 4):
-#                 self._canvas.create_text(
-#                     ((((posX - 1) * 3) + 1) * sqX) + (sqX / 2),
-#                     ((((posY - 1) * 3) + 1) * sqY) + (sqY / 2),
-#                     text=str(position))
-#                 position += 1
+        # Add section the numbers.
+        position = 1
+        for y in range(3):
+            for x in range(3):
+                self._canvas.create_text(
+                    (axisX[(3 * x) + 1] + axisX[(3 * x) + 2]) / 2,
+                    (axisY[(3 * y) + 1] + axisY[(3 * y) + 2]) / 2,
+                    text=str(position))
+                position += 1
 
     def draw_monitor_number(self):
         positionX, positionY = self._grid.get_center_point()
@@ -187,14 +118,6 @@ class TransparentWin(tk.Tk):
 
     def exit(self):
         self.destroy()
-
-#     def position(self):
-#         _filter = re.compile(r"(\d+)?x?(\d+)?([+-])(\d+)([+-])(\d+)")
-#         pos = self.winfo_geometry()
-#         filtered = _filter.search(pos)
-#         self.X = int(filtered.group(4))
-#         self.Y = int(filtered.group(6))
-#         return self.X, self.Y
 
     def callback(self, event):
         print "clicked at", event.x, event.y
@@ -213,7 +136,7 @@ def __run__():
     win.lift()
     win.focus_force()
     pass
-    #win.mainloop()
+    #win.mainloop()  # Needed to handle internal events.
 
 
 if __name__ == '__main__':
