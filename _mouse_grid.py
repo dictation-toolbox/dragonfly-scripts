@@ -18,36 +18,41 @@ def mouse_grid(pos=None):
     global MONITOR_SELECTED
     if MONITOR_COUNT == 1 and pos == None:
         pos = 1
-    if pos:
-        if pos <= MONITOR_COUNT:
-            print("Selected monitor: %s" % pos)
-            index = pos - 1
-            monitor = MONITORS[str(pos)]
-            if not index in GRID_WINDOWS.keys():
-                r = monitor.rectangle
-                if MONITOR_COUNT == 1:
-                    monitorNum = None
-                else:
-                    monitorNum = str(pos)
-                win = grid_experiment.TransparentWin(posX=int(r.x),
-                    posY=int(r.y), totalWidth=int(r.dx), totalHeight=int(r.dy),
-                    monitorNum=monitorNum)
-                win.update()
-                GRID_WINDOWS[index] = win
+    if pos and pos <= MONITOR_COUNT:
+        print("Selected monitor: %s" % pos)
+        index = pos - 1
+        monitor = MONITORS[str(pos)]
+        if not index in GRID_WINDOWS.keys():
+            r = monitor.rectangle
+            r = Rectangle(x1=10, y1=400, dx=400, dy=400)
+            if MONITOR_COUNT == 1:
+                monitorNum = None
             else:
-                win = GRID_WINDOWS[index]
-            win.deiconify()
-            win.lift()
-            win.focus_force()
-            MONITOR_SELECTED = pos
-            return
+                monitorNum = str(pos)
+            grid = grid_experiment.Grid(positionX=int(r.x),
+                positionY=int(r.y), width=int(r.dx), height=int(r.dy),
+                monitorNum=monitorNum)
+            win = grid_experiment.TransparentWin(grid)
+            win.draw_grid()
+            win.update()
+            GRID_WINDOWS[index] = win
+        else:
+            win = GRID_WINDOWS[index]
+        win.deiconify()
+        win.lift()
+        win.focus_force()
+        MONITOR_SELECTED = pos
+        return
 
     for index, monitor in MONITORS.items():
         if not index in GRID_WINDOWS.keys():
             r = monitor.rectangle
-            win = grid_experiment.TransparentWin(posX=int(r.x), posY=int(r.y),
-                totalWidth=int(r.dx), totalHeight=int(r.dy),
+            r = Rectangle(x1=10 + ((int(index) - 1) * 500), y1=400, dx=400, dy=400)  # @IgnorePep8
+            grid = grid_experiment.Grid(positionX=int(r.x),
+                positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                 monitorNum=str(index))
+            win = grid_experiment.TransparentWin(grid)
+            win.draw_grid()
             win.update()
             GRID_WINDOWS[index] = win
         else:

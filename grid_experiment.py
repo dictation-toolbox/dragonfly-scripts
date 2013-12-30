@@ -3,15 +3,18 @@ from Tkconstants import *  # @UnusedWildImport
 
 
 class Grid:
-    def __init__(self, monitorWidth=1024, monitorHeight=768, monitorNum=None):
-        self.monitorWidth = monitorWidth
-        self.monitorHeight = monitorHeight
+    def __init__(self, positionX=0, positionY=0, width=1024, height=768,
+                 monitorNum=None):
+        self.monitorPositionX = positionX
+        self.monitorPositionY = positionY
+        self.monitorWidth = width
+        self.monitorHeight = height
         self.monitorNum = monitorNum
         self.reset()
 
     def reset(self):
-        self.positionX = 0
-        self.positionY = 0
+        self.positionX = self.monitorPositionX
+        self.positionY = self.monitorPositionY
         self.width = self.monitorWidth
         self.height = self.monitorHeight
         self.calculate_axis()
@@ -31,10 +34,10 @@ class Grid:
     def calculate_axis(self, columns=9):
         stepX = self.width / columns
         stepY = self.height / columns
-        xDiff = self.width - (columns * stepX)
-        yDiff = self.height - (columns * stepY)
-        self._grid.axisX = self._calculate_one_axis(stepX, columns, xDiff)
-        self._grid.axisY = self._calculate_one_axis(stepY, columns, yDiff)
+        xDiff = (self.width - 1) - (columns * stepX)
+        yDiff = (self.height - 1) - (columns * stepY)
+        self.axisX = self._calculate_one_axis(stepX, columns, xDiff)
+        self.axisY = self._calculate_one_axis(stepY, columns, yDiff)
 
     def _calculate_one_axis(self, step, columns, diff):
         axis = []
@@ -70,7 +73,39 @@ class TransparentWin(tk.Tk):
         self._monitorNumberItem = None
 
     def draw_grid(self):
-        pass
+        self._draw_lines(minimumX=0, maximumX=self._grid.width,
+                         axisX=self._grid.axisX, minimumY=0,
+                         maximumY=self._grid.height, axisY=self._grid.axisY)
+
+    def _draw_lines(self, minimumX, maximumX, axisX, minimumY, maximumY,
+                    axisY):
+        for index, position in enumerate(axisY):
+            fill = "black"
+            if index % 3:
+                fill = "gray"
+            self._canvas.create_line(minimumX, position, maximumX, position,
+                                     fill=fill)
+        for index, position in enumerate(axisX):
+            fill = "black"
+            if index % 3:
+                fill = "gray"
+            self._canvas.create_line(position, minimumY, position, maximumY,
+                                     fill=fill)
+        # Add eventual monitor number.
+        if self._grid.monitorNum:
+            self.draw_monitor_number()
+        # Add the numbers.
+#         position = 1
+#         for posY in range(1, 4):
+#             for posX in range(1, 4):
+#                 self._canvas.create_text(
+#                     ((((posX - 1) * 3) + 1) * sqX) + (sqX / 2),
+#                     ((((posY - 1) * 3) + 1) * sqY) + (sqY / 2),
+#                     text=str(position))
+#                 position += 1
+
+
+
 #         xAxis = []
 #         yAxis = []
 #         totalWidth = self._totalWidth
@@ -142,7 +177,7 @@ class TransparentWin(tk.Tk):
     def draw_monitor_number(self):
         positionX, positionY = self._grid.get_center_point()
         self._monitorNumberItem = self._canvas.create_text(positionX,
-            positionY, fill="#555555", text=str(self._monitorNum),
+            positionY, fill="#555555", text=str(self._grid.monitorNum),
             font="Arial 100 bold")
 
     def remove_monitor_number(self):
@@ -166,10 +201,19 @@ class TransparentWin(tk.Tk):
 
 
 def __run__():
-    win = TransparentWin(posX=1400, posY=10, totalWidth=800,
-                         totalHeight=300)
+    from dragonfly import Rectangle
+    r = Rectangle(x1=10, y1=400, dx=400, dy=400)
+    grid = Grid(positionX=int(r.x),
+        positionY=int(r.y), width=int(r.dx), height=int(r.dy),
+        monitorNum=None)
+    win = TransparentWin(grid)
+    win.draw_grid()
     win.update()
-    win.mainloop()
+    win.deiconify()
+    win.lift()
+    win.focus_force()
+    pass
+    #win.mainloop()
 
 
 if __name__ == '__main__':
