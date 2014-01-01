@@ -36,7 +36,7 @@ def _poll_grids():
 def _stop_polling():
     global POLLING_COUNT
 #     global POLLING_THREAD
-    print("Stopping polling.")
+#     print("Stopping polling.")
 #     POLLING_THREAD.cancel()
     POLLING_COUNT = 0
 
@@ -99,7 +99,7 @@ def close_grid(exclude=None):
         count += 1
     if count == len(GRID_WINDOWS):
         MONITOR_SELECTED = None
-        _stop_polling()
+#         _stop_polling()
 
 
 def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
@@ -313,13 +313,31 @@ def __run__():
 #     win.refresh()
 #     pass
 #     win.mainloop()  # Needed to handle internal events.
+
+#     mouse_grid()
+#     time.sleep(2)
+#     mouse_pos(pos1=2)
+#     time.sleep(2)
+#     mouse_pos(pos1=5)
+#     time.sleep(2)
+#     left_click()
+
     mouse_grid()
+    time.sleep(1)
+    mouse_pos(pos1=2)
+    time.sleep(1)
+    mouse_pos(pos1=5)
+    time.sleep(1)
+    mouse_mark()
+
+    mouse_grid()
+    time.sleep(1)
+    mouse_pos(pos1=2)
     time.sleep(2)
     mouse_pos(pos1=1)
-    time.sleep(2)
-    mouse_pos(pos1=5)
-    time.sleep(2)
-    left_click()
+    time.sleep(1)
+    mouse_drag()
+    time.sleep(1)
 
 #     time.sleep(5)
     pass

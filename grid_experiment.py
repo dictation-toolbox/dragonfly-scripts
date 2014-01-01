@@ -2,6 +2,7 @@ import win32api
 import win32con
 import Tkinter as tk
 from Tkconstants import *  # @UnusedWildImport
+import time
 
 
 class Grid:
@@ -53,8 +54,8 @@ class Grid:
 
     def get_absolute_centerpoint(self):
         x, y = self.get_relative_center_point()
-        positionX = self.monitorPositionX + self.positionX + x
-        positionY = self.monitorPositionY + self.positionY + y
+        positionX = self.positionX + x
+        positionY = self.positionY + y
         return (positionX, positionY)
 
     def _get_coordinates(self):
@@ -121,11 +122,20 @@ class TransparentWin(tk.Tk):
             bd=-2)  # Border quirk, default border is 2.
         self._canvas.pack()
         self._monitorNumberItem = None
+        self._timestamp = time.time()
+#         self.after(1000, self._timer)
+
+#     def _timer(self):
+#         """Timeout after 8 seconds of inactivity."""
+#         if self.winfo_viewable():
+#             if time.time() - self._timestamp > 8:
+#                 self.withdraw()
 
     def get_grid(self):
         return self._grid
 
     def refresh(self):
+        self._timestamp = time.time()
         self.deiconify()  # Quirk: Secondary window won't refresh without this.
         self._canvas.delete("all")
         self.wm_geometry(self._grid.get_geometry_string())
@@ -218,6 +228,7 @@ def mouse_drag(startX, startY, targetX, targetY):
     win32api.SetCursorPos((startX, startY))
     _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
     win32api.SetCursorPos((targetX, targetY))
+    time.sleep(0.1)  # Required on secondary screen.
     _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
