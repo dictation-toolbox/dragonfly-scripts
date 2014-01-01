@@ -1,3 +1,5 @@
+import win32api
+import win32con
 import Tkinter as tk
 from Tkconstants import *  # @UnusedWildImport
 
@@ -24,13 +26,6 @@ class Grid:
                                     self.positionY)
         return geometry
 
-    def new_position(self, positionX, positionY, width, height):
-        self.positionX = positionX
-        self.positionY = positionY
-        self.width = width
-        self.height = height
-        self.calculate_axis()
-
     def calculate_axis(self):
         columns = 9
         stepX = self.width / columns
@@ -51,13 +46,67 @@ class Grid:
                 diff -= 1
         return axis
 
-    def get_center_point(self):
+    def get_relative_center_point(self):
         positionX = self.width / 2
         positionY = self.height / 2
         return (positionX, positionY)
 
+    def get_absolute_centerpoint(self):
+        x, y = self.get_relative_center_point()
+        positionX = self.monitorPositionX + self.positionX + x
+        positionY = self.monitorPositionY + self.positionY + y
+        return (positionX, positionY)
+
+    def _get_coordinates(self):
+        return {
+            1: (self.axisX[0], self.axisY[0], self.axisX[3], self.axisY[3]),
+            2: (self.axisX[3], self.axisY[0], self.axisX[6], self.axisY[3]),
+            3: (self.axisX[6], self.axisY[0], self.axisX[9], self.axisY[3]),
+            4: (self.axisX[0], self.axisY[3], self.axisX[3], self.axisY[6]),
+            5: (self.axisX[3], self.axisY[3], self.axisX[6], self.axisY[6]),
+            6: (self.axisX[6], self.axisY[3], self.axisX[9], self.axisY[6]),
+            7: (self.axisX[0], self.axisY[6], self.axisX[3], self.axisY[9]),
+            8: (self.axisX[3], self.axisY[6], self.axisX[6], self.axisY[9]),
+            9: (self.axisX[6], self.axisY[6], self.axisX[9], self.axisY[9]),
+        }
+
+    def recalculate_to_section(self, section):
+        coordinates = self._get_coordinates()
+        (x1, y1, x2, y2) = coordinates[section]
+        self.positionX = self.positionX + x1
+        self.positionY = self.positionY + y1
+        self.width = x2 - x1
+        self.height = y2 - y1
+        self._adjust_edges()
+
+    def _adjust_edges(self):
+        if self.positionX > (self.monitorPositionX + 2):
+            self.positionX -= 2
+            self.width += 2
+        if self.positionY > (self.monitorPositionY + 2):
+            self.positionY -= 2
+            self.height += 2
+        if (self.positionX + self.width) < (self.monitorPositionX + \
+                                            self.monitorWidth - 2):
+            self.width += 2
+        if (self.positionY + self.height) < (self.monitorPositionY + \
+                                             self.monitorWidth - 2):
+            self.height += 2
+
+    def move_to_section(self, section):
+        coordinates = self._get_coordinates()
+        (x1, y1, x2, y2) = coordinates[section]
+        sectionPositionX = (x2 + x1) / 2
+        sectionPositionY = (y2 + y1) / 2
+        centerX, centerY = self.get_relative_center_point()
+        moveX = sectionPositionX - centerX
+        moveY = sectionPositionY - centerY
+        self.positionX = self.positionX + moveX
+        self.positionY = self.positionY + moveY
+
 
 class TransparentWin(tk.Tk):
+
     def __init__(self, grid):
         tk.Tk.__init__(self, baseName="")  # baseName replaces argv params.
         self._grid = grid
@@ -65,7 +114,7 @@ class TransparentWin(tk.Tk):
         self.resizable(False, False)
         self.wm_attributes("-topmost", True)
         self.attributes("-alpha", 0.5)
-        self.wm_title("Grid overlay")  # Important for Dragonfly context.
+        self.wm_title("Grid overlay")  # Important for Dragonfly's Context.
         self.wm_geometry(self._grid.get_geometry_string())
         self._canvas = tk.Canvas(master=self, width=self._grid.width,
             height=self._grid.height, bg='white',
@@ -73,13 +122,34 @@ class TransparentWin(tk.Tk):
         self._canvas.pack()
         self._monitorNumberItem = None
 
-    def draw_grid(self):
-        self._draw_lines(minimumX=0, maximumX=self._grid.width,
-                         axisX=self._grid.axisX, minimumY=0,
-                         maximumY=self._grid.height, axisY=self._grid.axisY)
+    def get_grid(self):
+        return self._grid
 
-    def _draw_lines(self, minimumX, maximumX, axisX, minimumY, maximumY,
-                    axisY):
+    def refresh(self):
+        self.deiconify()  # Quirk: Secondary window won't refresh without this.
+        self._canvas.delete("all")
+        self.wm_geometry(self._grid.get_geometry_string())
+        self.draw_grid()
+        if self._grid.monitorNum:  # Add eventual monitor number.
+            self.draw_monitor_number()
+        self.deiconify()
+        self.lift()
+        self.focus_force()
+
+    def draw_grid(self):
+        self._draw_lines()
+        if self._grid.width == self._grid.monitorWidth:
+            self.draw_monitor_number()
+        if self._grid.width > 80 and self._grid.height > 80:
+            self._draw_section_numbers()
+
+    def _draw_lines(self):
+        minimumX = 0
+        maximumX = self._grid.width
+        axisX = self._grid.axisX
+        minimumY = 0
+        maximumY = self._grid.height
+        axisY = self._grid.axisY
         for index, position in enumerate(axisY):
             fill = "black"
             if index % 3:
@@ -92,51 +162,84 @@ class TransparentWin(tk.Tk):
                 fill = "gray"
             self._canvas.create_line(position, minimumY, position, maximumY,
                                      fill=fill)
-        # Add eventual monitor number.
-        if self._grid.monitorNum:
-            self.draw_monitor_number()
-        # Add section the numbers.
+        self.update()
+
+    def _draw_section_numbers(self):
+        axisX = self._grid.axisX
+        axisY = self._grid.axisY
         position = 1
         for y in range(3):
             for x in range(3):
                 self._canvas.create_text(
                     (axisX[(3 * x) + 1] + axisX[(3 * x) + 2]) / 2,
                     (axisY[(3 * y) + 1] + axisY[(3 * y) + 2]) / 2,
-                    text=str(position))
+                    text=str(position), font="Arial 10 bold")
                 position += 1
+        self.update()
 
     def draw_monitor_number(self):
-        positionX, positionY = self._grid.get_center_point()
-        self._monitorNumberItem = self._canvas.create_text(positionX,
-            positionY, fill="#555555", text=str(self._grid.monitorNum),
-            font="Arial 100 bold")
-
-    def remove_monitor_number(self):
-        self._canvas.delete(self._monitorNumText)
-        self.update_idletasks()
-        self.deiconify()
+        if self._monitorNumberItem == None:
+            positionX, positionY = self._grid.get_relative_center_point()
+            self._monitorNumberItem = self._canvas.create_text(positionX,
+                positionY, fill="#aaaaaa", text=str(self._grid.monitorNum),
+                font="Arial 100 bold")
+            self.update()
 
     def exit(self):
         self.destroy()
 
-    def callback(self, event):
-        print "clicked at", event.x, event.y
+
+def _mouse_event(value, x, y):
+    win32api.mouse_event(value, x, y, 0, 0)
+
+
+def move_mouse(positionX, positionY):
+    win32api.SetCursorPos((positionX, positionY))
+
+
+def left_click_mouse(positionX, positionY):
+    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
+    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
+
+
+def double_click_mouse(positionX, positionY):
+    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
+    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
+    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
+    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
+
+
+def right_click_mouse(positionX, positionY):
+    _mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, positionX, positionY)
+    _mouse_event(win32con.MOUSEEVENTF_RIGHTUP, positionX, positionY)
+
+
+def mouse_drag(startX, startY, targetX, targetY):
+    win32api.SetCursorPos((startX, startY))
+    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
+    win32api.SetCursorPos((targetX, targetY))
+    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
 def __run__():
-    from dragonfly import Rectangle
-    r = Rectangle(x1=10, y1=400, dx=400, dy=400)
-    grid = Grid(positionX=int(r.x),
-        positionY=int(r.y), width=int(r.dx), height=int(r.dy),
-        monitorNum=None)
+#     import win32api
+#     print("Get cursor position: %s, %s" % win32api.GetCursorPos())
+#     print()
+    grid = Grid(positionX=10, positionY=400, width=400, height=400,
+        monitorNum="1")
     win = TransparentWin(grid)
     win.draw_grid()
     win.update()
     win.deiconify()
     win.lift()
     win.focus_force()
+    # Reposition
+    grid = win.get_grid()
+    grid.recalculate_to_section(5)
+    grid.calculate_axis()
+    win.refresh()
     pass
-    #win.mainloop()  # Needed to handle internal events.
+    win.mainloop()  # Needed to handle internal events.
 
 
 if __name__ == '__main__':
