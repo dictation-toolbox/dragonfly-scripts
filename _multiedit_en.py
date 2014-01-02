@@ -1,6 +1,6 @@
 #
 # A command-module for Dragonfly, for generic editing help.
-# A modification of the _multiedit-en.py script at:
+# A heavily modified version of the _multiedit-en.py script at:
 # http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/mod-_multiedit.html  # @IgnorePep8
 # Licensed under the LGPL, see <http://www.gnu.org/licenses/>
 #
@@ -304,9 +304,9 @@ config.cmd.map = Item(
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
         # Canceling of started sentence.
-        "<text> (cancel|abort) (dictation|sentence|this)"
+        "<text> (cancel|abort) (dictation|sentence|this)": Text(""),
         # Reload Natlink.
-        "reload Natlink": Function(reload_natlink)
+        "reload Natlink": Function(reload_natlink),
     },
     namespace={
         "Key": Key,
