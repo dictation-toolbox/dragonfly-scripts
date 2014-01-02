@@ -41,24 +41,29 @@ def _stop_polling():
     POLLING_COUNT = 0
 
 
-def mouse_grid(pos=None):
+def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
+               pos6=None, pos7=None, pos8=None, pos9=None):
     global GRID_WINDOWS
     global MONITORS
     global MONITOR_COUNT
     global MONITOR_SELECTED
+    # Hide any existing grid windows.
+    for win in GRID_WINDOWS.values():
+        if win.winfo_viewable():
+            win.withdraw()
 #     global POLLING_THREAD
-    if MONITOR_COUNT == 1 and pos == None:
-        pos = 1
-    if pos and pos <= MONITOR_COUNT:
-        index = pos - 1
-        monitor = MONITORS[str(pos)]
-        MONITOR_SELECTED = pos
+    if MONITOR_COUNT == 1 and pos1 == None:
+        pos1 = 1
+    if pos1 and pos1 <= MONITOR_COUNT:
+        index = pos1 - 1
+        monitor = MONITORS[str(pos1)]
+        MONITOR_SELECTED = pos1
         if not index in GRID_WINDOWS.keys():
             r = monitor.rectangle
             if MONITOR_COUNT == 1:
                 monitorNum = None
             else:
-                monitorNum = str(pos)
+                monitorNum = str(pos1)
             grid = grid_experiment.Grid(positionX=int(r.x),
                 positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                 monitorNum=monitorNum)
@@ -69,6 +74,8 @@ def mouse_grid(pos=None):
             win = GRID_WINDOWS[index]
             win.get_grid().reset()
             win.refresh(MONITOR_SELECTED)
+        if pos2:  # Continue using other given positions.
+            mouse_pos(pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9)
     else:
         MONITOR_SELECTED = None
         for index, monitor in MONITORS.items():
@@ -79,9 +86,9 @@ def mouse_grid(pos=None):
                     monitorNum=str(index))
                 win = grid_experiment.TransparentWin(grid)
                 win.refresh(MONITOR_SELECTED)
-                GRID_WINDOWS[index] = win
+                GRID_WINDOWS[int(index) - 1] = win
             else:
-                win = GRID_WINDOWS[index]
+                win = GRID_WINDOWS[int(index) - 1]
                 win.get_grid().reset()
                 win.refresh(MONITOR_SELECTED)
 #     POLLING_THREAD = threading.Timer(.5, _poll_grids)
@@ -106,22 +113,26 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
               pos7=None, pos8=None, pos9=None):
     global GRID_WINDOWS
     global MONITOR_SELECTED
-    if MONITOR_SELECTED != None:
+    monitorSelected = MONITOR_SELECTED
+    # Hide any existing grid windows.
+    for win in GRID_WINDOWS.values():
+        if win.winfo_viewable():
+            win.withdraw()
+    if monitorSelected != None:
         variables = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
     else:
         variables = [pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
-        MONITOR_SELECTED = pos1
+        monitorSelected = pos1
         close_grid(exclude=pos1)
-        print("Selected: %s" % MONITOR_SELECTED)
-    win = GRID_WINDOWS[str(MONITOR_SELECTED)]
+    win = GRID_WINDOWS[monitorSelected - 1]
     sections = [var for var in variables if var != None]
     for section in sections:
         _reposition_grid(win, section)
-    win.refresh(MONITOR_SELECTED)
+    win.refresh(monitorSelected)
+    MONITOR_SELECTED = monitorSelected
 
 
 def _reposition_grid(win, section):
-    print("Reposition: %s" % section)
     grid = win.get_grid()
     if grid.width > 25:
         grid.recalculate_to_section(section)
@@ -134,10 +145,12 @@ def _init_mouse_action():
     global GRID_WINDOWS
     global MONITOR_SELECTED
     if MONITOR_SELECTED != None:
-        win = GRID_WINDOWS[str(MONITOR_SELECTED)]
+        win = GRID_WINDOWS[MONITOR_SELECTED - 1]
         (positionX, positionY) = win.get_grid().get_absolute_centerpoint()
         close_grid()
         return (positionX, positionY)
+    else:
+        close_grid()
 
 
 def go():
@@ -166,7 +179,7 @@ def double_click():
 def mouse_mark():
     global MOUSE_MARK_POSITION
     MOUSE_MARK_POSITION = _init_mouse_action()
-    print("Mark: %s:%s" % MOUSE_MARK_POSITION)
+    mouse_grid()
 
 
 def mouse_drag():
@@ -174,7 +187,6 @@ def mouse_drag():
     if MOUSE_MARK_POSITION:
         (startX, startY) = MOUSE_MARK_POSITION
         (targetX, targetY) = _init_mouse_action()
-        print("Drag: %s:%s, %s:%s" % (startX, startY, targetX, targetY))
         grid_experiment.mouse_drag(startX, startY, targetX, targetY)
         MOUSE_MARK_POSITION = None
     else:
@@ -183,14 +195,25 @@ def mouse_drag():
 
 init_rule = MappingRule(
     mapping={
-        "[mouse] grid [<pos>]": Function(mouse_grid),
+        "[mouse] grid [<pos1>] [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>]": Function(mouse_grid),  # @IgnorePep8
+        # In case focus on the grid/grids has been lost.
+        "(close|cancel|stop|abort) [mouse] grid": Function(close_grid),  # @IgnorePep8
+        "go": Function(go)
     },
     extras=[
-        IntegerRef("pos", 1, 10),
+        IntegerRef("pos1", 1, 10),
+        IntegerRef("pos2", 1, 10),
+        IntegerRef("pos3", 1, 10),
+        IntegerRef("pos4", 1, 10),
+        IntegerRef("pos5", 1, 10),
+        IntegerRef("pos6", 1, 10),
+        IntegerRef("pos7", 1, 10),
+        IntegerRef("pos8", 1, 10),
+        IntegerRef("pos9", 1, 10),
         Dictation("text"),
     ],
     defaults={
-        "pos": None
+        "pos1": None
     }
 )
 global_context = None  # Context is None, so grammar will be globally active.
@@ -207,8 +230,8 @@ navigate_rule = MappingRule(
         "double click": Function(double_click),
         "mark": Function(mouse_mark),
         "drag": Function(mouse_drag),
-        "(close [[mouse] grid]|escape|cancel|stop|abort)": Function(close_grid),  # @IgnorePep8
-        "go": Function(go)
+        "(close|cancel|stop|abort) [[mouse] grid]": Function(close_grid),  # @IgnorePep8
+        "go": Function(go),
     },
     extras=[  # Interval 1-9.
         IntegerRef("pos1", 1, 10),
@@ -309,8 +332,30 @@ def __run__():
 #     pass
 #     win.mainloop()  # Needed to handle internal events.
 
-# Draw and redraw grids.
+# Open grid on all monitors, select monitor 2bowl.
     mouse_grid()
+    time.sleep(2)
+    mouse_pos(pos1=1)
+    time.sleep(2)
+    mouse_pos(pos1=2)
+    time.sleep(2)
+    go()
+
+    time.sleep(3)
+
+# Open grid on all monitors, select monitor 2.
+    mouse_grid()
+    time.sleep(2)
+    mouse_pos(pos1=2)
+    time.sleep(2)
+    mouse_pos(pos1=2)
+    time.sleep(2)
+    go()
+
+    time.sleep(3)
+
+# Quick select monitor grid, on monitor 1.
+    mouse_grid(1)
     time.sleep(2)
     mouse_pos(pos1=2)
     time.sleep(2)
@@ -318,11 +363,16 @@ def __run__():
     time.sleep(2)
     left_click()
 
-    mouse_grid()
-    time.sleep(2)
-    mouse_pos(pos1=1)
+    time.sleep(3)
+
+# Quick select monitor grid, and monitor 2.
+    mouse_grid(2)
     time.sleep(2)
     mouse_pos(pos1=2)
+    time.sleep(2)
+    mouse_pos(pos1=5)
+    time.sleep(2)
+    left_click()
 
 # Mouse mark and mouse drag.
 #     mouse_grid()
@@ -332,7 +382,7 @@ def __run__():
 #     mouse_pos(pos1=5)
 #     time.sleep(1)
 #     mouse_mark()
-# 
+
 #     mouse_grid()
 #     time.sleep(1)
 #     mouse_pos(pos1=2)
