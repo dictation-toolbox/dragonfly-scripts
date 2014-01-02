@@ -221,6 +221,18 @@ def right_click_mouse(positionX, positionY):
     _mouse_event(win32con.MOUSEEVENTF_RIGHTUP, positionX, positionY)
 
 
+def control_click(positionX, positionY):
+    win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)  # @IgnorePep8
+    left_click_mouse(positionX, positionY)
+    win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+
+def shift_click(positionX, positionY):
+    win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)  # @IgnorePep8
+    left_click_mouse(positionX, positionY)
+    win32api.keybd_event(win32con.VK_SHIFT, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+
 def mouse_drag(startX, startY, targetX, targetY):
     win32api.SetCursorPos((startX, startY))
     _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)

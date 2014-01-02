@@ -176,6 +176,18 @@ def double_click():
     grid_experiment.double_click_mouse(positionX, positionY)
 
 
+def control_click():
+    (positionX, positionY) = _init_mouse_action()
+    grid_experiment.move_mouse(positionX, positionY)
+    grid_experiment.control_click(positionX, positionY)
+
+
+def shift_click():
+    (positionX, positionY) = _init_mouse_action()
+    grid_experiment.move_mouse(positionX, positionY)
+    grid_experiment.shift_click(positionX, positionY)
+
+
 def mouse_mark():
     global MOUSE_MARK_POSITION
     MOUSE_MARK_POSITION = _init_mouse_action()
@@ -228,6 +240,8 @@ navigate_rule = MappingRule(
         "[left] click": Function(left_click),
         "right click": Function(right_click),
         "double click": Function(double_click),
+        "control click": Function(control_click),
+        "shift click": Function(shift_click),
         "mark": Function(mouse_mark),
         "drag": Function(mouse_drag),
         "(close|cancel|stop|abort) [[mouse] grid]": Function(close_grid),  # @IgnorePep8
