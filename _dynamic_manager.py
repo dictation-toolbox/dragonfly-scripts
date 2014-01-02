@@ -28,19 +28,19 @@ incompatibleModules = {
 def notify_module_enabled(moduleName, useSound=True):
     print("--> Module enabled: %s" % moduleName)
     if useSound:
-        sound.play(sound.NOTIFY_ACTIVATE)
+        sound.play(sound.SND_ACTIVATE)
 
 
 def notify_module_disabled(moduleName, useSound=True):
     print("<-- Module disabled: %s" % moduleName)
     if useSound:
-        sound.play(sound.NOTIFY_DEACTIVATE)
+        sound.play(sound.SND_DEACTIVATE)
 
 
 def notify_module_action_aborted(message, useSound=True):
     print(message)
     if useSound:
-        sound.play(sound.NOTIFY_MESSAGE)
+        sound.play(sound.SND_MESSAGE)
 
 
 def enable_module(module):

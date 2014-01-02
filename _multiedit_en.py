@@ -9,6 +9,7 @@ import re
 
 from dragonfly import *  # @UnusedWildImport
 
+import lib.sound as sound
 
 release = Key("shift:up, ctrl:up")
 
@@ -202,7 +203,8 @@ def _restore_clipboard(text):
 
 
 def cancel_dictation():
-    pass
+    print("Dictation canceled.")
+    sound.play(sound.SND_DING)
 
 
 def reload_natlink():
@@ -308,6 +310,7 @@ config.cmd.map = Item(
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
         # Canceling of started sentence.
+        # Useful for canceling what inconsiderate loudmouths have started.
         "<text> (cancel|abort) (dictation|sentence|this)": Function(cancel_dictation),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
