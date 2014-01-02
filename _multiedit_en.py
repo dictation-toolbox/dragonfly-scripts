@@ -201,6 +201,10 @@ def _restore_clipboard(text):
     clipboard.copy_to_system()
 
 
+def cancel_dictation():
+    pass
+
+
 def reload_natlink():
     win = Window.get_foreground()
     FocusWindow(executable="natspeak",
@@ -304,7 +308,7 @@ config.cmd.map = Item(
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
         # Canceling of started sentence.
-        "<text> (cancel|abort) (dictation|sentence|this)": Text(""),
+        "<text> (cancel|abort) (dictation|sentence|this)": Function(cancel_dictation),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },
