@@ -143,6 +143,8 @@ class TransparentWin(tk.Tk):
         self.deiconify()
         self.lift()
         self.focus_force()
+        self.focus_set()
+        self.focus()
 
     def draw_grid(self, monitorSelected=False):
         self._draw_lines()
@@ -237,7 +239,7 @@ def mouse_drag(startX, startY, targetX, targetY):
     win32api.SetCursorPos((startX, startY))
     _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
     win32api.SetCursorPos((targetX, targetY))
-    time.sleep(0.1)  # Fix for glitching on secondary screen.
+    time.sleep(0.3)  # Fix for glitching on secondary screen.
     _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
