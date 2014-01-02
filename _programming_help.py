@@ -26,6 +26,12 @@ series_rule = SeriesMappingRule(
         "close html comment": Text(" -->"),
         # VBScript specific.
         "variable (dimension|dim)": Text("dim "),
+        # Closures.
+        "angle brackets": Text("<>"),
+        "brackets": Text("[]"),
+        "braces": Text("{}"),
+        "parens": Text("()"),
+        # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),
         "bar": Text("bar"),

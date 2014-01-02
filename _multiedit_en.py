@@ -211,6 +211,7 @@ def reload_natlink():
     win.set_foreground()
 
 
+# For repeating of characters.
 charMap = {
     "(bar|vertical bar)": "|",
     "(dash|minus|hyphen)": "-",
@@ -259,7 +260,7 @@ config.cmd.map = Item(
         "space [<n>]": release + Key("space:%(n)d"),
         "enter [<n>]": release + Key("enter:%(n)d"),
         "tab [<n>]": Key("tab:%(n)d"),
-        "delete [<n>]": release + Key("del:%(n)d"),
+        "delete <n>": release + Key("del:%(n)d"),
         "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps"),
@@ -302,6 +303,8 @@ config.cmd.map = Item(
         "(add|fix) missing space": Key("c-left, space, c-right"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
+        # Canceling of started sentence.
+        "<text> (cancel|abort) (dictation|sentence|this)"
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink)
     },
