@@ -52,6 +52,7 @@ def mouse_grid(pos=None):
     if pos and pos <= MONITOR_COUNT:
         index = pos - 1
         monitor = MONITORS[str(pos)]
+        MONITOR_SELECTED = pos
         if not index in GRID_WINDOWS.keys():
             r = monitor.rectangle
             if MONITOR_COUNT == 1:
@@ -62,14 +63,14 @@ def mouse_grid(pos=None):
                 positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                 monitorNum=monitorNum)
             win = grid_experiment.TransparentWin(grid)
-            win.refresh()
+            win.refresh(MONITOR_SELECTED)
             GRID_WINDOWS[index] = win
         else:
             win = GRID_WINDOWS[index]
             win.get_grid().reset()
-            win.refresh()
-        MONITOR_SELECTED = pos
+            win.refresh(MONITOR_SELECTED)
     else:
+        MONITOR_SELECTED = None
         for index, monitor in MONITORS.items():
             if not index in GRID_WINDOWS.keys():
                 r = monitor.rectangle
@@ -77,13 +78,12 @@ def mouse_grid(pos=None):
                     positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                     monitorNum=str(index))
                 win = grid_experiment.TransparentWin(grid)
-                win.refresh()
+                win.refresh(MONITOR_SELECTED)
                 GRID_WINDOWS[index] = win
             else:
                 win = GRID_WINDOWS[index]
                 win.get_grid().reset()
-                win.refresh()
-            MONITOR_SELECTED = None
+                win.refresh(MONITOR_SELECTED)
 #     POLLING_THREAD = threading.Timer(.5, _poll_grids)
 
 
@@ -113,23 +113,21 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
         MONITOR_SELECTED = pos1
         close_grid(exclude=pos1)
         print("Selected: %s" % MONITOR_SELECTED)
+    win = GRID_WINDOWS[str(MONITOR_SELECTED)]
     sections = [var for var in variables if var != None]
     for section in sections:
-        _reposition_grid(section)
+        _reposition_grid(win, section)
+    win.refresh(MONITOR_SELECTED)
 
 
-def _reposition_grid(section):
-    global GRID_WINDOWS
-    global MONITOR_SELECTED
+def _reposition_grid(win, section):
     print("Reposition: %s" % section)
-    win = GRID_WINDOWS[str(MONITOR_SELECTED)]
     grid = win.get_grid()
     if grid.width > 25:
         grid.recalculate_to_section(section)
         grid.calculate_axis()
     else:
         grid.move_to_section(section)
-    win.refresh()
 
 
 def _init_mouse_action():
@@ -294,9 +292,6 @@ MONITOR_COUNT = len(MONITORS)
 
 def __run__():
     import time
-#     import win32api
-#     print("Get cursor position: %s, %s" % win32api.GetCursorPos())
-#     print()
 
 #     grid = grid_experiment.Grid(positionX=10, positionY=400, width=400,
 #                                 height=400, monitorNum="1")
@@ -314,32 +309,39 @@ def __run__():
 #     pass
 #     win.mainloop()  # Needed to handle internal events.
 
-#     mouse_grid()
-#     time.sleep(2)
-#     mouse_pos(pos1=2)
-#     time.sleep(2)
-#     mouse_pos(pos1=5)
-#     time.sleep(2)
-#     left_click()
-
+# Draw and redraw grids.
     mouse_grid()
-    time.sleep(1)
-    mouse_pos(pos1=2)
-    time.sleep(1)
-    mouse_pos(pos1=5)
-    time.sleep(1)
-    mouse_mark()
-
-    mouse_grid()
-    time.sleep(1)
+    time.sleep(2)
     mouse_pos(pos1=2)
     time.sleep(2)
-    mouse_pos(pos1=1)
-    time.sleep(1)
-    mouse_drag()
-    time.sleep(1)
+    mouse_pos(pos1=5)
+    time.sleep(2)
+    left_click()
 
-#     time.sleep(5)
+    mouse_grid()
+    time.sleep(2)
+    mouse_pos(pos1=1)
+    time.sleep(2)
+    mouse_pos(pos1=2)
+
+# Mouse mark and mouse drag.
+#     mouse_grid()
+#     time.sleep(1)
+#     mouse_pos(pos1=2)
+#     time.sleep(1)
+#     mouse_pos(pos1=5)
+#     time.sleep(1)
+#     mouse_mark()
+# 
+#     mouse_grid()
+#     time.sleep(1)
+#     mouse_pos(pos1=2)
+#     time.sleep(2)
+#     mouse_pos(pos1=1)
+#     time.sleep(1)
+#     mouse_drag()
+#     time.sleep(1)
+
     pass
 
 if __name__ == '__main__':

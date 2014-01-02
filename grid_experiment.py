@@ -134,23 +134,21 @@ class TransparentWin(tk.Tk):
     def get_grid(self):
         return self._grid
 
-    def refresh(self):
+    def refresh(self, monitorSelected=False):
         self._timestamp = time.time()
         self.deiconify()  # Quirk: Secondary window won't refresh without this.
         self._canvas.delete("all")
         self.wm_geometry(self._grid.get_geometry_string())
-        self.draw_grid()
-        if self._grid.monitorNum:  # Add eventual monitor number.
-            self.draw_monitor_number()
+        self.draw_grid(monitorSelected)
         self.deiconify()
         self.lift()
         self.focus_force()
 
-    def draw_grid(self):
+    def draw_grid(self, monitorSelected=False):
         self._draw_lines()
-        if self._grid.width == self._grid.monitorWidth:
+        if not monitorSelected and self._grid.width == self._grid.monitorWidth:
             self.draw_monitor_number()
-        if self._grid.width > 80 and self._grid.height > 80:
+        elif self._grid.width > 80 and self._grid.height > 80:
             self._draw_section_numbers()
 
     def _draw_lines(self):
@@ -188,12 +186,11 @@ class TransparentWin(tk.Tk):
         self.update()
 
     def draw_monitor_number(self):
-        if self._monitorNumberItem == None:
-            positionX, positionY = self._grid.get_relative_center_point()
-            self._monitorNumberItem = self._canvas.create_text(positionX,
-                positionY, fill="#aaaaaa", text=str(self._grid.monitorNum),
-                font="Arial 100 bold")
-            self.update()
+        positionX, positionY = self._grid.get_relative_center_point()
+        self._monitorNumberItem = self._canvas.create_text(positionX,
+            positionY, fill="#aaaaaa", text=str(self._grid.monitorNum),
+            font="Arial 100 bold")
+        self.update()
 
     def exit(self):
         self.destroy()
@@ -228,7 +225,7 @@ def mouse_drag(startX, startY, targetX, targetY):
     win32api.SetCursorPos((startX, startY))
     _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
     win32api.SetCursorPos((targetX, targetY))
-    time.sleep(0.1)  # Required on secondary screen.
+    time.sleep(0.1)  # Fix for glitching on secondary screen.
     _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
