@@ -1,13 +1,19 @@
-#
-# A command-module for Dragonfly, for generic editing help.
-# A heavily modified version of the _multiedit-en.py script at:
-# http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/mod-_multiedit.html  # @IgnorePep8
-# Licensed under the LGPL, see <http://www.gnu.org/licenses/>
-#
+"""
+A command-module for Dragonfly, for generic editing help.
+
+-----------------------------------------------------------------------------
+This is a heavily modified version of the _multiedit-en.py script at:
+http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/mod-_multiedit.html  # @IgnorePep8
+Licensed under the LGPL, see http://www.gnu.org/licenses/
+
+"""
 
 import re
 
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import Key, Text, Choice, Clipboard, Pause, Window, \
+    FocusWindow, Config, Section, Item, Function, Dictation, Mimic, \
+    IntegerRef, MappingRule, Alternative, RuleRef, Grammar, Repetition, \
+    CompoundRule
 
 import lib.sound as sound
 
@@ -15,11 +21,25 @@ release = Key("shift:up, ctrl:up")
 
 
 def camel_case_text(text):
+    """Formats dictated text to camel case.
+
+    Example:
+    "'camel case my new variable'" => "myNewVariable".
+
+    """
     newText = _camelify(text.words)
     Text(newText).execute()
 
 
 def camel_case_count(n):
+    """Formats n words to the left of the cursor to camel case.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'my new variable' *pause* 'camel case 3'" => "myNewVariable".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -31,10 +51,16 @@ def camel_case_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def _camelify(words):
+    """Takes a list of words and returns a string formatted to camel case.
+
+    Example:
+    ["my", "new", "variable"] => "myNewVariable".
+
+    """
     newText = ''
     for word in words:
         if newText == '':
@@ -45,11 +71,25 @@ def _camelify(words):
 
 
 def pascal_case_text(text):
+    """Formats dictated text to pascal case.
+
+    Example:
+    "'pascal case my new variable'" => "PyNewVariable".
+
+    """
     newText = str(text).title()
     Text(newText).execute()
 
 
 def pascal_case_count(n):
+    """Formats n words to the left of the cursor to pascal case.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'my new variable' *pause* 'pascal case 3'" => "MyNewVariable".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -61,15 +101,29 @@ def pascal_case_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def snake_case_text(text):
+    """Formats dictated text to snake case.
+
+    Example:
+    "'snake case my new variable'" => "my_new_variable".
+
+    """
     newText = '_'.join(text.words)
     Text(newText).execute()
 
 
 def snake_case_count(n):
+    """Formats n words to the left of the cursor to snake case.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'my new variable' *pause* 'snake case 3'" => "my_new_variable".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -81,15 +135,30 @@ def snake_case_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def squash_text(text):
+    """Formats dictated text with whitespace removed.
+
+    Example:
+    "'squash my new variable'" => "mynewvariable".
+
+    """
     newText = ''.join(text.words)
     Text(newText).execute()
 
 
 def squash_count(n):
+    """Formats n words to the left of the cursor with whitespace removed.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'my new variable' *pause* 'squash 3'" => "mynewvariable".
+    "'my<tab>new variable' *pause* 'squash 3'" => "mynewvariable".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -101,10 +170,19 @@ def squash_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def expand_count(n):
+    """Formats n words to the left of the cursor by adding whitespace in
+    certain positions.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example, with to compact code:
+    "result=(width1+width2)/2 'expand 9' " => "result = (width1 + width2) / 2"
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -117,7 +195,7 @@ def expand_count(n):
             hit = reg.search(cutText)
             count += 1
         reg = re.compile(
-            r'([a-zA-Z0-9_\"\'][=\+\-\*/]|[=\+\-\*/][a-zA-Z0-9_\"\'])')
+            r'([a-zA-Z0-9_\"\'\)][=\+\-\*/]|[=\+\-\*/][a-zA-Z0-9_\"\'\(])')
         hit = reg.search(cutText)
         count = 0
         while hit and count < 10:
@@ -130,15 +208,29 @@ def expand_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def uppercase_text(text):
-    newText = ''.join(text.words)
+    """Formats dictated text to upper case.
+
+    Example:
+    "'upper case my new variable'" => "MY NEW VARIABLE".
+
+    """
+    newText = str(text)
     Text(newText.upper()).execute()
 
 
 def uppercase_count(n):
+    """Formats n words to the left of the cursor to upper case.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'my new variable' *pause* 'upper case 3'" => "MY NEW VARIABLE".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -146,15 +238,29 @@ def uppercase_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def lowercase_text(text):
-    newText = ''.join(text.words)
+    """Formats dictated text to lower case.
+
+    Example:
+    "'lower case John Johnson'" => "john johnson".
+
+    """
+    newText = str(text)
     Text(newText.lower()).execute()
 
 
 def lowercase_count(n):
+    """Formats n words to the left of the cursor to lower case.
+    Note that word count differs between editors and programming languages.
+    The examples are all from Eclipse/Python.
+
+    Example:
+    "'John Johnson' *pause* 'lower case 2'" => "john johnson".
+
+    """
     saveText = _get_clipboard_text()
     cutText = _select_and_cut_text(n)
     if cutText:
@@ -162,10 +268,18 @@ def lowercase_count(n):
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
-    _restore_clipboard(saveText)
+    _set_clipboard_text(saveText)
 
 
 def _cleanup_text(text):
+    """Cleans up the text before formatting to camel, pascal or snake case.
+
+    Removes dashes, underscores, single quotes (apostrophes) and replaces
+    them with a space character. Multiple spaces, tabs or new line characters
+    are collapsed to one space character.
+    Returns the result as a string.
+
+    """
     text = text.strip()
     text = text.replace('-', ' ')
     text = text.replace('_', ' ')
@@ -175,11 +289,16 @@ def _cleanup_text(text):
 
 
 def _get_clipboard_text():
+    """Returns the text contents of the system clip board."""
     clipboard = Clipboard()
     return clipboard.get_system_text()
 
 
 def _select_and_cut_text(wordCount):
+    """Selects wordCount number of words to the left of the cursor and cuts
+    them out of the text. Returns the text from the system clip board.
+
+    """
     clipboard = Clipboard()
     clipboard.set_system_text('')
     try:  # Try selecting n number of words.
@@ -196,18 +315,30 @@ def _select_and_cut_text(wordCount):
     return clipboard.get_system_text()
 
 
-def _restore_clipboard(text):
+def _set_clipboard_text(text):
+    """Sets the system clip board content."""
     clipboard = Clipboard()
     clipboard.set_text(text)  # Restore previous clipboard text.
     clipboard.copy_to_system()
 
 
 def cancel_dictation():
-    print("Dictation canceled.")
+    """Used to cancel an ongoing dictation.
+
+    This method does effectively nothing. It only notifies the user that the
+    dictation was in fact canceled, with a sound and a message in the Natlink
+    feedback window.
+    Example:
+    "'random mumbling or other noises cancel this'" => No action.
+    "'random mumbling or other noises abort dictation'" => No action.
+
+    """
+    print("* Dictation canceled, by user command. *")
     sound.play(sound.SND_DING)
 
 
 def reload_natlink():
+    """Reloads Natlink and custom Python modules."""
     win = Window.get_foreground()
     FocusWindow(executable="natspeak",
         title="Messages from Python Macros").execute()
@@ -266,7 +397,7 @@ config.cmd.map = Item(
         "space [<n>]": release + Key("space:%(n)d"),
         "enter [<n>]": release + Key("enter:%(n)d"),
         "tab [<n>]": Key("tab:%(n)d"),
-        "delete <n>": release + Key("del:%(n)d"),
+        "delete [<n>]": release + Key("del:%(n)d"),
         "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps"),
@@ -310,7 +441,7 @@ config.cmd.map = Item(
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
         # Canceling of started sentence.
-        # Useful for canceling what inconsiderate loudmouths have started.
+        # Useful for canceling what inconsiderate loud mouths have started.
         "<text> (cancel|abort) (dictation|sentence|this)": Function(cancel_dictation),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
@@ -323,9 +454,7 @@ config.cmd.map = Item(
 
 
 class KeystrokeRule(MappingRule):
-
     exported = False
-
     mapping = config.cmd.map
     extras = [
         IntegerRef("n", 1, 100),
@@ -346,7 +475,6 @@ sequence = Repetition(single_action, min=1, max=16, name="sequence")
 
 
 class RepeatRule(CompoundRule):
-
     # Here we define this rule's spoken-form and special elements.
     spec = "<sequence> [[[and] repeat [that]] <n> times]"
     extras = [
@@ -366,13 +494,13 @@ class RepeatRule(CompoundRule):
         release.execute()
 
 
-grammar = Grammar("Multiedit")  # Create this module's grammar.
+grammar = Grammar("Generic edit")  # Create this module's grammar.
 grammar.add_rule(RepeatRule())  # Add the top-level rule.
 grammar.load()  # Load the grammar.
 
 
-# Unload function which will be called at unload time.
 def unload():
+    """Unload function which will be called at unload time."""
     global grammar
     if grammar:
         grammar.unload()
