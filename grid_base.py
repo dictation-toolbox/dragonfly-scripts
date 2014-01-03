@@ -5,7 +5,7 @@ from Tkconstants import *  # @UnusedWildImport
 import time
 
 
-class Grid:
+class GridConfig:
     def __init__(self, positionX=0, positionY=0, width=1024, height=768,
                  monitorNum=None):
         self.monitorPositionX = positionX
@@ -238,9 +238,11 @@ def shift_click(positionX, positionY):
 
 def mouse_drag(startX, startY, targetX, targetY):
     win32api.SetCursorPos((startX, startY))
+    time.sleep(0.1)
     _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
+    time.sleep(0.1)
     win32api.SetCursorPos((targetX, targetY))
-    time.sleep(0.3)  # Fix for glitching on secondary screen.
+    time.sleep(0.2)
     _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
@@ -248,7 +250,7 @@ def __run__():
 #     import win32api
 #     print("Get cursor position: %s, %s" % win32api.GetCursorPos())
 #     print()
-    grid = Grid(positionX=10, positionY=400, width=400, height=400,
+    grid = GridConfig(positionX=10, positionY=400, width=400, height=400,
         monitorNum="1")
     win = TransparentWin(grid)
     win.draw_grid()
