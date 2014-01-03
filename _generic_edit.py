@@ -73,10 +73,11 @@ def pascal_case_text(text):
     """Formats dictated text to pascal case.
 
     Example:
-    "'pascal case my new variable'" => "PyNewVariable".
+    "'pascal case my new variable'" => "MyNewVariable".
 
     """
     newText = str(text).title()
+    newText = "".join(newText.split(" "))
     Text(newText).execute()
 
 
