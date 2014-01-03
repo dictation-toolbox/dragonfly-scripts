@@ -1,5 +1,4 @@
-"""
-A command-module for Dragonfly, for generic editing help.
+"""A command module for Dragonfly, for generic editing help.
 
 -----------------------------------------------------------------------------
 This is a heavily modified version of the _multiedit-en.py script at:

@@ -1,3 +1,10 @@
+"""A support module for Dragonfly command modules, for playing sounds.
+
+-----------------------------------------------------------------------------
+Licensed under the LGPL, see http://www.gnu.org/licenses/
+
+"""
+
 import os
 import winsound
 
@@ -14,9 +21,16 @@ SND_DING = os.path.join(SOUND_PATH, "ding.wav")
 
 
 def play(sound):
+    """Plays the specified sound file, asynchronously.
+
+    Use the predefined SND-parameters in this module to specify what sound
+    to play. Any working path can however be specified.
+    If the sound file is not found, no exception is raised.
+
+    """
     flags = winsound.SND_FILENAME | winsound.SND_NODEFAULT | winsound.SND_ASYNC
     if not os.path.isfile(sound):
-        print("Sound error: File not found '%s'." % sound)
+        print("* Sound error: File not found '%s'. *" % sound)
     winsound.PlaySound(sound, flags)
 
 
