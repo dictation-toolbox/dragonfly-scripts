@@ -42,7 +42,7 @@ def _stop_polling():
 
 
 def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
-               pos6=None, pos7=None, pos8=None, pos9=None):
+               pos6=None, pos7=None, pos8=None, pos9=None, action=None):
     global GRID_WINDOWS
     global MONITORS
     global MONITOR_COUNT
@@ -68,14 +68,17 @@ def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                 positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                 monitorNum=monitorNum)
             win = grid_experiment.TransparentWin(grid)
-            win.refresh(MONITOR_SELECTED)
+            if action == None:
+                win.refresh(MONITOR_SELECTED)
             GRID_WINDOWS[index] = win
         else:
             win = GRID_WINDOWS[index]
             win.get_grid().reset()
-            win.refresh(MONITOR_SELECTED)
+            if action == None:
+                win.refresh(MONITOR_SELECTED)
         if pos2:  # Continue using other given positions.
-            mouse_pos(pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9)
+            mouse_pos(pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9,
+                      action=None)
     else:
         MONITOR_SELECTED = None
         for index, monitor in MONITORS.items():
@@ -110,7 +113,7 @@ def close_grid(exclude=None):
 
 
 def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
-              pos7=None, pos8=None, pos9=None):
+              pos7=None, pos8=None, pos9=None, action=None):
     global GRID_WINDOWS
     global MONITOR_SELECTED
     monitorSelected = MONITOR_SELECTED
@@ -128,7 +131,11 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
     sections = [var for var in variables if var != None]
     for section in sections:
         _reposition_grid(win, section)
-    win.refresh(monitorSelected)
+    if action:
+        call_action(action, monitorSelected)
+        monitorSelected = None
+    else:
+        win.refresh(monitorSelected)
     MONITOR_SELECTED = monitorSelected
 
 
@@ -191,6 +198,8 @@ def shift_click():
 def mouse_mark():
     global MOUSE_MARK_POSITION
     MOUSE_MARK_POSITION = _init_mouse_action()
+    (positionX, positionY) = MOUSE_MARK_POSITION
+    grid_experiment.move_mouse(positionX, positionY)
     mouse_grid()
 
 
@@ -205,9 +214,27 @@ def mouse_drag():
         print("Mouse drag failed, no start position marked.")
 
 
+actions = {
+    "[left] click": left_click,
+    "right click": right_click,
+    "double click": double_click,
+    "control click": control_click,
+    "shift click": shift_click,
+    "mark": mouse_mark,
+    "drag": mouse_drag,
+    "go": go,
+}
+
+
+def call_action(action, monitorSelected):
+    global MONITOR_SELECTED
+    MONITOR_SELECTED = monitorSelected
+    action()
+
+
 init_rule = MappingRule(
     mapping={
-        "[mouse] grid [<pos1>] [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>]": Function(mouse_grid),  # @IgnorePep8
+        "[mouse] grid [<pos1>] [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>] [<action>]": Function(mouse_grid),  # @IgnorePep8
         # In case focus on the grid/grids has been lost.
         "(close|cancel|stop|abort) [mouse] grid": Function(close_grid),  # @IgnorePep8
         "go": Function(go)
@@ -223,6 +250,7 @@ init_rule = MappingRule(
         IntegerRef("pos8", 1, 10),
         IntegerRef("pos9", 1, 10),
         Dictation("text"),
+        Choice("action", actions),
     ],
     defaults={
         "pos1": None
@@ -236,7 +264,7 @@ grammar1.load()
 
 navigate_rule = MappingRule(
     mapping={
-        "<pos1> [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>]": Function(mouse_pos),  # @IgnorePep8
+        "<pos1> [<pos2>] [<pos3>] [<pos4>] [<pos5>] [<pos6>] [<pos7>] [<pos8>] [<pos9>] [<action>]": Function(mouse_pos),  # @IgnorePep8
         "[left] click": Function(left_click),
         "right click": Function(right_click),
         "double click": Function(double_click),
@@ -258,6 +286,7 @@ navigate_rule = MappingRule(
         IntegerRef("pos8", 1, 10),
         IntegerRef("pos9", 1, 10),
         Dictation("text"),
+        Choice("action", actions),
     ],
     defaults={
         "pos1": 1

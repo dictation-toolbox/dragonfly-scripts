@@ -142,9 +142,10 @@ class TransparentWin(tk.Tk):
         self.draw_grid(monitorSelected)
         self.deiconify()
         self.lift()
-        self.focus_force()
-        self.focus_set()
-        self.focus()
+        time.sleep(0.1)  # Pause to allow focus to take.
+        self.focus_force()  # Focus.
+        self.focus_set()  # Really focus.
+        self.focus()  # Really really focus.
 
     def draw_grid(self, monitorSelected=False):
         self._draw_lines()
