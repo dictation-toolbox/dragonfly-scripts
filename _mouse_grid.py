@@ -4,7 +4,7 @@
 
 from dragonfly import *  # @UnusedWildImport
 
-import grid_experiment
+import grid_base
 
 GRID_WINDOWS = {}
 MONITORS = {}
@@ -64,10 +64,10 @@ def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                 monitorNum = None
             else:
                 monitorNum = str(pos1)
-            grid = grid_experiment.Grid(positionX=int(r.x),
+            grid = grid_base.Grid(positionX=int(r.x),
                 positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                 monitorNum=monitorNum)
-            win = grid_experiment.TransparentWin(grid)
+            win = grid_base.TransparentWin(grid)
             if action == None:
                 win.refresh(MONITOR_SELECTED)
             GRID_WINDOWS[index] = win
@@ -84,10 +84,10 @@ def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
         for index, monitor in MONITORS.items():
             if not index in GRID_WINDOWS.keys():
                 r = monitor.rectangle
-                grid = grid_experiment.Grid(positionX=int(r.x),
+                grid = grid_base.Grid(positionX=int(r.x),
                     positionY=int(r.y), width=int(r.dx), height=int(r.dy),
                     monitorNum=str(index))
-                win = grid_experiment.TransparentWin(grid)
+                win = grid_base.TransparentWin(grid)
                 win.refresh(MONITOR_SELECTED)
                 GRID_WINDOWS[int(index) - 1] = win
             else:
@@ -162,44 +162,44 @@ def _init_mouse_action():
 
 def go():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
 
 
 def left_click():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
-    grid_experiment.left_click_mouse(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
+    grid_base.left_click_mouse(positionX, positionY)
 
 
 def right_click():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
-    grid_experiment.right_click_mouse(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
+    grid_base.right_click_mouse(positionX, positionY)
 
 
 def double_click():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
-    grid_experiment.double_click_mouse(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
+    grid_base.double_click_mouse(positionX, positionY)
 
 
 def control_click():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
-    grid_experiment.control_click(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
+    grid_base.control_click(positionX, positionY)
 
 
 def shift_click():
     (positionX, positionY) = _init_mouse_action()
-    grid_experiment.move_mouse(positionX, positionY)
-    grid_experiment.shift_click(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
+    grid_base.shift_click(positionX, positionY)
 
 
 def mouse_mark():
     global MOUSE_MARK_POSITION
     MOUSE_MARK_POSITION = _init_mouse_action()
     (positionX, positionY) = MOUSE_MARK_POSITION
-    grid_experiment.move_mouse(positionX, positionY)
+    grid_base.move_mouse(positionX, positionY)
     mouse_grid()
 
 
@@ -208,7 +208,7 @@ def mouse_drag():
     if MOUSE_MARK_POSITION:
         (startX, startY) = MOUSE_MARK_POSITION
         (targetX, targetY) = _init_mouse_action()
-        grid_experiment.mouse_drag(startX, startY, targetX, targetY)
+        grid_base.mouse_drag(startX, startY, targetX, targetY)
         MOUSE_MARK_POSITION = None
     else:
         print("Mouse drag failed, no start position marked.")
@@ -359,9 +359,9 @@ MONITOR_COUNT = len(MONITORS)
 def __run__():
     import time
 
-#     grid = grid_experiment.Grid(positionX=10, positionY=400, width=400,
+#     grid = grid_base.Grid(positionX=10, positionY=400, width=400,
 #                                 height=400, monitorNum="1")
-#     win = grid_experiment.TransparentWin(grid)
+#     win = grid_base.TransparentWin(grid)
 #     win.draw_grid()
 #     win.update()
 #     win.deiconify()
