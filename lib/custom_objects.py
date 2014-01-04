@@ -1,3 +1,4 @@
+import re
 
 from dragonfly import Text
 from dragonfly.actions.keyboard import Keyboard
@@ -40,13 +41,26 @@ class SCText(Text):  # Special Characters Text.
     def _parse_spec(self, spec):
         """Overrides the normal Text class behavior. To handle dictation of
         special characters like / . _
+        Unfortunately, I have found a better place to solve this.
 
         """
+        # self._spec: 'touch %(text)s'
+        # spec:       'touch _\underscore test'
+        print("self._spec: %s" % self._spec)
+        parts = re.split("\%\([a-z_0-9]+\)s", self._spec)
+        if len(parts) > 2:
+            raise Exception("SCText only supports one variable.")
+        start = len(parts[0])
+        print(parts)
+        end = len(spec) - len(parts[1])
+        print(start, end)
+        work = spec[start:end]
         for text, char in specialCharacterTranslations.items():
-            spec = spec.replace(" %s " % text, char)
-            spec = spec.replace(" %s" % text, char)
-            spec = spec.replace("%s " % text, char)
-            spec = spec.replace("%s" % text, char)
+            work = work.replace(" %s " % text, char)
+            work = work.replace(" %s" % text, char)
+            work = work.replace("%s " % text, char)
+            work = work.replace("%s" % text, char)
+        spec = parts[0] + work + parts[1]
         events = []
         for character in spec:
             if character in self._specials:
