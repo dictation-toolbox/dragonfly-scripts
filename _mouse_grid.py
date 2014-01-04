@@ -20,6 +20,7 @@ from dragonfly import MappingRule, Function, IntegerRef, Choice, Dictation, \
     Grammar, AppContext, Rectangle
 
 import grid_base
+import lib.sound as sound
 
 GRID_WINDOWS = {}
 MONITORS = {}
@@ -27,6 +28,16 @@ MONITOR_SELECTED = None
 MOUSE_MARK_POSITION = None
 # POLLING_THREAD = None
 # POLLING_COUNT = 0
+
+
+def notify_action_aborted(message, useSound=True):
+    """Notifies the user, with a custom message, that the action was not
+    completed.
+
+    """
+    print(message)
+    if useSound:
+        sound.play(sound.SND_MESSAGE)
 
 
 def _poll_grids():
@@ -152,6 +163,9 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
             win.withdraw()
     if monitorSelected != None:
         variables = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
+    elif pos1 > len(GRID_WINDOWS):
+        notify_action_aborted("Monitor number %s out of range." % pos1)
+        return
     else:
         variables = [pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
         monitorSelected = pos1
