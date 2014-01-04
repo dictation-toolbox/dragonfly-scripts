@@ -1,5 +1,7 @@
 from dragonfly import *  # @UnusedWildImport
 
+from lib.custom_objects import SCText
+
 
 def directory_up(n):
     repeat = ['..' for i in range(n)]  # @UnusedVariable
@@ -40,43 +42,44 @@ special_commands_one = SeriesMappingRule(
     mapping={
         # Keywords:
         "(change (directory|dir)|C D)": Text("cd "),
-        "(change (directory|dir)|C D) <text>": Text("cd %(text)s"),
-        "control break": Function(control_break),
+        "(change (directory|dir)|C D) <text>": SCText("cd %(text)s"),
+        "[press] control break": Function(control_break),
         "(copy|C P)": Text("cp "),
         "(copy|C P) recursive": Text("cp -r "),
         "diff": Text("diff "),
         "directory up <n> [times]": Function(directory_up),
+        "find": Text("find . -name "),
         "grep": Text("grep "),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
         "kill (hard|9)": Text("kill -9 "),
         "list files": Text("ls -la\n"),
         "list files time sort": Text("ls -lat\n"),
         "make (directory|dir)": Text("mkdir "),
-        "make (directory|dir) <text>": Text("mkdir %(text)s"),
+        "make (directory|dir) <text>": SCText("mkdir %(text)s"),
         "move": Text("mv "),
-        "move <text>": Text("mv %(text)s"),
+        "move <text>": SCText("mv %(text)s"),
         "(print working directory|P W D)": Text("pwd\n"),
         "(R M|remove file)": Text("rm "),
-        "(R M|remove file) <text>": Text("rm %(text)s"),
+        "(R M|remove file) <text>": SCText("rm %(text)s"),
         "remove (directory|dir|folder|recursive)": Text("rm -rf "),
-        "remove (directory|dir|folder|recursive) <text>": Text("rm -rf %(text)s"),  # @IgnorePep8
+        "remove (directory|dir|folder|recursive) <text>": SCText("rm -rf %(text)s"),  # @IgnorePep8
         "(link|L N)": Text("ln "),
         "soft link": Text("ln -s "),
         "sudo": Text("sudo "),
         "tail": Text("tail "),
-        "tail <text>": Text("tail %(text)s"),
+        "tail <text>": SCText("tail %(text)s"),
         "tail (F|follow)": Text("tail -f "),
-        "tail <text> (F|follow)": Text("tail -f %(text)s"),
+        "tail (F|follow) <text>": SCText("tail -f %(text)s"),
         "touch": Text("touch "),
-        "touch <text>": Text("touch %(text)s"),
+        "touch <text>": SCText("touch %(text)s"),
         "vim": Text("vim "),
-        "vim <text>": Text("vim %(text)s"),
+        "vim <text>": SCText("vim %(text)s"),
         "X M L lint": Text("xmllint "),
-        "X M L lint <text>": Text("xmllint %(text)s"),
+        "X M L lint <text>": SCText("xmllint %(text)s"),
         "X M L lint format": Text("xmllint -format "),
-        "X M L lint format <text>": Text("xmllint -format %(text)s"),
+        "X M L lint format <text>": SCText("xmllint -format %(text)s"),
         "X M L lint schema": Text("xmllint -schema "),
-        "X M L lint schema <text>": Text("xmllint -schema %(text)s"),
+        "X M L lint schema <text>": SCText("xmllint -schema %(text)s"),
     },
     extras=[
         IntegerRef("n", 1, 100),

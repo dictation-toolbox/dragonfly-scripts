@@ -1,5 +1,6 @@
-
 from dragonfly import *  # @UnusedWildImport
+
+from lib.custom_objects import SCText
 
 
 class SeriesMappingRule(CompoundRule):
@@ -80,28 +81,28 @@ series_rule = SeriesMappingRule(
     mapping={
         "git add": Text("git add "),
         "git archive": Text("git archive --format=tar "),
-        "git add <text>": Text("git add %(text)s"),
+        "git add <text>": SCText("git add %(text)s"),
         "git add (all|period|dot)": Text("git add .\n"),
         "git blame": Text("git blame "),
         "git branch": Text("git branch\n"),
         "git branch track": Text("git branch -- track "),
-        "git branch <text>": Text("git branch %(text)s"),
+        "git branch <text>": SCText("git branch %(text)s"),
         "git branch delete ": Text("git branch -d "),
-        "git branch delete <text>": Text("git branch -d %(text)s"),
+        "git branch delete <text>": SCText("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
-        "git (check out|checkout) <text>": Text("git checkout %(text)s"),
+        "git (check out|checkout) <text>": SCText("git checkout %(text)s"),
         "git clone": Text("git clone "),
-        "git clone <text>": Text("git clone %(text)s"),
+        "git clone <text>": SCText("git clone %(text)s"),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
         "git config": Text("git config "),
         "git config add": Text("git config --add "),
-        "git config add <text>": Text("git config --add %(text)s "),
+        "git config add <text>": SCText("git config --add %(text)s "),
         "git config list": Text("git config --list\n"),
         "git (diff|difference|differentiate)": Text("git diff "),
-        "git (diff|difference|differentiate) <text>": Text("git diff %(text)s"),  # @IgnorePep8
+        "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
         "git fetch": Text("git fetch\n"),
-        "git fetch <text>": Text("git fetch %(text)s "),
+        "git fetch <text>": SCText("git fetch %(text)s "),
         "git grep": Text("git grep \"\"") + Key("left:1"),
         "git help": Text("git --help\n"),
         "git help <gitcmd>": Text("git --help %(gitcmd)s\n"),
@@ -112,31 +113,31 @@ series_rule = SeriesMappingRule(
         "git log graph": Text("git log --graph --oneline --decorate --all\n"),
         "git log graph limit <n>": Text("git log --graph --oneline --decorate --all -n %(n)d\n"),  # @IgnorePep8
         "git merge": Text("git merge "),
-        "git merge <text>": Text("git merge %(text)s"),
+        "git merge <text>": SCText("git merge %(text)s"),
         "git merge (no (fast forward|F F))": Text("git merge --no-ff "),
-        "git merge (no (fast forward|F F)) <text>": Text("git merge --no-ff %(text)s"),  # @IgnorePep8
+        "git merge (no (fast forward|F F)) <text>": SCText("git merge --no-ff %(text)s"),  # @IgnorePep8
         "git (move|M V)": Text("git mv "),
-        "git (move|M V) <text>": Text("git mv %(text)s"),
+        "git (move|M V) <text>": SCText("git mv %(text)s"),
         "git pull": Text("git pull\n"),
-        "git pull origin <text>": Text("git pull origin %(text)s"),
+        "git pull origin <text>": SCText("git pull origin %(text)s"),
         "git push": Text("git push\n"),
         "git push all": Text("git push --all\n"),
         "git push origin ": Text("git push origin "),
-        "git push origin <text>": Text("git push origin %(text)s"),
+        "git push origin <text>": SCText("git push origin %(text)s"),
         "git push tags": Text("git push --tags\n"),
         "git (rebase|re-base)": Text("git rebase "),
-        "git (rebase|re-base) <text>": Text("git rebase %(text)s"),
+        "git (rebase|re-base) <text>": SCText("git rebase %(text)s"),
         "git remote": Text("git remote\n"),
         "git remote add": Text("git remote add "),
-        "git remote add <text>": Text("git remote add %(text)s"),
+        "git remote add <text>": SCText("git remote add %(text)s"),
         "git remote show": Text("git remote show "),
-        "git remote show <text>": Text("git remote show %(text)s"),
+        "git remote show <text>": SCText("git remote show %(text)s"),
         "git remote rename": Text("git remote rename "),
-        "git remote rename <text>": Text("git remote rename %(text)s"),
+        "git remote rename <text>": SCText("git remote rename %(text)s"),
         "git remote (remove|R M)": Text("git remote rm "),
-        "git remote (remove|R M) <text>": Text("git remote rm %(text)s"),
+        "git remote (remove|R M) <text>": SCText("git remote rm %(text)s"),
         "git (remove|R M)": Text("git rm "),
-        "git (remove|R M) <text>": Text("git rm %(text)s"),
+        "git (remove|R M) <text>": SCText("git rm %(text)s"),
         "git reset hard": Text("git reset --hard"),
         "git revert": Text("git revert "),
         "git revert head": Text("git revert HEAD"),
