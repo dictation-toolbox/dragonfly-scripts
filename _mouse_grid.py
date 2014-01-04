@@ -393,6 +393,8 @@ grammar2.load()  # Load the grammar.
 
 def unload():
     """Unload function which will be called at unload time."""
+    global MONITORS
+    global GRID_WINDOWS
     global grammar1
     if grammar1:
         grammar1.unload()
@@ -401,6 +403,10 @@ def unload():
     if grammar2:
         grammar2.unload()
     grammar2 = None
+    for win in GRID_WINDOWS.values():
+        win.destroy()
+        win = None
+    MONITORS = None
 
 
 # ----------------------------------------------------------------------------
