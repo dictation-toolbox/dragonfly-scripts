@@ -1,6 +1,6 @@
 from dragonfly import *  # @UnusedWildImport
 
-from lib.custom_objects import SCText
+from lib.text import SCText
 
 
 class SeriesMappingRule(CompoundRule):
