@@ -7,6 +7,7 @@ Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
 
+from natlink import setMicState
 from dragonfly import Key, Text, Choice, Pause, Window, \
     FocusWindow, Config, Section, Item, Function, Dictation, Mimic, \
     IntegerRef, MappingRule, Alternative, RuleRef, Grammar, Repetition, \
@@ -18,7 +19,7 @@ import lib.format
 release = Key("shift:up, ctrl:up")
 
 
-def cancel_dictation():
+def cancel_dictation(text=None, text2=None):
     """Used to cancel an ongoing dictation.
 
     This method only notifies the user that the dictation was in fact canceled,
@@ -31,7 +32,7 @@ def cancel_dictation():
     sound.play(sound.SND_DING)
 
 
-def cancel_and_sleep():
+def cancel_and_sleep(text=None, text2=None):
     """Used to cancel an ongoing dictation and puts microphone to sleep.
 
     This method notifies the user that the dictation was in fact canceled,
@@ -43,6 +44,7 @@ def cancel_and_sleep():
     """
     print("* Dictation canceled, by user command. Going to sleep. *")
     sound.play(sound.SND_DING)
+    setMicState("sleeping")
 
 
 def reload_natlink():
@@ -151,7 +153,9 @@ config.cmd.map = Item(
         # Canceling of started sentence.
         # Useful for canceling what inconsiderate loud mouths have started.
         "<text> cancel dictation": Function(cancel_dictation),
+        "<text> cancel dictation <text2>": Function(cancel_dictation),
         "<text> cancel and sleep": Function(cancel_and_sleep),
+        "<text> cancel and sleep <text2>": Function(cancel_and_sleep),
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },
@@ -168,6 +172,7 @@ class KeystrokeRule(MappingRule):
     extras = [
         IntegerRef("n", 1, 100),
         Dictation("text"),
+        Dictation("text2"),
         Choice("char", charMap),
     ]
     defaults = {
