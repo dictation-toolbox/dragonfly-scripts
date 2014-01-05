@@ -33,6 +33,8 @@ series_rule = SeriesMappingRule(
         "parens": Text("()") + Key("left"),
         "quotes": Text('""') + Key("left"),
         "single quotes": Text("''") + Key("left"),
+        # Common terms.
+        "lib": Text("lib"),
         # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),
@@ -77,4 +79,3 @@ def unload():
     if grammar:
         grammar.unload()
     grammar = None
-
