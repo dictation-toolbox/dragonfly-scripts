@@ -27,12 +27,12 @@ series_rule = SeriesMappingRule(
         # VBScript specific.
         "variable (dimension|dim)": Text("dim "),
         # Closures.
-        "angle brackets": Text("<>"),
-        "brackets": Text("[]"),
-        "braces": Text("{}"),
-        "parens": Text("()"),
-        "quotes": Text('""'),
-        "single quotes": Text("''"),
+        "angle brackets": Text("<>") + Key("left"),
+        "brackets": Text("[]") + Key("left"),
+        "braces": Text("{}") + Key("left"),
+        "parens": Text("()") + Key("left"),
+        "quotes": Text('""') + Key("left"),
+        "single quotes": Text("''") + Key("left"),
         # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),

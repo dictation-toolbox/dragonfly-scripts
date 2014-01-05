@@ -1,5 +1,7 @@
 from dragonfly import *  # @UnusedWildImport
 
+from lib.custom_objects import SCText
+
 
 class SeriesMappingRule(CompoundRule):
 
@@ -29,7 +31,7 @@ special_commands_one = SeriesMappingRule(
         "break": Text("break"),
         "divided by": Text(" / "),
         "(dict|dictionary) key value": Text("\"\": \"\",") + Key("left:6"),
-        "enumerate": Text("enumerate("),
+        "enumerate": Text("enumerate()") + Key("left"),
         "comment": Text("# "),
         "class": Text("class "),
         "continue": Text("continue"),
@@ -39,18 +41,25 @@ special_commands_one = SeriesMappingRule(
         "else": Text("else:\n"),
         "except": Text("except "),
         "(el if|else if)": Text("elif "),
+        "(el if|else if) <text>": SCText("elif %(text)s"),
         "equals": Text(" == "),
         "false": Text("False"),
         "finally": Text("finally:\n"),
         "for": Text("for "),
+        "for <text>": SCText("for %(text)s"),
         "from": Text("from "),
+        "from <text>": SCText("from %(text)s"),
         "greater than": Text(" > "),
         "greater [than] equals": Text(" >= "),
         "if": Text("if "),
+        "if <text>": SCText("if %(text)s"),
         "in": Text("in "),
+        "in <text>": SCText("in %(text)s"),
         "(int|I N T)": Text("int"),
+        "(int|I N T)": Text("int()") + Key("left"),
         "init": Text("init"),
         "import": Text("import "),
+        "import <text>": SCText("import %(text)s"),
         "(len|L E N)": Text("len("),
         "less than": Text(" < "),
         "less [than] equals": Text(" <= "),
@@ -67,8 +76,10 @@ special_commands_one = SeriesMappingRule(
         "raise": Text("raise"),
         "raise exception": Text("raise Exception()") + Key("left"),
         "return": Text("return"),
+        "return <text>": SCText("return %(text)s"),
         "self": Text("self"),
-        "S T R": Text("str("),
+        "(str|S T R)": Text("str"),
+        "(str|S T R) paren": Text("str()") + Key("left"),
         "true": Text("True"),
         "try": Text("try:\n"),
         "times": Text(" * "),
