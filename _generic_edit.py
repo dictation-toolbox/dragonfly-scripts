@@ -7,333 +7,41 @@ Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
 
-import re
-
-from dragonfly import Key, Text, Choice, Clipboard, Pause, Window, \
+from dragonfly import Key, Text, Choice, Pause, Window, \
     FocusWindow, Config, Section, Item, Function, Dictation, Mimic, \
     IntegerRef, MappingRule, Alternative, RuleRef, Grammar, Repetition, \
     CompoundRule
 
 import lib.sound as sound
+import lib.format
 
 release = Key("shift:up, ctrl:up")
-
-
-def camel_case_text(text):
-    """Formats dictated text to camel case.
-
-    Example:
-    "'camel case my new variable'" => "myNewVariable".
-
-    """
-    newText = _camelify(text.words)
-    Text(newText).execute()
-
-
-def camel_case_count(n):
-    """Formats n words to the left of the cursor to camel case.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'my new variable' *pause* 'camel case 3'" => "myNewVariable".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        endSpace = cutText.endswith(' ')
-        text = _cleanup_text(cutText)
-        newText = _camelify(text.split(' '))
-        if endSpace:
-            newText = newText + ' '
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def _camelify(words):
-    """Takes a list of words and returns a string formatted to camel case.
-
-    Example:
-    ["my", "new", "variable"] => "myNewVariable".
-
-    """
-    newText = ''
-    for word in words:
-        if newText == '':
-            newText = word[:1].lower() + word[1:]
-        else:
-            newText = '%s%s' % (newText, word.capitalize())
-    return newText
-
-
-def pascal_case_text(text):
-    """Formats dictated text to pascal case.
-
-    Example:
-    "'pascal case my new variable'" => "MyNewVariable".
-
-    """
-    newText = str(text).title()
-    newText = "".join(newText.split(" "))
-    Text(newText).execute()
-
-
-def pascal_case_count(n):
-    """Formats n words to the left of the cursor to pascal case.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'my new variable' *pause* 'pascal case 3'" => "MyNewVariable".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        endSpace = cutText.endswith(' ')
-        text = _cleanup_text(cutText)
-        newText = text.title().replace(' ', '')
-        if endSpace:
-            newText = newText + ' '
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def snake_case_text(text):
-    """Formats dictated text to snake case.
-
-    Example:
-    "'snake case my new variable'" => "my_new_variable".
-
-    """
-    newText = '_'.join(text.words)
-    Text(newText).execute()
-
-
-def snake_case_count(n):
-    """Formats n words to the left of the cursor to snake case.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'my new variable' *pause* 'snake case 3'" => "my_new_variable".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        endSpace = cutText.endswith(' ')
-        text = _cleanup_text(cutText.lower())
-        newText = '_'.join(text.split(' '))
-        if endSpace:
-            newText = newText + ' '
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def squash_text(text):
-    """Formats dictated text with whitespace removed.
-
-    Example:
-    "'squash my new variable'" => "mynewvariable".
-
-    """
-    newText = ''.join(text.words)
-    Text(newText).execute()
-
-
-def squash_count(n):
-    """Formats n words to the left of the cursor with whitespace removed.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'my new variable' *pause* 'squash 3'" => "mynewvariable".
-    "'my<tab>new variable' *pause* 'squash 3'" => "mynewvariable".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        endSpace = cutText.endswith(' ')
-        text = _cleanup_text(cutText)
-        newText = ''.join(text.split(' '))
-        if endSpace:
-            newText = newText + ' '
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def expand_count(n):
-    """Formats n words to the left of the cursor by adding whitespace in
-    certain positions.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example, with to compact code:
-    "result=(width1+width2)/2 'expand 9' " => "result = (width1 + width2) / 2"
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        endSpace = cutText.endswith(' ')
-        reg = re.compile(r'[:,][a-zA-Z0-9_\"\']')
-        hit = reg.search(cutText)
-        count = 0
-        while hit and count < 10:
-            cutText = cutText[:hit.start() + 1] + ' ' + cutText[hit.end() - 1:]
-            hit = reg.search(cutText)
-            count += 1
-        reg = re.compile(
-            r'([a-zA-Z0-9_\"\'\)][=\+\-\*/]|[=\+\-\*/][a-zA-Z0-9_\"\'\(])')
-        hit = reg.search(cutText)
-        count = 0
-        while hit and count < 10:
-            cutText = cutText[:hit.start() + 1] + ' ' + cutText[hit.end() - 1:]
-            hit = reg.search(cutText)
-            count += 1
-        newText = cutText
-        if endSpace:
-            newText = newText + ' '
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def uppercase_text(text):
-    """Formats dictated text to upper case.
-
-    Example:
-    "'upper case my new variable'" => "MY NEW VARIABLE".
-
-    """
-    newText = str(text)
-    Text(newText.upper()).execute()
-
-
-def uppercase_count(n):
-    """Formats n words to the left of the cursor to upper case.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'my new variable' *pause* 'upper case 3'" => "MY NEW VARIABLE".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        newText = cutText.upper()
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def lowercase_text(text):
-    """Formats dictated text to lower case.
-
-    Example:
-    "'lower case John Johnson'" => "john johnson".
-
-    """
-    newText = str(text)
-    Text(newText.lower()).execute()
-
-
-def lowercase_count(n):
-    """Formats n words to the left of the cursor to lower case.
-    Note that word count differs between editors and programming languages.
-    The examples are all from Eclipse/Python.
-
-    Example:
-    "'John Johnson' *pause* 'lower case 2'" => "john johnson".
-
-    """
-    saveText = _get_clipboard_text()
-    cutText = _select_and_cut_text(n)
-    if cutText:
-        newText = cutText.lower()
-        Text(newText).execute()
-    else:  # Failed to get text from clipboard.
-        Key('c-v').execute()  # Restore cut out text.
-    _set_clipboard_text(saveText)
-
-
-def _cleanup_text(text):
-    """Cleans up the text before formatting to camel, pascal or snake case.
-
-    Removes dashes, underscores, single quotes (apostrophes) and replaces
-    them with a space character. Multiple spaces, tabs or new line characters
-    are collapsed to one space character.
-    Returns the result as a string.
-
-    """
-    text = text.strip()
-    text = text.replace('-', ' ')
-    text = text.replace('_', ' ')
-    text = text.replace("'", ' ')
-    text = re.sub('[ \t\r\n]+', ' ', text)  # Any whitespaces to one space.
-    return text
-
-
-def _get_clipboard_text():
-    """Returns the text contents of the system clip board."""
-    clipboard = Clipboard()
-    return clipboard.get_system_text()
-
-
-def _select_and_cut_text(wordCount):
-    """Selects wordCount number of words to the left of the cursor and cuts
-    them out of the text. Returns the text from the system clip board.
-
-    """
-    clipboard = Clipboard()
-    clipboard.set_system_text('')
-    try:  # Try selecting n number of words.
-        Key('ctrl:down, shift:down').execute()
-        Key('left:%s' % wordCount).execute()
-        Key('shift:up').execute()
-    finally:
-        # It is important to make sure that the buttons are released.
-        # Otherwise you get stuck in an unpleasant situation.
-        Key('shift:up, ctrl:up').execute()
-    Pause("10").execute()
-    Key('c-x').execute()  # Cut out the selected words.
-    Pause("20").execute()
-    return clipboard.get_system_text()
-
-
-def _set_clipboard_text(text):
-    """Sets the system clip board content."""
-    clipboard = Clipboard()
-    clipboard.set_text(text)  # Restore previous clipboard text.
-    clipboard.copy_to_system()
 
 
 def cancel_dictation():
     """Used to cancel an ongoing dictation.
 
-    This method does effectively nothing. It only notifies the user that the
-    dictation was in fact canceled, with a sound and a message in the Natlink
-    feedback window.
+    This method only notifies the user that the dictation was in fact canceled,
+    with a sound and a message in the Natlink feedback window.
     Example:
-    "'random mumbling or other noises cancel this'" => No action.
-    "'random mumbling or other noises abort dictation'" => No action.
+    "'random mumbling or other noises cancel dictation'" => No action.
 
     """
     print("* Dictation canceled, by user command. *")
+    sound.play(sound.SND_DING)
+
+
+def cancel_and_sleep():
+    """Used to cancel an ongoing dictation and puts microphone to sleep.
+
+    This method notifies the user that the dictation was in fact canceled,
+    with a sound and a message in the Natlink feedback window.
+    Then the the microphone is put to sleep.
+    Example:
+    "'random mumbling or other noises cancel and sleep'" => Microphone sleep.
+
+    """
+    print("* Dictation canceled, by user command. Going to sleep. *")
     sound.play(sound.SND_DING)
 
 
@@ -423,26 +131,27 @@ config.cmd.map = Item(
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
          # Formatting.
-        "camel case <text>": Function(camel_case_text),
-        "camel case <n> [words]": Function(camel_case_count),
-        "pascal case <text>": Function(pascal_case_text),
-        "pascal case <n> [words]": Function(pascal_case_count),
-        "snake case <text>": Function(snake_case_text),
-        "snake case <n> [words]": Function(snake_case_count),
-        "squash <text>": Function(squash_text),
-        "squash <n> [words]": Function(squash_count),
-        "expand <n> [words]": Function(expand_count),
-        "uppercase <text>": Function(uppercase_text),
-        "uppercase <n> [words]": Function(uppercase_count),
-        "lowercase <text>": Function(lowercase_text),
-        "lowercase <n> [words]": Function(lowercase_count),
+        "camel case <text>": Function(lib.format.camel_case_text),
+        "camel case <n> [words]": Function(lib.format.camel_case_count),
+        "pascal case <text>": Function(lib.format.pascal_case_text),
+        "pascal case <n> [words]": Function(lib.format.pascal_case_count),
+        "snake case <text>": Function(lib.format.snake_case_text),
+        "snake case <n> [words]": Function(lib.format.snake_case_count),
+        "squash <text>": Function(lib.format.squash_text),
+        "squash <n> [words]": Function(lib.format.squash_count),
+        "expand <n> [words]": Function(lib.format.expand_count),
+        "uppercase <text>": Function(lib.format.uppercase_text),
+        "uppercase <n> [words]": Function(lib.format.uppercase_count),
+        "lowercase <text>": Function(lib.format.lowercase_text),
+        "lowercase <n> [words]": Function(lib.format.lowercase_count),
         # Text corrections.
         "(add|fix) missing space": Key("c-left, space, c-right"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
         # Canceling of started sentence.
         # Useful for canceling what inconsiderate loud mouths have started.
-        "<text> (cancel|abort) (dictation|sentence|this)": Function(cancel_dictation),  # @IgnorePep8
+        "<text> cancel dictation": Function(cancel_dictation),
+        "<text> cancel and sleep": Function(cancel_and_sleep),
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },

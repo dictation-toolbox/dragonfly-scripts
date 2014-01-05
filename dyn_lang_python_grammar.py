@@ -1,6 +1,28 @@
 from dragonfly import *  # @UnusedWildImport
 
-from lib.custom_objects import SCText
+from lib.text import SCText
+import lib.format
+
+
+def define_function(text):
+    Text("def ").execute()
+    lib.format.snake_case_text(text)
+    Text("():").execute()
+    Key("left:2").execute()
+
+
+def define_method(text):
+    Text("def ").execute()
+    lib.format.snake_case_text(text)
+    Text("(self, ):").execute()
+    Key("left:2").execute()
+
+
+def define_class(text):
+    Text("class ").execute()
+    lib.format.pascal_case_text(text)
+    Text("():").execute()
+    Key("left:2").execute()
 
 
 class SeriesMappingRule(CompoundRule):
@@ -34,8 +56,11 @@ special_commands_one = SeriesMappingRule(
         "enumerate": Text("enumerate()") + Key("left"),
         "comment": Text("# "),
         "class": Text("class "),
+        "class <text>": Function(define_class),
         "continue": Text("continue"),
         "(def|define|definition)": Text("def "),
+        "(def|define|definition) <text>": Function(define_function),
+        "(def|define|definition) method <text>": Function(define_method),
         "(def|define|definition) init": Text("def __init__("),
         "doc string": Text('"""Doc string."""') + Key("left:14, s-right:11"),
         "else": Text("else:\n"),
