@@ -1,5 +1,8 @@
 from dragonfly import *  # @UnusedWildImport
 
+import lib.format
+from lib.text import SCText
+
 
 class SeriesMappingRule(CompoundRule):
 
@@ -20,40 +23,86 @@ class SeriesMappingRule(CompoundRule):
             action.execute()
 
 
+def define_function(text):
+    Text("function ").execute()
+    lib.format.camel_case_text(text)
+    Text("() {").execute()
+    Key("left:3").execute()
+
+
 special_commands_two = SeriesMappingRule(
     mapping={
         # Keywords:
         "and": Text(" && "),
-        "or": Text(" || "),
+        "assign": Text(" = "),
+        "break": Text("break"),
+        "case": Text("case "),
+        "case <text>": SCText("case %(text)s"),
+        "catch": Text("catch () {") + Key("left:3"),
         "comment": Text("// "),
-        "open comment": Text("/* "),
+        "comment <text>": SCText("// %(text)s"),
+        "continue": Text("continue"),
         "close comment": Text(" */"),
+        "debugger": Text("debugger"),
+        "default": Text("default"),
+        "delete": Text("delete "),
+        "do": Text("do {"),
         "equals": Text(" == "),
         "equals (strict|strictly|exact|exactly)": Text(" === "),
         "else": Text("else"),
-        "else if": Text("else if("),
-        "if": Text("if("),
-        "for": Text("for("),
+        "else if": Text("else if () {") + Key("left:3"),
+        "extends ": Text("extends "),
+        "for": Text("for () {") + Key("left:3"),
+        "for <text>": SCText("for (%(text)s) {") + Key("left:3"),
         "false": Text("false"),
+        "finally": Text("finally {") + Key("enter"),
         "function": Text("function "),
+        "function <text>": Function(define_function),
+        "greater than": Text(" > "),
+        "greater equals": Text(" >= "),
+        "if": SCText("if (%(text)s) {") + Key("left"),
+        "if <text>": Text("if () {") + Key("left"),
+        "instanceof": Text("instanceof ") + Key("left"),
+        "(int|I N T)": Text("int "),
+        "(int|I N T) <text>": SCText("int %(text)s"),
+        "in": Text("in "),
+        "in <text>": SCText("in %(text)s"),
         "(jQuery (variable|var)|dollar paren)": Text("$()") + Key("left"),
+        "less than": Text(" < "),
+        "less equals": Text(" <= "),
+        "(line end|end line)": Key("end") + Text(";") + Key("enter"),
+        "(minus|subtract|subtraction)": Text(" - "),
+        "(minus|subtract|subtraction) equals": Text(" -= "),
+        "modulo": Key("space") + Key("percent") + Key("space"),
         "new": Text("new "),
         "not equals": Text(" != "),
         "not (strict|strictly|exact|exactly) equals": Text(" !== "),
+        "open comment": Text("/* "),
+        "or": Text(" || "),
+        "object": Text("Object "),
+        "(plus|add|addition)": Text(" + "),
+        "(plus|add|addition) equals": Text(" += "),
+        "reg exp": Text("RegExp"),
         "return": Text("return "),
-        "throw": Text("throw"),
+        "return <text>": SCText("return %(text)s"),
+        "string": Text("String"),
+        "switch": Text("switch () {") + Key("left:3"),
+        "switch <text>": SCText("switch (%(text)s) {") + Key("left:3"),
+        "this": Text("this"),
+        "throw": Text("throw "),
         "true": Text("true"),
-        "(variable|var)": Text("var"),
-        "assign": Text(" = "),
-        "(plus|add)": Text(" + "),
-        "(plus|add) equals": Text(" += "),
-        "(minus|subtract)": Text(" - "),
-        "(minus|subtract) equals": Text(" -= "),
-        "less than": Text(" < "),
-        "less equals": Text(" <= "),
-        "greater than": Text(" > "),
-        "greater equals": Text(" >= "),
-        "modulo": Key("space") + Key("percent") + Key("space"),
+        "try": Text("try {") + Key("enter"),
+        "typeof": Text("typeof "),
+        "(variable|var)": Text("var "),
+        "(variable|var) <text>": SCText("var %(text)s"),
+        "while": Text("while () {") + Key("left:3"),
+        "while <text>": SCText("while (%(text)s) {") + Key("left:3"),
+        "with": Text("with () {") + Key("left:3"),
+        "with <text>": SCText("with (%(text)s) {") + Key("left:3"),
+        # Global variables and objects.
+        "window": Text("window"),
+        "undefined": Text("undefined"),
+        "JSON": Text("JSON"),
     },
     extras=[
         IntegerRef("n", 1, 100),
