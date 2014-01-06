@@ -79,55 +79,61 @@ gitopt = {
 
 series_rule = SeriesMappingRule(
     mapping={
+        # Git commands.
         "git add": Text("git add "),
-        "git archive": Text("git archive --format=tar "),
         "git add <text>": SCText("git add %(text)s"),
-        "git add (all|period|dot)": Text("git add .\n"),
+        "git add (all|period|dot)": Text("git add .") + Key("enter"),
+        "git archive": Text("git archive --format=tar "),
         "git blame": Text("git blame "),
-        "git branch": Text("git branch\n"),
+        "git branch": Text("git branch") + Key("enter"),
         "git branch track": Text("git branch -- track "),
         "git branch <text>": SCText("git branch %(text)s"),
         "git branch delete ": Text("git branch -d "),
         "git branch delete <text>": SCText("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
         "git (check out|checkout) <text>": SCText("git checkout %(text)s"),
+        "git (check out|checkout) force": Text("git checkout -f "),
+        "git (check out|checkout) force <text>": SCText("git checkout -f %(text)s"),  # @IgnorePep8
         "git clone": Text("git clone "),
         "git clone <text>": SCText("git clone %(text)s"),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
+        "git commit amend": Text("git commit --amend"),
         "git config": Text("git config "),
         "git config add": Text("git config --add "),
         "git config add <text>": SCText("git config --add %(text)s "),
-        "git config list": Text("git config --list\n"),
+        "git config list": Text("git config --list") + Key("enter"),
         "git (diff|difference|differentiate)": Text("git diff "),
         "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
-        "git fetch": Text("git fetch\n"),
+        "git (diff|difference|differentiate) cached": Text("git diff --cashed") + Key("enter"),  # @IgnorePep8
+        "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
+        "git fetch": Text("git fetch") + Key("enter"),
         "git fetch <text>": SCText("git fetch %(text)s "),
         "git grep": Text("git grep \"\"") + Key("left:1"),
-        "git help": Text("git --help\n"),
-        "git help <gitcmd>": Text("git --help %(gitcmd)s\n"),
-        "git (init|initialize)": Text("git init\n"),
-        "git (init|initialize) bare": Text("git init --bare\n"),
-        "git log": Text("git log\n"),
-        "git log limit <n>": Text("git log -n %(n)d\n"),
-        "git log graph": Text("git log --graph --oneline --decorate --all\n"),
-        "git log graph limit <n>": Text("git log --graph --oneline --decorate --all -n %(n)d\n"),  # @IgnorePep8
+        "git help": Text("git --help") + Key("enter"),
+        "git help <gitcmd>": Text("git --help %(gitcmd)s") + Key("enter"),
+        "git (init|initialize)": Text("git init") + Key("enter"),
+        "git (init|initialize) bare": Text("git init --bare") + Key("enter"),
+        "git log": Text("git log") + Key("enter"),
+        "git log limit <n>": Text("git log -n %(n)d") + Key("enter"),
+        "git log graph": Text("git log --graph --oneline --decorate --all") + Key("enter"),  # @IgnorePep8
+        "git log graph limit <n>": Text("git log --graph --oneline --decorate --all -n %(n)d") + Key("enter"),  # @IgnorePep8
         "git merge": Text("git merge "),
         "git merge <text>": SCText("git merge %(text)s"),
         "git merge (no (fast forward|F F))": Text("git merge --no-ff "),
         "git merge (no (fast forward|F F)) <text>": SCText("git merge --no-ff %(text)s"),  # @IgnorePep8
         "git (move|M V)": Text("git mv "),
         "git (move|M V) <text>": SCText("git mv %(text)s"),
-        "git pull": Text("git pull\n"),
+        "git pull": Text("git pull "),
         "git pull origin <text>": SCText("git pull origin %(text)s"),
-        "git push": Text("git push\n"),
-        "git push all": Text("git push --all\n"),
+        "git push": Text("git push"),
+        "git push all": Text("git push --all") + Key("enter"),
         "git push origin ": Text("git push origin "),
         "git push origin <text>": SCText("git push origin %(text)s"),
-        "git push tags": Text("git push --tags\n"),
+        "git push tags": Text("git push --tags") + Key("enter"),
         "git (rebase|re-base)": Text("git rebase "),
         "git (rebase|re-base) <text>": SCText("git rebase %(text)s"),
-        "git remote": Text("git remote\n"),
+        "git remote": Text("git remote") + Key("enter"),
         "git remote add": Text("git remote add "),
         "git remote add <text>": SCText("git remote add %(text)s"),
         "git remote show": Text("git remote show "),
@@ -142,12 +148,13 @@ series_rule = SeriesMappingRule(
         "git revert": Text("git revert "),
         "git revert head": Text("git revert HEAD"),
         "git show": Text("git show "),
-        "git (status|S T)": Text("git status\n"),
-        "git (status|S T) <gitopt>": Text("git status %(gitopt)s\n"),
+        "git stash": Text("git stash") + Key("enter"),
+        "git (status|S T)": Text("git status") + Key("enter"),
+        "git (status|S T) <gitopt>": Text("git status %(gitopt)s") + Key("enter"),  # @IgnorePep8
         "git tag": Text("git tag "),
         "git tag (annotate|annotated)": Text("git tag -a  -m \"\"") + Key("left:6"),  # @IgnorePep8
         "git tag delete": Text("git tag -d "),
-
+        # Special access to commands and options.
         "git command <gitcmd>": Text("git %(gitcmd)s "),
         "git option <gitopt>": Text(" %(gitopt)s"),
     },
