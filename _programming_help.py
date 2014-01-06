@@ -39,8 +39,6 @@ series_rule = SeriesMappingRule(
         "foobar": Text("foobar"),
         "foo": Text("foo"),
         "bar": Text("bar"),
-        "baz": Text("baz"),
-        "qux": Text("qux"),
         # Lorem ipsum, filler text
         # (Multiple keys are much faster than long texts.)
         "Lorem ipsum [short]": Key("L,o,r,e,m,space,i,p,s,u,m,space,d,o,l,o,r,space,s,i,t,space,a,m,e,t,comma,space,c,o,n,s,e,c,t,e,t,u,r,space,a,d,i,p,i,s,i,c,i,n,g,space,e,l,i,t,dot"),  # @IgnorePep8
