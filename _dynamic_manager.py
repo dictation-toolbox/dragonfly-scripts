@@ -25,13 +25,15 @@ from dragonfly import CompoundRule, MappingRule, RuleRef, Repetition, \
 import lib.sound as sound
 import dyn_lang_python_grammar
 import dyn_lang_javascript_grammar
+import dyn_lang_html_grammar
 import dyn_appl_bash_grammar
 
 
 moduleMapping = {
     "python": dyn_lang_python_grammar,
     "javascript": dyn_lang_javascript_grammar,
-    "bash": dyn_appl_bash_grammar
+    "bash": dyn_appl_bash_grammar,
+    "html": dyn_lang_html_grammar,
 }
 
 incompatibleModules = {
