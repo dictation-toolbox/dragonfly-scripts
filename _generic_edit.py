@@ -60,7 +60,7 @@ def reload_natlink():
 
 # For repeating of characters.
 charMap = {
-    "(bar|vertical bar)": "|",
+    "(bar|vertical bar|pipe)": "|",
     "(dash|minus|hyphen)": "-",
     "(dot|period)": ".",
     "comma": ",",
