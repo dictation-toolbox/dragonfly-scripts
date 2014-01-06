@@ -1,7 +1,7 @@
 from dragonfly import *  # @UnusedWildImport
 
 from lib.text import SCText
-import lib.format
+# import lib.format
 
 
 class SeriesMappingRule(CompoundRule):
@@ -64,12 +64,12 @@ htmlElements = {
     "figure": "figure",
     "footer": "footer",
     "form": "form",
-    "(H 1|heading 1": "h1",
-    "(H 2|heading 2": "h2",
-    "(H 3|heading 3": "h3",
-    "(H 4|heading 4": "h4",
-    "(H 5|heading 5": "h5",
-    "(H 6|heading 6": "h6",
+    "(H 1|heading 1)": "h1",
+    "(H 2|heading 2)": "h2",
+    "(H 3|heading 3)": "h3",
+    "(H 4|heading 4)": "h4",
+    "(H 5|heading 5)": "h5",
+    "(H 6|heading 6)": "h6",
     "head": "head",
     "header": "header",
     "(H R|horizontal rule)": "hr",
@@ -140,6 +140,9 @@ htmlElements = {
     "(W B R|word break [opportunity])": "wbr",
 }
 
+voidElements = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img',
+    'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'
+]
 
 htmlAttributes = {
     "accept": "accept",
@@ -251,16 +254,51 @@ htmlAttributes = {
 }
 
 
+def start_tag(element):
+    if element in voidElements:
+        Text("<%s />" % str(element)).execute()
+    else:
+        Text("<%s>" % str(element)).execute()
+
+
+def tags(element):
+    elementString = str(element)
+    if element in voidElements:
+        Text("<%s />" % str(element)).execute()
+    else:
+        Text("<%s></%s>" % (elementString, elementString)).execute()
+        Key("left:%s" % len(elementString)).execute()
+
+
+def end_tag(element):
+    Text("</%(element)s>")
+
+
+def attribute_with_content(attribute, text):
+    Text(' %(attribute)s=""').execute()
+    Key("left").execute()
+    SCText(str(text)).execute()
+
+
 special_commands_one = SeriesMappingRule(
     mapping={
         # Commands and keywords:
-        "tag <element>": Text("<%(element)s>"),
-        "end tag <element>": Text("</%(element)s>"),
+        "tag": Text("<>") + Key("left"),
+        "tag <element>": Function(start_tag),
+        "tags <element>": Function(tags),
+        "end tag": Text("</>") + Key("left"),
+        "end tag <element>": Function(end_tag),
+        "attribute <attribute>": Text(' %(attribute)s=""') + Key("left"),
+        "attribute <attribute> [equals] <text>": Function(attribute_with_content),  # @IgnorePep8
+        # doctype's
+        # if cases
+        
     },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
         Choice("element", htmlElements),
+        Choice("attribute", htmlAttributes),
     ],
     defaults={
         "n": 1
