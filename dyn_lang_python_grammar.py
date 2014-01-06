@@ -46,7 +46,7 @@ class SeriesMappingRule(CompoundRule):
 
 special_commands_one = SeriesMappingRule(
     mapping={
-        # Keywords:
+        # Commands and keywords:
         "and": Text(" and "),
         "as": Text("as "),
         "assign": Text(" = "),
@@ -60,8 +60,8 @@ special_commands_one = SeriesMappingRule(
         "divided by": Text(" / "),
         "(dict|dictionary) key value": Text("\"\": \"\",") + Key("left:6"),
         "enumerate": Text("enumerate()") + Key("left"),
-        "(def|define|definition)": Text("def "),
-        "(def|define|definition) <text>": Function(define_function),
+        "(def|define|definition) [function]": Text("def "),
+        "(def|define|definition) [function] <text>": Function(define_function),
         "(def|define|definition) method <text>": Function(define_method),
         "(def|define|definition) init": Text("def __init__("),
         "doc string": Text('"""Doc string."""') + Key("left:14, s-right:11"),
@@ -121,9 +121,9 @@ special_commands_one = SeriesMappingRule(
         "datetime": Text("datetime"),
         "(io|I O)": Text("io"),
         "logging": Text("logging"),
-        "(pdb|P D B)": Text("pdb"),
         "(os|O S)": Text("os"),
-        "(re|R E)": Text("os"),
+        "(pdb|P D B)": Text("pdb"),
+        "(re|R E)": Text("re"),
         "(sys|S Y S)": Text("sys"),
         "S Q lite 3": Text("sqlite3"),
         "subprocess": Text("subprocess"),
