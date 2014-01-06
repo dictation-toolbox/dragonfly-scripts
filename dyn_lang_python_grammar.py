@@ -82,7 +82,7 @@ special_commands_one = SeriesMappingRule(
         "greater [than] equals": Text(" >= "),
         "if": Text("if "),
         "if <text>": SCText("if %(text)s"),
-        "in": Text("in "),
+        "in": Text(" in "),
         "in <text>": SCText("in %(text)s"),
         "(int|I N T)": Text("int"),
         "(int|I N T)": Text("int()") + Key("left"),
