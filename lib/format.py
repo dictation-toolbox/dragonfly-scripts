@@ -264,11 +264,22 @@ def _cleanup_text(text):
     Returns the result as a string.
 
     """
+    prefixChars = ""
+    suffixChars = ""
+    if text.startswith("-"):
+        prefixChars += "-"
+    if text.startswith("_"):
+        prefixChars += "_"
+    if text.endswith("-"):
+        suffixChars += "-"
+    if text.endswith("_"):
+        suffixChars += "_"
     text = text.strip()
     text = text.replace('-', ' ')
     text = text.replace('_', ' ')
     text = text.replace("'", ' ')
     text = re.sub('[ \t\r\n]+', ' ', text)  # Any whitespaces to one space.
+    text = prefixChars + text + suffixChars
     return text
 
 
