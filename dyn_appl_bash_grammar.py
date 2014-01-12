@@ -65,6 +65,7 @@ special_commands_one = SeriesMappingRule(
         "grep <text>": SCText("grep %(text)s"),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
         "grep recursive <text>": Text("grep -rn \"%(text)s\" *") + Key("left:3"),  # @IgnorePep8
+        "ifconfig": Text("ifconfig "),
         "kill": Text("kill "),
         "kill (hard|[dash]9)": Text("kill -9 "),
         "list files": Text("ls -la") + Key("enter"),
@@ -74,6 +75,7 @@ special_commands_one = SeriesMappingRule(
         "move": Text("mv "),
         "move <text>": SCText("mv %(text)s"),
         "pipe": Text(" | "),
+        "ping": Text("ping "),
         "(print working directory|P W D)": Text("pwd") + Key("enter"),
         "(R M|remove file)": Text("rm "),
         "(R M|remove file) <text>": SCText("rm %(text)s"),
@@ -89,6 +91,7 @@ special_commands_one = SeriesMappingRule(
         "tail <text>": SCText("tail %(text)s"),
         "tail (F|follow)": Text("tail -f "),
         "tail (F|follow) <text>": SCText("tail -f %(text)s"),
+        "telnet": Text("telnet "),
         "touch": Text("touch "),
         "touch <text>": SCText("touch %(text)s"),
         "vim": Text("vim "),
