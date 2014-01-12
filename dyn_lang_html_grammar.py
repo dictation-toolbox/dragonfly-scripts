@@ -267,11 +267,11 @@ def tags(element):
         Text("<%s />" % str(element)).execute()
     else:
         Text("<%s></%s>" % (elementString, elementString)).execute()
-        Key("left:%s" % len(elementString)).execute()
+        Key("left:%s" % (len(elementString) + 3)).execute()
 
 
 def end_tag(element):
-    Text("</%(element)s>")
+    Text("</%s>" % str(element)).execute()
 
 
 def attribute_with_content(attribute, text):
@@ -282,7 +282,7 @@ def attribute_with_content(attribute, text):
 
 special_commands_one = SeriesMappingRule(
     mapping={
-        # Commands and keywords:
+        # Commands and keywords.
         "tag": Text("<>") + Key("left"),
         "tag <element>": Function(start_tag),
         "tags <element>": Function(tags),
@@ -290,9 +290,19 @@ special_commands_one = SeriesMappingRule(
         "end tag <element>": Function(end_tag),
         "attribute <attribute>": Text(' %(attribute)s=""') + Key("left"),
         "attribute <attribute> [equals] <text>": Function(attribute_with_content),  # @IgnorePep8
-        # doctype's
-        # if cases
-        
+        # Comments.
+        "comment": Text("<!--  -->") + Key("left:4"),
+        "comment <text>": SCText("<!-- %(text)s -->") + Key("left:4"),
+        "(open|left) comment": Text("<!-- "),
+        "(open|left) comment <text>": SCText("<!-- %(text)s"),
+        "(close|right) comment": Text(" -->"),
+        # Doctypes.
+        "doctype 5": Text("<!DOCTYPE html>"),
+        "doctype 4 [transitional]": Text('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">'),  # @IgnorePep8
+        "doctype 4 strict": Text('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'),  # @IgnorePep8
+        "doctype X [transitional]": Text('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'),  # @IgnorePep8
+        "doctype X strict": Text('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'),  # @IgnorePep8
+        # if conditions.
     },
     extras=[
         IntegerRef("n", 1, 100),
