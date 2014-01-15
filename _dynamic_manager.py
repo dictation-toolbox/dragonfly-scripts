@@ -4,16 +4,6 @@ different grammars.
 If a grammar is enabled, that is conflicting with a previously enabled grammar,
 the previously enabled grammar will be disabled.
 
-Currently available dynamic grammars:
-Python
-JavaScript
-Bash
-
-Example:
-To enable Python language commands.
-"'enable python grammar'"
-"'load python grammar'"
-
 -----------------------------------------------------------------------------
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
@@ -86,6 +76,17 @@ def notify_module_action_aborted(message, useSound=True):
         sound.play(sound.SND_MESSAGE)
 
 
+def notify(message="", useSound=True):
+    """Notifies the user, with a custom message, that the action was not
+    completed.
+
+    """
+    if message:
+        print(message)
+    if useSound:
+        sound.play(sound.SND_DING)
+
+
 def enable_module(module):
     """Enables the specified module. Disables conflicting modules."""
     disable_incompatible_modules(module)
@@ -151,6 +152,9 @@ global_context = None  # Context is None, so grammar will be globally active.
 grammar = Grammar("Dynamic manager", context=global_context)
 grammar.add_rule(series_rule)
 grammar.load()
+
+
+notify()  # Notify that Dragonfly is loaded (it more or less is...).
 
 
 def unload():
