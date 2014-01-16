@@ -26,6 +26,7 @@ import lib.sound as sound
 import dyn_lang_python_grammar
 import dyn_lang_javascript_grammar
 import dyn_lang_html_grammar
+import dyn_lang_css_grammar
 import dyn_appl_bash_grammar
 
 
@@ -34,14 +35,29 @@ moduleMapping = {
     "javascript": dyn_lang_javascript_grammar,
     "bash": dyn_appl_bash_grammar,
     "html": dyn_lang_html_grammar,
+    "css": dyn_lang_css_grammar,
 }
 
 incompatibleModules = {
     dyn_lang_python_grammar: [
-        dyn_lang_javascript_grammar
+        dyn_lang_javascript_grammar,
+        dyn_lang_html_grammar,
+        dyn_lang_css_grammar
     ],
     dyn_lang_javascript_grammar: [
-        dyn_lang_python_grammar
+        dyn_lang_python_grammar,
+        dyn_lang_html_grammar,
+        dyn_lang_css_grammar
+    ],
+    dyn_lang_html_grammar: [
+        dyn_lang_python_grammar,
+        dyn_lang_javascript_grammar,
+        dyn_lang_css_grammar
+    ],
+    dyn_lang_css_grammar: [
+        dyn_lang_python_grammar,
+        dyn_lang_javascript_grammar,
+        dyn_lang_html_grammar
     ]
 }
 
