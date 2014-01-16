@@ -1,5 +1,5 @@
-from dragonfly import Text, Key, Function, CompoundRule, MappingRule, \
-    Repetition, RuleRef, IntegerRef, Grammar, Dictation
+from dragonfly import (Text, Key, Function, MappingRule, Grammar, Dictation,
+    IntegerRef)
 
 import lib.format
 from lib.text import SCText
@@ -13,25 +13,6 @@ INCOMPATIBLE_MODULES = [
 ]
 
 
-class SeriesMappingRule(CompoundRule):
-
-    def __init__(self, mapping, extras=None, defaults=None):
-        mapping_rule = MappingRule(mapping=mapping, extras=extras,
-            defaults=defaults, exported=False)
-        single = RuleRef(rule=mapping_rule)
-        series = Repetition(single, min=1, max=16, name="series")
-
-        compound_spec = "<series>"
-        compound_extras = [series]
-        CompoundRule.__init__(self, spec=compound_spec,
-            extras=compound_extras, exported=True)
-
-    def _process_recognition(self, node, extras):  # @UnusedVariable
-        series = extras["series"]
-        for action in series:
-            action.execute()
-
-
 def define_function(text):
     Text("function ").execute()
     lib.format.camel_case_text(text)
@@ -39,7 +20,7 @@ def define_function(text):
     Key("left:3").execute()
 
 
-special_commands_two = SeriesMappingRule(
+rules = MappingRule(
     mapping={
         # Keywords:
         "and": Text(" && "),
@@ -125,7 +106,7 @@ special_commands_two = SeriesMappingRule(
 
 global_context = None  # Context is None, so grammar will be globally active.
 grammar = Grammar("JavaScript grammar", context=global_context)
-grammar.add_rule(special_commands_two)
+grammar.add_rule(rules)
 grammar.load()
 grammar.disable()
 

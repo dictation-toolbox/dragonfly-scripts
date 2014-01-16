@@ -1,5 +1,5 @@
-from dragonfly import Text, Key, Choice, CompoundRule, MappingRule, \
-    Repetition, RuleRef, IntegerRef, Grammar, Dictation
+from dragonfly import (Text, Key, Choice, MappingRule, IntegerRef, Grammar,
+    Dictation)
 
 from lib.text import SCText
 
@@ -10,25 +10,6 @@ INCOMPATIBLE_MODULES = [
     'javascript',
     'html'
 ]
-
-
-class SeriesMappingRule(CompoundRule):
-
-    def __init__(self, mapping, extras=None, defaults=None):
-        mapping_rule = MappingRule(mapping=mapping, extras=extras,
-            defaults=defaults, exported=False)
-        single = RuleRef(rule=mapping_rule)
-        series = Repetition(single, min=1, max=16, name="series")
-
-        compound_spec = "<series>"
-        compound_extras = [series]
-        CompoundRule.__init__(self, spec=compound_spec,
-            extras=compound_extras, exported=True)
-
-    def _process_recognition(self, node, extras):  # @UnusedVariable
-        series = extras["series"]
-        for action in series:
-            action.execute()
 
 
 cssProperties = {
@@ -219,7 +200,7 @@ cssProperties = {
 }
 
 
-special_commands_one = SeriesMappingRule(
+rules = MappingRule(
     mapping={
         # Commands and keywords.
         "class <text>": SCText(".%(text)s {"),
@@ -241,7 +222,7 @@ special_commands_one = SeriesMappingRule(
 
 global_context = None  # Context is None, so grammar will be globally active.
 grammar = Grammar("Css grammar", context=global_context)
-grammar.add_rule(special_commands_one)
+grammar.add_rule(rules)
 grammar.load()
 grammar.disable()
 

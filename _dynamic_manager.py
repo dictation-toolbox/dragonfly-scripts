@@ -77,7 +77,8 @@ def enable_module(module):
     if status:
         notify_module_enabled(moduleName)
     else:
-        notify_module_action_aborted("Dynamic grammar %s already enabled." % moduleName)
+        notify_module_action_aborted("Dynamic grammar %s already enabled." %
+            moduleName)
 
 
 def disable_module(module):
@@ -87,7 +88,8 @@ def disable_module(module):
     if status:
         notify_module_disabled(moduleName)
     else:
-        notify_module_action_aborted("Dynamic grammar %s was not enabled." % moduleName)
+        notify_module_action_aborted("Dynamic grammar %s was not enabled." %
+            moduleName)
 
 
 def disable_incompatible_modules(enableModule):
