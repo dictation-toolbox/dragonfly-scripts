@@ -1,7 +1,15 @@
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import Text, Key, Choice, CompoundRule, MappingRule, \
+    Repetition, RuleRef, IntegerRef, Grammar, Dictation, Function
 
 from lib.text import SCText
-# import lib.format
+
+DYN_MODULE_TYPE = "programming_language"
+DYN_MODULE_NAME = "html"
+INCOMPATIBLE_MODULES = [
+    'python',
+    'javascript',
+    'css'
+]
 
 
 class SeriesMappingRule(CompoundRule):

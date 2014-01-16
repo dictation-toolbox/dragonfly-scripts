@@ -8,48 +8,32 @@ the previously enabled grammar will be disabled.
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
+# import os
+import sys
+import pkgutil
 
 from dragonfly import CompoundRule, MappingRule, RuleRef, Repetition, \
     Function, IntegerRef, Dictation, Choice, Grammar
 
 import lib.sound as sound
-import dyn_lang_python_grammar
-import dyn_lang_javascript_grammar
-import dyn_lang_html_grammar
-import dyn_lang_css_grammar
-import dyn_appl_bash_grammar
+import modules
+
+moduleMapping = {}
 
 
-moduleMapping = {
-    "python": dyn_lang_python_grammar,
-    "javascript": dyn_lang_javascript_grammar,
-    "bash": dyn_appl_bash_grammar,
-    "html": dyn_lang_html_grammar,
-    "css": dyn_lang_css_grammar,
-}
+def import_dynamic_modules():
+    path = modules.__path__
+    prefix = modules.__name__ + "."
+    print("Loading dynamic grammar modules:")
+    for importer, package_name, _ in pkgutil.iter_modules(path, prefix):
+        if package_name not in sys.modules:
+            module = importer.find_module(package_name).load_module(
+                package_name)
+            moduleMapping[module.DYN_MODULE_NAME] = module
+            print("    %s" % package_name)
 
-incompatibleModules = {
-    dyn_lang_python_grammar: [
-        dyn_lang_javascript_grammar,
-        dyn_lang_html_grammar,
-        dyn_lang_css_grammar
-    ],
-    dyn_lang_javascript_grammar: [
-        dyn_lang_python_grammar,
-        dyn_lang_html_grammar,
-        dyn_lang_css_grammar
-    ],
-    dyn_lang_html_grammar: [
-        dyn_lang_python_grammar,
-        dyn_lang_javascript_grammar,
-        dyn_lang_css_grammar
-    ],
-    dyn_lang_css_grammar: [
-        dyn_lang_python_grammar,
-        dyn_lang_javascript_grammar,
-        dyn_lang_html_grammar
-    ]
-}
+import_dynamic_modules()
+print(moduleMapping)
 
 
 def notify_module_enabled(moduleName, useSound=True):
@@ -110,9 +94,11 @@ def disable_module(module):
 
 def disable_incompatible_modules(enableModule):
     """Iterates through the list of incompatible modules and disables them."""
-    for module in incompatibleModules.get(enableModule, {}):
+    for moduleName in enableModule.INCOMPATIBLE_MODULES:
+        module = moduleMapping.get(moduleName)
+        if not module:
+            print("Error: module %s not found." % moduleName)
         status = module.dynamic_disable()
-        moduleName = module.__name__
         if status:
             notify_module_disabled(moduleName, useSound=False)
 
