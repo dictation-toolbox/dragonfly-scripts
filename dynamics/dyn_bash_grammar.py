@@ -1,6 +1,11 @@
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import Text, Key, Function, CompoundRule, MappingRule, \
+    Repetition, RuleRef, IntegerRef, Grammar, Dictation, Pause
 
 from lib.text import SCText
+
+DYN_MODULE_TYPE = "environmental"
+DYN_MODULE_NAME = "bash"
+INCOMPATIBLE_MODULES = []
 
 
 def directory_up(n):

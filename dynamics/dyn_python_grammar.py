@@ -1,7 +1,16 @@
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import Text, Key, Function, CompoundRule, MappingRule, \
+    Repetition, RuleRef, IntegerRef, Grammar, Dictation
 
 from lib.text import SCText
 import lib.format
+
+DYN_MODULE_TYPE = "programming_language"
+DYN_MODULE_NAME = "python"
+INCOMPATIBLE_MODULES = [
+    'javascript',
+    'html',
+    'css'
+]
 
 
 def define_function(text):
