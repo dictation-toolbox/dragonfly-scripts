@@ -8,7 +8,6 @@ the previously enabled grammar will be disabled.
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
-# import os
 import sys
 import pkgutil
 
@@ -16,14 +15,14 @@ from dragonfly import CompoundRule, MappingRule, RuleRef, Repetition, \
     Function, IntegerRef, Dictation, Choice, Grammar
 
 import lib.sound as sound
-import modules
+import dynamics
 
 moduleMapping = {}
 
 
 def import_dynamic_modules():
-    path = modules.__path__
-    prefix = modules.__name__ + "."
+    path = dynamics.__path__
+    prefix = dynamics.__name__ + "."
     print("Loading dynamic grammar modules:")
     for importer, package_name, _ in pkgutil.iter_modules(path, prefix):
         if package_name not in sys.modules:
@@ -33,19 +32,18 @@ def import_dynamic_modules():
             print("    %s" % package_name)
 
 import_dynamic_modules()
-print(moduleMapping)
 
 
 def notify_module_enabled(moduleName, useSound=True):
     """Notifies the user that a dynamic module has been enabled."""
-    print("--> Module enabled: %s" % moduleName)
+    print("==> Dynamic grammar enabled: %s" % moduleName)
     if useSound:
         sound.play(sound.SND_ACTIVATE)
 
 
 def notify_module_disabled(moduleName, useSound=True):
     """Notifies the user that a dynamic module has been disabled."""
-    print("<-- Module disabled: %s" % moduleName)
+    print("<-- Dynamic grammar disabled: %s" % moduleName)
     if useSound:
         sound.play(sound.SND_DEACTIVATE)
 
@@ -75,21 +73,21 @@ def enable_module(module):
     """Enables the specified module. Disables conflicting modules."""
     disable_incompatible_modules(module)
     status = module.dynamic_enable()
-    moduleName = module.__name__
+    moduleName = module.DYN_MODULE_NAME
     if status:
         notify_module_enabled(moduleName)
     else:
-        notify_module_action_aborted("Module %s already enabled." % moduleName)
+        notify_module_action_aborted("Dynamic grammar %s already enabled." % moduleName)
 
 
 def disable_module(module):
     """Disabled the specified module."""
     status = module.dynamic_disable()
-    moduleName = module.__name__
+    moduleName = module.DYN_MODULE_NAME
     if status:
         notify_module_disabled(moduleName)
     else:
-        notify_module_action_aborted("Module %s was not enabled." % moduleName)
+        notify_module_action_aborted("Dynamic grammar %s was not enabled." % moduleName)
 
 
 def disable_incompatible_modules(enableModule):
@@ -101,6 +99,18 @@ def disable_incompatible_modules(enableModule):
         status = module.dynamic_disable()
         if status:
             notify_module_disabled(moduleName, useSound=False)
+
+
+def disable_all_modules():
+    """Iterates through the list of all dynamic modules and disables them."""
+    disableCount = 0
+    for moduleName, module in moduleMapping.items():
+        status = module.dynamic_disable()
+        if status:
+            disableCount += 1
+            notify_module_disabled(moduleName, useSound=False)
+    if disableCount > 0:
+        sound.play(sound.SND_DEACTIVATE)
 
 
 class SeriesMappingRule(CompoundRule):
@@ -124,6 +134,10 @@ series_rule = SeriesMappingRule(
     mapping={
         "(enable|load) <module> grammar": Function(enable_module),
         "(disable|unload) <module> grammar": Function(disable_module),
+        "(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
+        "(start|switch to) <module> mode": Function(enable_module),
+        "(stop|end) <module> mode": Function(disable_module),
+        "(stop|end) [all] dynamic modes": Function(disable_all_modules),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -140,7 +154,7 @@ grammar.add_rule(series_rule)
 grammar.load()
 
 
-notify()  # Notify that Dragonfly is loaded (it more or less is...).
+notify()  # Notify that Dragonfly is ready.
 
 
 def unload():
