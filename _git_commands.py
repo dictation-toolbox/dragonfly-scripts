@@ -115,7 +115,7 @@ series_rule = SeriesMappingRule(
         "git (diff|difference|differentiate)": Text("git diff "),
         "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
         "git (diff|difference|differentiate) cached": Text("git diff --cashed") + Key("enter"),  # @IgnorePep8
-        "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
+        "git (diff|difference|differentiate) cached <text>": SCText("git diff --cashed %(text)s") + Key("enter"),  # @IgnorePep8
         "git fetch": Text("git fetch") + Key("enter"),
         "git fetch <text>": SCText("git fetch %(text)s "),
         "git grep": Text("git grep \"\"") + Key("left:1"),
