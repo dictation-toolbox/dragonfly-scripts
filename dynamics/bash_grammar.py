@@ -15,13 +15,11 @@ def directory_up(n):
 
 
 def control_break():
-    try:
-        Key("ctrl:down").execute()
-        Pause("10").execute()  # Pause needed for Git-bash, Console2, etc.
-        Key("c").execute()
+    try:  # Pauses needed for Git-bash, Console2, Windows command prompt, etc.
+        Key("ctrl:down/10").execute()
+        Key("c/5").execute()
     finally:
-        Pause("10").execute()  # Pause needed for Git-bash, Console2, etc.
-        Key("ctrl:up").execute()
+        Key("ctrl:up/10").execute()
 
 
 rules = MappingRule(
