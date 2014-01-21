@@ -114,6 +114,7 @@ class TransparentWin(tk.Tk):
         self.overrideredirect(True)  # Removes the title bar.
         self.resizable(False, False)
         self.wm_attributes("-topmost", True)
+        self.wait_visibility(self)
         self.attributes("-alpha", 0.5)
         self.wm_title("Grid overlay")  # Important for Dragonfly's Context.
         self.wm_geometry(self._grid.get_geometry_string())
