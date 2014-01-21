@@ -41,7 +41,7 @@ class SCText(Text):  # Special Characters Text.
     def _parse_spec(self, spec):
         """Overrides the normal Text class behavior. To handle dictation of
         special characters like / . _
-        Unfortunately, I have found a better place to solve this.
+        Unfortunately, I have not found a better place to solve this.
 
         """
         parts = re.split("\%\([a-z_0-9]+\)s", self._spec)
