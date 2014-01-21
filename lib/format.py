@@ -31,6 +31,7 @@ def camel_case_count(n):
         newText = _camelify(text.split(' '))
         if endSpace:
             newText = newText + ' '
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -82,6 +83,7 @@ def pascal_case_count(n):
         newText = text.title().replace(' ', '')
         if endSpace:
             newText = newText + ' '
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -116,6 +118,7 @@ def snake_case_count(n):
         newText = '_'.join(text.split(' '))
         if endSpace:
             newText = newText + ' '
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -151,6 +154,7 @@ def squash_count(n):
         newText = ''.join(text.split(' '))
         if endSpace:
             newText = newText + ' '
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -171,24 +175,27 @@ def expand_count(n):
     cutText = _select_and_cut_text(n)
     if cutText:
         endSpace = cutText.endswith(' ')
-        reg = re.compile(r'[:,][a-zA-Z0-9_\"\']')
+        reg = re.compile(r'[:,%][a-zA-Z0-9_\"\']')
         hit = reg.search(cutText)
         count = 0
         while hit and count < 10:
-            cutText = cutText[:hit.start() + 1] + ' ' + cutText[hit.end() - 1:]
+            cutText = cutText[:hit.start() + 1] + ' ' + \
+                cutText[hit.end() - 1:]
             hit = reg.search(cutText)
             count += 1
         reg = re.compile(
-            r'([a-zA-Z0-9_\"\'\)][=\+\-\*/]|[=\+\-\*/][a-zA-Z0-9_\"\'\(])')
+            r'([a-zA-Z0-9_\"\'\)][=\+\-\*/\%]|[=\+\-\*/\%][a-zA-Z0-9_\"\'\(])')
         hit = reg.search(cutText)
         count = 0
         while hit and count < 10:
-            cutText = cutText[:hit.start() + 1] + ' ' + cutText[hit.end() - 1:]
+            cutText = cutText[:hit.start() + 1] + ' ' + \
+                cutText[hit.end() - 1:]
             hit = reg.search(cutText)
             count += 1
         newText = cutText
         if endSpace:
             newText = newText + ' '
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -203,6 +210,7 @@ def uppercase_text(text):
 
     """
     newText = str(text)
+    newText = newText.replace("%", "%%")  # Escape any format chars.
     Text(newText.upper()).execute()
 
 
@@ -219,6 +227,7 @@ def uppercase_count(n):
     cutText = _select_and_cut_text(n)
     if cutText:
         newText = cutText.upper()
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
@@ -249,6 +258,7 @@ def lowercase_count(n):
     cutText = _select_and_cut_text(n)
     if cutText:
         newText = cutText.lower()
+        newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
