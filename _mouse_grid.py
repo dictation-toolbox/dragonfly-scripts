@@ -1,6 +1,6 @@
 """A command module for Dragonfly, for controlling the mouse using a grid.
 
-This is still a experimental functionality. It may contain several bugs,
+This is still an experimental functionality. It may contain several bugs,
 and it may be heavily modified.
 
 Apart from the normal mouse grid, this grid is made to support multiple
@@ -17,7 +17,7 @@ Licensed under the LGPL, see http://www.gnu.org/licenses/
 # import datetime
 
 from dragonfly import MappingRule, Function, IntegerRef, Choice, Dictation, \
-    Grammar, AppContext, Rectangle
+    Grammar, AppContext, Rectangle, Mouse, Key
 
 import grid_base
 import lib.sound as sound
@@ -217,7 +217,7 @@ def go():
     """Places the mouse at the grid coordinates. Hides the grid."""
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
+        Mouse("[%s, %s]" % (positionX, positionY))
 
 
 def left_click():
@@ -227,8 +227,7 @@ def left_click():
     """
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        grid_base.left_click_mouse(positionX, positionY)
+        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
 
 
 def right_click():
@@ -238,8 +237,7 @@ def right_click():
     """
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        grid_base.right_click_mouse(positionX, positionY)
+        Mouse("[%s, %s], right" % (positionX, positionY)).execute()
 
 
 def double_click():
@@ -249,8 +247,7 @@ def double_click():
     """
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        grid_base.double_click_mouse(positionX, positionY)
+        Mouse("[%s, %s], left:2" % (positionX, positionY)).execute()
 
 
 def control_click():
@@ -260,8 +257,9 @@ def control_click():
     """
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        grid_base.control_click(positionX, positionY)
+        Key("ctrl:down/5").execute()
+        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
+        Key("ctrl:up/5").execute()
 
 
 def shift_click():
@@ -271,8 +269,9 @@ def shift_click():
     """
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        grid_base.shift_click(positionX, positionY)
+        Key("shift:down/5").execute()
+        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
+        Key("shift:up/5").execute()
 
 
 def mouse_mark():
@@ -281,11 +280,9 @@ def mouse_mark():
 
     """
     global MOUSE_MARK_POSITION
-    MOUSE_MARK_POSITION = _init_mouse_action()
-    (positionX, positionY) = MOUSE_MARK_POSITION
+    (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
-        grid_base.move_mouse(positionX, positionY)
-        mouse_grid()
+        MOUSE_MARK_POSITION = (positionX, positionY)
     else:
         MOUSE_MARK_POSITION = None
 
@@ -299,7 +296,9 @@ def mouse_drag():
     if MOUSE_MARK_POSITION:
         (startX, startY) = MOUSE_MARK_POSITION
         (targetX, targetY) = _init_mouse_action()
-        grid_base.mouse_drag(startX, startY, targetX, targetY)
+        mouseString = "[%s, %s], left:down/10, [%s, %s], left:up/10" % (startX,
+            startY, targetX, targetY)
+        Mouse(mouseString).execute()
         MOUSE_MARK_POSITION = None
     else:
         print("Mouse drag failed, no start position marked.")

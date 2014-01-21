@@ -1,5 +1,4 @@
-import win32api
-import win32con
+
 import Tkinter as tk
 from Tkconstants import *  # @UnusedWildImport
 import time
@@ -198,53 +197,6 @@ class TransparentWin(tk.Tk):
 
     def exit(self):
         self.destroy()
-
-
-def _mouse_event(value, x, y):
-    win32api.mouse_event(value, x, y, 0, 0)
-
-
-def move_mouse(positionX, positionY):
-    win32api.SetCursorPos((positionX, positionY))
-
-
-def left_click_mouse(positionX, positionY):
-    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
-
-
-def double_click_mouse(positionX, positionY):
-    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, positionX, positionY)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, positionX, positionY)
-
-
-def right_click_mouse(positionX, positionY):
-    _mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN, positionX, positionY)
-    _mouse_event(win32con.MOUSEEVENTF_RIGHTUP, positionX, positionY)
-
-
-def control_click(positionX, positionY):
-    win32api.keybd_event(win32con.VK_CONTROL, 0, 0, 0)  # @IgnorePep8
-    left_click_mouse(positionX, positionY)
-    win32api.keybd_event(win32con.VK_CONTROL, 0, win32con.KEYEVENTF_KEYUP, 0)
-
-
-def shift_click(positionX, positionY):
-    win32api.keybd_event(win32con.VK_SHIFT, 0, 0, 0)  # @IgnorePep8
-    left_click_mouse(positionX, positionY)
-    win32api.keybd_event(win32con.VK_SHIFT, 0, win32con.KEYEVENTF_KEYUP, 0)
-
-
-def mouse_drag(startX, startY, targetX, targetY):
-    win32api.SetCursorPos((startX, startY))
-    time.sleep(0.1)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, startX, startY)
-    time.sleep(0.1)
-    win32api.SetCursorPos((targetX, targetY))
-    time.sleep(0.2)
-    _mouse_event(win32con.MOUSEEVENTF_LEFTUP, targetX, targetY)
 
 
 def __run__():
