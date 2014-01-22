@@ -118,6 +118,7 @@ series_rule = SeriesMappingRule(
         "git (diff|difference|differentiate) cached <text>": SCText("git diff --cashed %(text)s") + Key("enter"),  # @IgnorePep8
         "git fetch": Text("git fetch") + Key("enter"),
         "git fetch <text>": SCText("git fetch %(text)s "),
+        "git fetch prune": Text("git fetch -p"),  # Remove local refs to deleted remote branches.  # @IgnorePep8
         "git grep": Text("git grep \"\"") + Key("left:1"),
         "git help": Text("git --help") + Key("enter"),
         "git help <gitcmd>": Text("git --help %(gitcmd)s") + Key("enter"),
