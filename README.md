@@ -1,12 +1,18 @@
 # dragonfly-scripts
 
+---
+
 >**NO WARRANTY!**
 >All code and information in this repository is provided "AS IS". Your use of it's content is at your own risk. The author/authors are not liable for any consequences from using it. **ALWAYS** make sure to keep backups before making any changes!
 
-__Note: There is currently a lot of heavy experimenting going on in this repository, so it is not stable. And there will most likely be a lot of tweaking in the weeks to come.__
+---
 
+>All code in this repository is licensed under LGPL3, if not explicitly stated otherwise.
 
 ---
+
+__Note: There is currently a lot of heavy experimenting going on in this repository, so it is not stable. Some of the information is not updated. Once the repository contents starts to stabilize, I will try to update the information texts.__
+
 
 ## What?
 
