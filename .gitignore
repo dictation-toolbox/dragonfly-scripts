@@ -37,4 +37,5 @@ _vocola_main.py
 # Ignore personal, work and junk files.
 _work.py
 _personal.py
+config.json
 junk.py

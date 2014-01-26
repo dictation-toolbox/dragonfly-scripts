@@ -5,7 +5,7 @@ If a grammar is enabled, that is conflicting with a previously enabled grammar,
 the previously enabled grammar will be disabled.
 
 -----------------------------------------------------------------------------
-Licensed under the LGPL, see http://www.gnu.org/licenses/
+Licensed under LGPL3
 
 """
 import sys
@@ -14,25 +14,11 @@ import pkgutil
 from dragonfly import CompoundRule, MappingRule, RuleRef, Repetition, \
     Function, IntegerRef, Dictation, Choice, Grammar
 
+import lib.config
 import lib.sound as sound
 import dynamics
 
 moduleMapping = {}
-
-
-def import_dynamic_modules():
-    global moduleMapping
-    path = dynamics.__path__
-    prefix = dynamics.__name__ + "."
-    print("Loading dynamic grammar modules:")
-    for importer, package_name, _ in pkgutil.iter_modules(path, prefix):
-        if package_name not in sys.modules:
-            module = importer.find_module(package_name).load_module(
-                package_name)
-            moduleMapping[module.DYN_MODULE_NAME] = module
-            print("    %s" % package_name)
-
-import_dynamic_modules()
 
 
 def notify_module_enabled(moduleName, useSound=True):
@@ -70,38 +56,67 @@ def notify(message="", useSound=True):
         sound.play(sound.SND_DING)
 
 
-def enable_module(module):
+def enable_module(module, useSound=True):
     """Enables the specified module. Disables conflicting modules."""
+    if not module:
+        return
+    moduleName = module.DYN_MODULE_NAME
     disable_incompatible_modules(module)
     status = module.dynamic_enable()
-    moduleName = module.DYN_MODULE_NAME
     if status:
-        notify_module_enabled(moduleName)
+        notify_module_enabled(moduleName, useSound)
+        config = lib.config.get_config()
+        cfg = config["dynamic_modules"][moduleName]
+        cfg["enabled"] = True
+        lib.config.save_config()
     else:
         notify_module_action_aborted("Dynamic grammar %s already enabled." %
             moduleName)
 
 
-def disable_module(module):
+def disable_module(module, useSound=True):
     """Disabled the specified module."""
+    if not module:
+        return
     status = module.dynamic_disable()
     moduleName = module.DYN_MODULE_NAME
     if status:
-        notify_module_disabled(moduleName)
-    else:
-        notify_module_action_aborted("Dynamic grammar %s was not enabled." %
-            moduleName)
+        notify_module_disabled(moduleName, useSound)
+        config = lib.config.get_config()
+        cfg = config["dynamic_modules"][moduleName]
+        cfg["enabled"] = False
+        lib.config.save_config()
 
 
 def disable_incompatible_modules(enableModule):
     """Iterates through the list of incompatible modules and disables them."""
     for moduleName in enableModule.INCOMPATIBLE_MODULES:
         module = moduleMapping.get(moduleName)
-        if not module:
-            print("Error: module %s not found." % moduleName)
-        status = module.dynamic_disable()
-        if status:
-            notify_module_disabled(moduleName, useSound=False)
+        if module:
+            disable_module(module, useSound=True)
+
+
+def import_dynamic_modules():
+    global moduleMapping
+    config = lib.config.get_config()
+    path = dynamics.__path__
+    prefix = dynamics.__name__ + "."
+    print("Loading dynamic grammar modules:")
+    for importer, package_name, _ in pkgutil.iter_modules(path, prefix):
+        if package_name not in sys.modules:
+            module = importer.find_module(package_name).load_module(
+                package_name)
+            moduleMapping[module.DYN_MODULE_NAME] = module
+            cfg = config["dynamic_modules"].get(module.DYN_MODULE_NAME)
+            if not cfg:
+                cfg = {"enabled": False}
+                config["dynamic_modules"][module.DYN_MODULE_NAME] = cfg
+            print("    %s" % package_name)
+            if cfg["enabled"] == True:
+                enable_module(module, useSound=False)
+
+
+import_dynamic_modules()
 
 
 def disable_all_modules():
