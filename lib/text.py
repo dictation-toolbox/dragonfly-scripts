@@ -46,7 +46,7 @@ class SCText(Text):  # Special Characters Text.
         """
         parts = re.split("\%\([a-z_0-9]+\)s", self._spec)
         if len(parts) > 2:
-            raise Exception("SCText only supports one variable.")
+            raise Exception("SCText only supports one variable, yet.")
         start = len(parts[0])
         end = len(spec) - len(parts[1])
         work = spec[start:end]
