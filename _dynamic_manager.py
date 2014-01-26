@@ -21,6 +21,7 @@ moduleMapping = {}
 
 
 def import_dynamic_modules():
+    global moduleMapping
     path = dynamics.__path__
     prefix = dynamics.__name__ + "."
     print("Loading dynamic grammar modules:")
@@ -156,11 +157,16 @@ grammar.add_rule(series_rule)
 grammar.load()
 
 
-notify()  # Notify that Dragonfly is ready.
+notify()  # Notify that Dragonfly is ready with a sound.
 
 
 def unload():
     """Unload function which will be called at unload time."""
+    # Unload the dynamically loaded modules.
+    global moduleMapping
+    for module in moduleMapping.values():
+        module.unload()
+
     global grammar
     if grammar:
         grammar.unload()
