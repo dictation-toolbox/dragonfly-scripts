@@ -99,6 +99,8 @@ def disable_incompatible_modules(enableModule):
 def import_dynamic_modules():
     global moduleMapping
     config = lib.config.get_config()
+    if not config.get("dynamic_modules"):
+        config["dynamic_modules"] = {}
     path = dynamics.__path__
     prefix = dynamics.__name__ + "."
     print("Loading dynamic grammar modules:")
