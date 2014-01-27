@@ -5,25 +5,7 @@ WORKING_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = os.path.join(WORKING_PATH, "config.json")
 
 # Default config.
-CONFIG = {
-    "dynamic_modules": {
-        "bash": {
-            "enabled": False
-        },
-        "css": {
-            "enabled": False
-        },
-        "html": {
-            "enabled": False
-        },
-        "javascript": {
-            "enabled": False
-        },
-        "python": {
-            "enabled": False
-        }
-    }
-}
+CONFIG = {}
 
 
 def save_config():
