@@ -1,9 +1,8 @@
 from dragonfly import (Text, Key, Function, MappingRule, IntegerRef, Grammar,
-    Dictation, Pause)
+    Dictation)
 
 from lib.text import SCText
 
-DYN_MODULE_TYPE = "environmental"
 DYN_MODULE_NAME = "bash"
 INCOMPATIBLE_MODULES = []
 
