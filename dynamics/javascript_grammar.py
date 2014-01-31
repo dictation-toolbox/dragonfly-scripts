@@ -57,7 +57,7 @@ rules = MappingRule(
         "(int|I N T) <text>": SCText("int %(text)s"),
         "in": Text("in "),
         "in <text>": SCText("in %(text)s"),
-        "(jQuery (variable|var)|dollar paren)": Text("$()") + Key("left"),
+        "((jquery|jay query) (variable|var)|dollar paren)": Text("$()") + Key("left"),  # @IgnorePep8
         "less than": Text(" < "),
         "less equals": Text(" <= "),
         "(line end|end line)": Key("end") + Text(";") + Key("enter"),
