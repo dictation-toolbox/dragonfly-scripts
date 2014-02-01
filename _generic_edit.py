@@ -154,8 +154,8 @@ config.cmd.map = Item(
         # Useful for canceling what inconsiderate loud mouths have started.
         "<text> cancel dictation": Function(cancel_dictation),
         "<text> cancel dictation <text2>": Function(cancel_dictation),
-        "<text> cancel and sleep": Function(cancel_and_sleep),
-        "<text> cancel and sleep <text2>": Function(cancel_and_sleep),
+        "[<text>] cancel and sleep": Function(cancel_and_sleep),
+        "[<text>] cancel and sleep [<text2>]": Function(cancel_and_sleep),
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },

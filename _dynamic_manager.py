@@ -131,6 +131,7 @@ def disable_all_modules():
             notify_module_disabled(moduleName, useSound=False)
     if disableCount > 0:
         sound.play(sound.SND_DEACTIVATE)
+    print("----------- All dynamic modules disabled -----------\n")
 
 
 class SeriesMappingRule(CompoundRule):
@@ -155,7 +156,7 @@ series_rule = SeriesMappingRule(
         "(enable|load) <module> grammar": Function(enable_module),
         "(disable|unload) <module> grammar": Function(disable_module),
         "(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
-        "(start|switch to) <module> mode": Function(enable_module),
+        "[(start|switch to)] <module> mode": Function(enable_module),  # Too disruptive? Time will tell...    @IgnorePep8
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
     },
