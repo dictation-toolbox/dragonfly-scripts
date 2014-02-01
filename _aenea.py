@@ -36,16 +36,14 @@ def notify_host(text):
     communication.server.notify_host(message=str(text))
 
 
-def _switch_workspace(direction):
+def workspace_direction(direction1, direction2=None):
     try:
         Key("Control_R").execute()  # Release VirtualBox keyboard capture.
-        Key("ctrl:down, alt:down, %s/5" % direction).execute()
+        Key("ctrl:down, alt:down, %s/5" % direction1).execute()
+        if direction2:
+            Key("%s/5" % direction2).execute()
     finally:  # Make sure to release the modifier keys.
         Key("alt:up, ctrl:up").execute()
-
-
-def workspace_direction(direction):
-    _switch_workspace(direction)
 
 
 directions = {
@@ -62,12 +60,14 @@ rules = MappingRule(
         "write text": Key("A, B, C"),
         "linux test": Key("s-a"),
         "notify host <text>": Function(notify_host),
-        "workspace <direction>": Function(workspace_direction),
+        "workspace <direction1> [<direction2>]": Function(workspace_direction),
+#         "workspace <direction1> ": Function(workspace_direction),
     },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
-        Choice("direction", directions)
+        Choice("direction1", directions),
+        Choice("direction2", directions)
     ],
     defaults={
         "n": 1
