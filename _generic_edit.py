@@ -8,13 +8,34 @@ Licensed under the LGPL, see http://www.gnu.org/licenses/
 """
 
 from natlink import setMicState
-from dragonfly import Key, Text, Choice, Pause, Window, \
-    FocusWindow, Config, Section, Item, Function, Dictation, Mimic, \
-    IntegerRef, MappingRule, Alternative, RuleRef, Grammar, Repetition, \
+from dragonfly import (
+    Key,  # @UnusedImport
+    Text,  # @UnusedImport
+    Choice,
+    Pause,
+    Window,
+    FocusWindow,
+    Config,
+    Section,
+    Item,
+    Function,
+    Dictation,
+    IntegerRef,
+    MappingRule,
+    Alternative,
+    RuleRef,
+    Grammar,
+    Repetition,
     CompoundRule
+)
 
 import lib.sound as sound
 import lib.format
+
+try:
+    from proxy_nicknames import Key, Text
+except ImportError:
+    pass
 
 release = Key("shift:up, ctrl:up")
 
@@ -126,7 +147,7 @@ config.cmd.map = Item(
         "release [all]": release,
         # How do I comment this?
         "say <text>": release + Text("%(text)s"),
-        "mimic <text>": release + Mimic(extra="text"),
+#         "mimic <text>": release + Mimic(extra="text"),
          # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
