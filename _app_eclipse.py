@@ -29,7 +29,7 @@ rules = MappingRule(
     mapping={
         # Commands:
         "activate editor": Key("f12"),
-        "apply correction": Key("c-1"),
+        "apply (fix|correction)": Key("c-1"),
         "choose editor": Key("cs-e"),
         "close tab": Key("c-w"),
         "close all tab": Key("cs-w"),
@@ -72,7 +72,9 @@ rules = MappingRule(
     }
 )
 context = None
-winContext = AppContext(executable="eclipse", title="Eclipse")
+winContext1 = AppContext(executable="javaw", title="Eclipse")
+winContext2 = AppContext(executable="eclipse", title="Eclipse")
+winContext = winContext1 | winContext2
 if USING_AENEA == True:
     nixContext = NixAppContext(executable="java", title="Eclipse")
     context = winContext | nixContext
