@@ -34,6 +34,8 @@ rules = MappingRule(
         "close tab": Key("c-w"),
         "close all tab": Key("cs-w"),
         "debug": Key("f11"),
+        "duplicate down [<n>]": Key("ca-down:%(n)d"),
+        "duplicate up [<n>]": Key("ca-up:%(n)d"),
         "find and replace": Key("c-f"),
         "go back": Key("a-right"),
         "go forward": Key("a-left"),
@@ -45,8 +47,8 @@ rules = MappingRule(
         "step next [<n>]": Key("f6/50:%(n)d"),
         "step out [<n>]": Key("f7/50:%(n)d"),
         "move tab left [<n>]": Key("c-pgup/10:%(n)d"),
-        "move tab right": Key("c-pgdown/10:%(n)d"),
-        "terminate all launches": Key("ca-f9"),  # Will switch tty in Linux!!
+        "move tab right [<n>]": Key("c-pgdown/10:%(n)d"),
+        "terminate all launches": Key("ca-f9"),  # Will switch TTY in Linux!!
         "toggle breakpoint": Key("cs-b"),
         "toggle comment": Key("c-slash"),
         "toggle editor": Key("c-f6"),
@@ -58,10 +60,12 @@ rules = MappingRule(
         "show file menu": Key("apps"),
         "show system menu": Key("a-minus"),
         "show shortcuts": Key("cs-l"),
+        "show file properties": Key("a-enter"),
         "show view menu": Key("c-f10"),
+        "switch editor": Key("c-e"),
     },
     extras=[
-        IntegerRef("n", 1, 10),
+        IntegerRef("n", 1, 100),
     ],
     defaults={
         "n": 1
