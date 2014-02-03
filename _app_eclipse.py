@@ -14,11 +14,15 @@ from dragonfly import (
     AppContext,
     IntegerRef,
     Grammar,
-#     Key,
+    Key,  # @UnusedImport
 )
 
-from proxy_nicknames import Key
-from proxy_nicknames import AppContext as NixAppContext
+try:
+    from proxy_nicknames import Key
+    from proxy_nicknames import AppContext as NixAppContext
+    USING_AENEA = True
+except ImportError:
+    USING_AENEA = False
 
 
 rules = MappingRule(
@@ -26,6 +30,7 @@ rules = MappingRule(
         # Commands:
         "activate editor": Key("f12"),
         "apply correction": Key("c-1"),
+        "choose editor": Key("cs-e"),
         "close tab": Key("c-w"),
         "close all tab": Key("cs-w"),
         "debug": Key("f11"),
@@ -39,9 +44,8 @@ rules = MappingRule(
         "step in [<n>]": Key("f5/50:%(n)d"),
         "step next [<n>]": Key("f6/50:%(n)d"),
         "step out [<n>]": Key("f7/50:%(n)d"),
-        "choose editor": Key("cs-e"),
-        "tab left": Key("c-pgup"),
-        "tab right": Key("c-pgdown"),
+        "move tab left [<n>]": Key("c-pgup/10:%(n)d"),
+        "move tab right": Key("c-pgdown/10:%(n)d"),
         "terminate all launches": Key("ca-f9"),  # Will switch tty in Linux!!
         "toggle breakpoint": Key("cs-b"),
         "toggle comment": Key("c-slash"),
@@ -63,10 +67,14 @@ rules = MappingRule(
         "n": 1
     }
 )
-
-winContext = AppContext(executable="javaw", title="Eclipse")
-nixContext = NixAppContext(executable="java", title="Eclipse")
-grammar = Grammar("Eclipse", context=winContext | nixContext)
+context = None
+winContext = AppContext(executable="eclipse", title="Eclipse")
+if USING_AENEA == True:
+    nixContext = NixAppContext(executable="java", title="Eclipse")
+    context = winContext | nixContext
+else:
+    context = winContext
+grammar = Grammar("Eclipse", context=context)
 grammar.add_rule(rules)
 grammar.load()
 
