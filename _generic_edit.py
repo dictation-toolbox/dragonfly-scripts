@@ -113,7 +113,6 @@ config.cmd.map = Item(
         "application key": release + Key("apps"),
         "win key": release + Key("win"),
         "paste": release + Key("c-v/5"),
-        "duplicate <n>": release + Key("c-c, c-v:%(n)d"),
         "copy": release + Key("c-c/5"),
         "cut": release + Key("c-x/5"),
         "select all": release + Key("c-a"),
