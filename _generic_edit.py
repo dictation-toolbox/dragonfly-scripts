@@ -80,7 +80,7 @@ def reload_natlink():
 
 
 # For repeating of characters.
-charMap = {
+specialCharMap = {
     "(bar|vertical bar|pipe)": "|",
     "(dash|minus|hyphen)": "-",
     "(dot|period)": ".",
@@ -102,6 +102,101 @@ charMap = {
     "plus": "+",
     "space": " "
 }
+
+# Modifiers for press-command.
+modifierMap = {
+    "alt": "a",
+    "control": "c",
+    "shift": "s",
+    "super": "w",
+}
+
+# Modifiers for press-command.
+singleModifierMap = {
+    "alt": "alt",
+    "control": "contrl",
+    "shift": "shift",
+    "super": "win",
+}
+
+letterMap = {
+    "(A|alpha)": "a",
+    "(B|bravo) ": "b",
+    "(C|charlie) ": "c",
+    "(D|delta) ": "d",
+    "(E|echo) ": "e",
+    "(F|foxtrot) ": "f",
+    "(G|golf) ": "g",
+    "(H|hotel) ": "h",
+    "(I|india|indigo) ": "i",
+    "(J|juliet) ": "j",
+    "(K|kilo) ": "k",
+    "(L|lima) ": "l",
+    "(M|mike) ": "m",
+    "(N|november) ": "n",
+    "(O|oscar) ": "o",
+    "(P|papa|poppa) ": "p",
+    "(Q|quebec|quiche) ": "q",
+    "(R|romeo) ": "r",
+    "(S|sierra) ": "s",
+    "(T|tango) ": "t",
+    "(U|uniform) ": "u",
+    "(V|victor) ": "v",
+    "(W|whiskey) ": "w",
+    "(X|x-ray) ": "x",
+    "(Y|yankee) ": "y",
+    "(Z|zulu) ": "z",
+}
+
+numberMap = {
+    "zero": "0",
+    "one": "1",
+    "two": "2",
+    "three": "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9",
+}
+
+controlKeyMap = {
+    "left": "left",
+    "right": "right",
+    "up": "up",
+    "down": "down",
+    "page up": "pgup",
+    "page down": "pgdown",
+    "home": "home",
+    "end": "end",
+    "space": "space",
+    "enter": "enter",
+    "escape": "escape",
+    "tab": "tab"
+}
+
+# F1 to F12.
+functionKeyMap = {
+    'F one': 'f1',
+    'F two': 'f2',
+    'F three': 'f3',
+    'F four': 'f4',
+    'F five': 'f5',
+    'F six': 'f6',
+    'F seven': 'f7',
+    'F eight': 'f8',
+    'F nine': 'f9',
+    'F ten': 'f10',
+    'F eleven': 'f11',
+    'F twelve': 'f12',
+}
+
+pressKeyMap = {}
+pressKeyMap.update(letterMap)
+pressKeyMap.update(numberMap)
+pressKeyMap.update(controlKeyMap)
+pressKeyMap.update(functionKeyMap)
 
 
 config = Config("multi edit")
@@ -145,13 +240,17 @@ config.cmd.map = Item(
         "[hold] control": Key("ctrl:down"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
-        # How do I comment this?
+        # Type written form of "that which would otherwise not be written".
         "say <text>": release + Text("%(text)s"),
 #         "mimic <text>": release + Mimic(extra="text"),
          # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
+        # Keypresses, to get that working in Linux.
+        "press <modifierSingle>": Key("%(modifierSingle)s"),
+        "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+        "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
          # Formatting.
         "camel case <text>": Function(lib.format.camel_case_text),
         "camel case <n> [words]": Function(lib.format.camel_case_count),
@@ -193,7 +292,11 @@ class KeystrokeRule(MappingRule):
         IntegerRef("n", 1, 100),
         Dictation("text"),
         Dictation("text2"),
-        Choice("char", charMap),
+        Choice("char", specialCharMap),
+        Choice("modifier1", modifierMap),
+        Choice("modifier2", modifierMap),
+        Choice("modifierSingle", singleModifierMap),
+        Choice("pressKey", pressKeyMap),
     ]
     defaults = {
         "n": 1,
