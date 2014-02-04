@@ -48,6 +48,7 @@ rules = MappingRule(
         "step out [<n>]": Key("f7/50:%(n)d"),
         "move tab left [<n>]": Key("c-pgup/10:%(n)d"),
         "move tab right [<n>]": Key("c-pgdown/10:%(n)d"),
+        "terminate": Key("c-f2"),  # Stop debug session.
         "terminate all launches": Key("ca-f9"),  # Will switch TTY in Linux!!
         "toggle breakpoint": Key("cs-b"),
         "toggle comment": Key("c-slash"),
