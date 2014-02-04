@@ -248,6 +248,7 @@ config.cmd.map = Item(
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
         # Keypresses, to get that working in Linux.
+        "press right control": Key("Control_R"),
         "press <modifierSingle>": Key("%(modifierSingle)s"),
         "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
         "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
