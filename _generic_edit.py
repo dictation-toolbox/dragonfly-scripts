@@ -6,7 +6,7 @@ http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
-
+import sys
 from natlink import setMicState
 from dragonfly import (
     Key,  # @UnusedImport
@@ -29,13 +29,18 @@ from dragonfly import (
     CompoundRule
 )
 
-import lib.sound as sound
-import lib.format
+aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
+if not aeneaPath in sys.path:
+    sys.path.insert(0, aeneaPath)
 
 try:
     from proxy_nicknames import Key, Text
 except ImportError:
     pass
+
+import lib.sound as sound
+import lib.format
+
 
 release = Key("shift:up, ctrl:up")
 
