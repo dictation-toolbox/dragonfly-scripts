@@ -23,7 +23,6 @@ except:
 
 def workspace_direction(direction1, direction2=None):
     try:
-#         Key("Control_R").execute()  # Release VirtualBox keyboard capture.
         Key("ctrl:down, alt:down, %s/5" % direction1).execute()
         if direction2:
             Key("%s/5" % direction2).execute()
@@ -45,14 +44,16 @@ rules = MappingRule(
         "workspace <direction1> [<direction2>]": Function(workspace_direction),
         "show launcher": Key("a-f1"),
         "show hud": Key("win"),
-        "show panel menu": Key("a-f10"),
+        "toggle panel menu": Key("a-f10"),
         "toggle desktop": Key("cw-d"),
         "toggle spread mode": Key("w-w"),
         "toggle expo mode": Key("w-s"),
-        # Window placement.
-        "minmize window": Key("ca-np0"),  # Minimizes aenea client instead >:(
+        # Window control
+        "close window": Key("a-f4"),
+        "minimize window": Key("ca-np0"),
         "maximize window": Key("cw-up"),
         "restore window": Key("cw-down"),
+        # Window placement.
         # Numpad keys doesn't seem to work?
         "place window top left": Key("ca-np7"),
         "place window top": Key("ca-np8"),
