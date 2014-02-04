@@ -1,7 +1,25 @@
-from dragonfly import (Text, Key, Function, MappingRule, IntegerRef, Grammar,
-    Dictation)
+import sys
+from dragonfly import (
+    Text,  # @UnusedImport
+    Key,  # @UnusedImport
+    Function,
+    MappingRule,
+    IntegerRef,
+    Grammar,
+    Dictation
+)
+
+aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
+if not aeneaPath in sys.path:
+    sys.path.insert(0, aeneaPath)
+
+try:
+    from proxy_nicknames import Key, Text
+except ImportError:
+    pass
 
 from lib.text import SCText
+
 
 DYN_MODULE_NAME = "bash"
 INCOMPATIBLE_MODULES = []
@@ -11,14 +29,6 @@ def directory_up(n):
     repeat = ['..' for i in range(n)]  # @UnusedVariable
     txt = "cd %s\n" % ("/".join(repeat))
     Text(txt).execute()
-
-
-def control_break():
-    try:  # Pauses needed for Git-bash, Console2, Windows command prompt, etc.
-        Key("ctrl:down/10").execute()
-        Key("c/5").execute()
-    finally:
-        Key("ctrl:up/10").execute()
 
 
 rules = MappingRule(
@@ -33,7 +43,7 @@ rules = MappingRule(
         "(cat|C A T) <text>": SCText("cat %(text)s"),
         "(change (directory|dir)|C D)": Text("cd "),
         "(change (directory|dir)|C D) <text>": SCText("cd %(text)s"),
-        "[press] control break": Function(control_break),
+        "[press] control break": Key("ctrl:down, c/10, ctrl:up"),
         "(copy|C P)": Text("cp "),
         "(copy|C P) recursive": Text("cp -r "),
         "(change mode)|C H mod": Text("chmod "),
@@ -43,7 +53,7 @@ rules = MappingRule(
         "D P K G list": Text("dpkg -l "),
         "exit": Text("exit"),
         "find": Text("find . -name "),
-        "find": SCText("find . -name %(text)s"),
+        "find <text>": SCText("find . -name %(text)s"),
         "grep": Text("grep "),
         "grep <text>": SCText("grep %(text)s"),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
