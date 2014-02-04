@@ -1,4 +1,20 @@
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import (
+    CompoundRule,
+    MappingRule,
+    RuleRef,
+    Repetition,
+    Dictation,
+    IntegerRef,
+    Grammar,
+    Text,  # @UnusedImport
+    Key  # @UnusedImport
+)
+
+
+try:
+    from proxy_nicknames import Key, Text
+except ImportError:
+    pass
 
 
 class SeriesMappingRule(CompoundRule):
