@@ -199,24 +199,56 @@ cssProperties = {
     "z-index": "z-index",
 }
 
+hexValue = {
+    "zero": "0",
+    "one": "1",
+    "two": "2",
+    "three": "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9",
+    "(A|alpha)": "a",
+    "(B|bravo)": "b",
+    "(C|charlie)": "c",
+    "(D|delta)": "d",
+    "(E|echo)": "e",
+    "(F|foxtrot)": "f",
+}
+
 
 rules = MappingRule(
     mapping={
         # Commands and keywords.
         "class <text>": SCText(".%(text)s {"),
+        "media": Text("@media ") + Key("left:3"),
+        "media query": Text("@media () {") + Key("left:3"),
         "close comment": Text(" */"),
         "comment": Text("/*  */") + Key("left:3"),
-        "<prop>": Text("%(prop)s: "),
-#         "<prop> <text>": SCText("%(prop)s: %(text)s"),
+        "hex <hex1><hex2><hex3>": Text("#%(hex1)s%(hex2)s%(hex3)s"),
+        "hex <hex1><hex2><hex3><hex4><hex5><hex6>": Text("#%(hex1)s%(hex2)s%(hex3)s%(hex4)s%(hex5)s%(hex6)s"),  # @IgnorePep8
         "open comment": Text("/* "),
+        "property <prop>": SCText("%(prop)s: "),
+        "property <prop> <text>": SCText("%(prop)s: %(text)s"),
+        "<numeric> E M": Text("%(numeric)sem"),
+        "<numeric> P T": Text("%(numeric)spt"),
+        "<numeric> P X": Text("%(numeric)spx"),
     },
     extras=[
-        IntegerRef("n", 1, 100),
+        IntegerRef("numeric", 1, 10000),
         Dictation("text"),
         Choice("prop", cssProperties),
+        Choice("hex1", hexValue),
+        Choice("hex2", hexValue),
+        Choice("hex3", hexValue),
+        Choice("hex4", hexValue),
+        Choice("hex5", hexValue),
+        Choice("hex6", hexValue),
     ],
     defaults={
-        "n": 1
+        "n": 0
     }
 )
 
