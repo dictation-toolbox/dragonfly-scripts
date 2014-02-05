@@ -29,6 +29,12 @@ from dragonfly import (
     CompoundRule
 )
 
+import win32con
+from dragonfly.actions.keyboard import Typeable
+from dragonfly.actions.typeables import typeables
+
+typeables["Control_R"] = Typeable(code=win32con.VK_RCONTROL, name="Control_R")
+
 aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
 if not aeneaPath in sys.path:
     sys.path.insert(0, aeneaPath)
