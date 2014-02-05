@@ -246,9 +246,11 @@ config.cmd.map = Item(
         "undo <n> [times]": release + Key("c-z:%(n)d"),
         "redo": release + Key("c-y"),
         "redo <n> [times]": release + Key("c-y:%(n)d"),
-        "[hold] shift": Key("shift:down"),
+        "[hold] alt": Key("alt:down/5"),
+        "release alt": Key("alt:up"),
+        "[hold] shift": Key("shift:down/5"),
         "release shift": Key("shift:up"),
-        "[hold] control": Key("ctrl:down"),
+        "[hold] control": Key("ctrl:down/5"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
