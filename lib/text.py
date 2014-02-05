@@ -1,7 +1,17 @@
 import re
+import sys
 
-from dragonfly import Text
+from dragonfly import Text  # @UnusedImport
 from dragonfly.actions.keyboard import Keyboard
+
+aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
+if not aeneaPath in sys.path:
+    sys.path.insert(0, aeneaPath)
+
+try:
+    from proxy_nicknames import Text
+except ImportError:
+    pass
 
 specialCharacterTranslations = {
     "?\\question-mark": "?",

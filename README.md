@@ -3,7 +3,7 @@
 ---
 
 >**NO WARRANTY!**
->All code and information in this repository is provided "AS IS". Your use of it's content is at your own risk. The author/authors are not liable for any consequences from using it. **ALWAYS** make sure to keep backups before making any changes!
+>All code and information in this repository is provided "AS IS". Your use of its content is at your own risk. The author/authors are not liable for any consequences from using it. **ALWAYS** make sure to keep backups before making any changes!
 
 ---
 

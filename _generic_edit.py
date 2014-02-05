@@ -6,15 +6,41 @@ http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
-
+import sys
 from natlink import setMicState
-from dragonfly import Key, Text, Choice, Pause, Window, \
-    FocusWindow, Config, Section, Item, Function, Dictation, Mimic, \
-    IntegerRef, MappingRule, Alternative, RuleRef, Grammar, Repetition, \
+from dragonfly import (
+    Key,  # @UnusedImport
+    Text,  # @UnusedImport
+    Choice,
+    Pause,
+    Window,
+    FocusWindow,
+    Config,
+    Section,
+    Item,
+    Function,
+    Dictation,
+    IntegerRef,
+    MappingRule,
+    Alternative,
+    RuleRef,
+    Grammar,
+    Repetition,
     CompoundRule
+)
+
+aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
+if not aeneaPath in sys.path:
+    sys.path.insert(0, aeneaPath)
+
+try:
+    from proxy_nicknames import Key, Text
+except ImportError:
+    pass
 
 import lib.sound as sound
 import lib.format
+
 
 release = Key("shift:up, ctrl:up")
 
@@ -59,7 +85,7 @@ def reload_natlink():
 
 
 # For repeating of characters.
-charMap = {
+specialCharMap = {
     "(bar|vertical bar|pipe)": "|",
     "(dash|minus|hyphen)": "-",
     "(dot|period)": ".",
@@ -81,6 +107,101 @@ charMap = {
     "plus": "+",
     "space": " "
 }
+
+# Modifiers for press-command.
+modifierMap = {
+    "alt": "a",
+    "control": "c",
+    "shift": "s",
+    "super": "w",
+}
+
+# Modifiers for press-command.
+singleModifierMap = {
+    "alt": "alt",
+    "control": "contrl",
+    "shift": "shift",
+    "super": "win",
+}
+
+letterMap = {
+    "(A|alpha)": "a",
+    "(B|bravo) ": "b",
+    "(C|charlie) ": "c",
+    "(D|delta) ": "d",
+    "(E|echo) ": "e",
+    "(F|foxtrot) ": "f",
+    "(G|golf) ": "g",
+    "(H|hotel) ": "h",
+    "(I|india|indigo) ": "i",
+    "(J|juliet) ": "j",
+    "(K|kilo) ": "k",
+    "(L|lima) ": "l",
+    "(M|mike) ": "m",
+    "(N|november) ": "n",
+    "(O|oscar) ": "o",
+    "(P|papa|poppa) ": "p",
+    "(Q|quebec|quiche) ": "q",
+    "(R|romeo) ": "r",
+    "(S|sierra) ": "s",
+    "(T|tango) ": "t",
+    "(U|uniform) ": "u",
+    "(V|victor) ": "v",
+    "(W|whiskey) ": "w",
+    "(X|x-ray) ": "x",
+    "(Y|yankee) ": "y",
+    "(Z|zulu) ": "z",
+}
+
+numberMap = {
+    "zero": "0",
+    "one": "1",
+    "two": "2",
+    "three": "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9",
+}
+
+controlKeyMap = {
+    "left": "left",
+    "right": "right",
+    "up": "up",
+    "down": "down",
+    "page up": "pgup",
+    "page down": "pgdown",
+    "home": "home",
+    "end": "end",
+    "space": "space",
+    "enter": "enter",
+    "escape": "escape",
+    "tab": "tab"
+}
+
+# F1 to F12.
+functionKeyMap = {
+    'F one': 'f1',
+    'F two': 'f2',
+    'F three': 'f3',
+    'F four': 'f4',
+    'F five': 'f5',
+    'F six': 'f6',
+    'F seven': 'f7',
+    'F eight': 'f8',
+    'F nine': 'f9',
+    'F ten': 'f10',
+    'F eleven': 'f11',
+    'F twelve': 'f12',
+}
+
+pressKeyMap = {}
+pressKeyMap.update(letterMap)
+pressKeyMap.update(numberMap)
+pressKeyMap.update(controlKeyMap)
+pressKeyMap.update(functionKeyMap)
 
 
 config = Config("multi edit")
@@ -113,7 +234,6 @@ config.cmd.map = Item(
         "application key": release + Key("apps"),
         "win key": release + Key("win"),
         "paste": release + Key("c-v/5"),
-        "duplicate <n>": release + Key("c-c, c-v:%(n)d"),
         "copy": release + Key("c-c/5"),
         "cut": release + Key("c-x/5"),
         "select all": release + Key("c-a"),
@@ -125,13 +245,18 @@ config.cmd.map = Item(
         "[hold] control": Key("ctrl:down"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
-        # How do I comment this?
+        # Type written form of "that which would otherwise not be written".
         "say <text>": release + Text("%(text)s"),
-        "mimic <text>": release + Mimic(extra="text"),
+#         "mimic <text>": release + Mimic(extra="text"),
          # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
+        # Keypresses, to get that working in Linux.
+        "press right control": Key("Control_R"),
+        "press <modifierSingle>": Key("%(modifierSingle)s"),
+        "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+        "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
          # Formatting.
         "camel case <text>": Function(lib.format.camel_case_text),
         "camel case <n> [words]": Function(lib.format.camel_case_count),
@@ -154,8 +279,8 @@ config.cmd.map = Item(
         # Useful for canceling what inconsiderate loud mouths have started.
         "<text> cancel dictation": Function(cancel_dictation),
         "<text> cancel dictation <text2>": Function(cancel_dictation),
-        "<text> cancel and sleep": Function(cancel_and_sleep),
-        "<text> cancel and sleep <text2>": Function(cancel_and_sleep),
+        "[<text>] cancel and sleep": Function(cancel_and_sleep),
+        "[<text>] cancel and sleep [<text2>]": Function(cancel_and_sleep),
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },
@@ -173,7 +298,11 @@ class KeystrokeRule(MappingRule):
         IntegerRef("n", 1, 100),
         Dictation("text"),
         Dictation("text2"),
-        Choice("char", charMap),
+        Choice("char", specialCharMap),
+        Choice("modifier1", modifierMap),
+        Choice("modifier2", modifierMap),
+        Choice("modifierSingle", singleModifierMap),
+        Choice("pressKey", pressKeyMap),
     ]
     defaults = {
         "n": 1,

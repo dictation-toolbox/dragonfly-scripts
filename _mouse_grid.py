@@ -40,33 +40,6 @@ def notify_action_aborted(message, useSound=True):
         sound.play(sound.SND_MESSAGE)
 
 
-def _poll_grids():
-    global GRID_WINDOWS
-#     global POLLING_THREAD
-#     global POLLING_COUNT
-#     POLLING_COUNT += 1
-#     print("Polling: %s - %s" % (POLLING_COUNT, datetime.datetime.now()))
-    viewables = 0
-    for win in GRID_WINDOWS.values():
-        if win.winfo_viewable():
-            win.update()
-            viewables += 1
-    if viewables == 0:
-        _stop_polling()
-    elif POLLING_COUNT >= 20:
-        for win in GRID_WINDOWS.values():
-            if win.winfo_viewable():
-                win.withdraw()
-
-
-def _stop_polling():
-    global POLLING_COUNT
-#     global POLLING_THREAD
-#     print("Stopping polling.")
-#     POLLING_THREAD.cancel()
-    POLLING_COUNT = 0
-
-
 def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                pos6=None, pos7=None, pos8=None, pos9=None, action=None):
     """Creates new or reuses grid windows. Can also delegate positioning."""

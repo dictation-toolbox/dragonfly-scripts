@@ -1,6 +1,10 @@
-from dragonfly import *  # @UnusedWildImport
+from dragonfly import (Text, Key, MappingRule, IntegerRef, Grammar, Dictation,
+    CompoundRule, RuleRef, Repetition, Choice)
 
 from lib.text import SCText
+
+DYN_MODULE_NAME = "git"
+INCOMPATIBLE_MODULES = []
 
 
 class SeriesMappingRule(CompoundRule):
@@ -107,7 +111,7 @@ series_rule = SeriesMappingRule(
         "git clone <text>": SCText("git clone %(text)s"),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
-        "git commit amend": Text("git commit --amend"),
+        "git commit amend": Text("git commit --amend -m "),
         "git config": Text("git config "),
         "git config add": Text("git config --add "),
         "git config add <text>": SCText("git config --add %(text)s "),
@@ -140,10 +144,12 @@ series_rule = SeriesMappingRule(
         "git push all": Text("git push --all") + Key("enter"),
         "git push origin ": Text("git push origin "),
         "git push origin <text>": SCText("git push origin %(text)s"),
+        "git push origin <gitopt>": SCText("git push origin %(gitopt)s"),
         "git push tags": Text("git push --tags") + Key("enter"),
         "git (rebase|re-base)": Text("git rebase "),
         "git (rebase|re-base) <text>": SCText("git rebase %(text)s"),
         "git remote": Text("git remote") + Key("enter"),
+        "git remote <gitopt>": Text("git remote %(gitopt)s"),
         "git remote add": Text("git remote add "),
         "git remote add <text>": SCText("git remote add %(text)s"),
         "git remote show": Text("git remote show "),
@@ -182,6 +188,25 @@ global_context = None  # Context is None, so grammar will be globally active.
 grammar = Grammar("Git commands", context=global_context)
 grammar.add_rule(series_rule)
 grammar.load()
+grammar.disable()
+
+
+def dynamic_enable():
+    global grammar
+    if grammar.enabled:
+        return False
+    else:
+        grammar.enable()
+        return True
+
+
+def dynamic_disable():
+    global grammar
+    if grammar.enabled:
+        grammar.disable()
+        return True
+    else:
+        return False
 
 
 # Unload function which will be called at unload time.
