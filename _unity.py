@@ -74,6 +74,8 @@ rules = MappingRule(
         "minimize window": Key("ca-KP_Insert"),
         "maximize window": Key("cw-up"),
         "restore window": Key("cw-down"),
+        "move window": Key("a-f7"),
+        "resize window": Key("a-f8"),
         # Window placement.
         "place window <winDirection>": Function(window_direction),
 #         "": Key(""),
@@ -90,7 +92,7 @@ rules = MappingRule(
     }
 )
 
-grammar = Grammar("Unity desktop contrl grammar", context=aenea.global_context)
+grammar = Grammar("Unity desktop control grammar", context=aenea.global_context)
 grammar.add_rule(rules)
 grammar.load()
 
