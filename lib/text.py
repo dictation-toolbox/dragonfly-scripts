@@ -8,8 +8,10 @@ aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
 if not aeneaPath in sys.path:
     sys.path.insert(0, aeneaPath)
 
+USING_AENEA = False
 try:
     from proxy_nicknames import Text
+    USING_AENEA = True
 except ImportError:
     pass
 
@@ -66,6 +68,8 @@ class SCText(Text):  # Special Characters Text.
             work = work.replace("%s " % text, char)
             work = work.replace("%s" % text, char)
         spec = parts[0] + work + parts[1]
+        if USING_AENEA == True:
+            return spec
         events = []
         for character in spec:
             if character in self._specials:
