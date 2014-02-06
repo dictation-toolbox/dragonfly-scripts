@@ -114,7 +114,7 @@ specialCharMap = {
     "space": " "
 }
 
-# Modifiers for press-command.
+# Modifiers for the press-command.
 modifierMap = {
     "alt": "a",
     "control": "c",
@@ -122,10 +122,10 @@ modifierMap = {
     "super": "w",
 }
 
-# Modifiers for press-command.
+# Modifiers for the press-command, if only the modifier is pressed.
 singleModifierMap = {
     "alt": "alt",
-    "control": "contrl",
+    "control": "control",
     "shift": "shift",
     "super": "win",
 }
@@ -227,8 +227,8 @@ config.cmd.map = Item(
         "right <n> (word | words)": Key("c-right:%(n)d"),
         "home": Key("home"),
         "end": Key("end"),
-        "doc home": Key("c-home"),
-        "doc end": Key("c-end"),
+        "doc home": Key("c-home/10"),
+        "doc end": Key("c-end/10"),
         # Functional keys.
         "space": release + Key("space"),
         "space [<n>]": release + Key("space:%(n)d"),
@@ -237,20 +237,19 @@ config.cmd.map = Item(
         "delete [<n>]": release + Key("del:%(n)d/5"),
         "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
-        "application key": release + Key("apps"),
-        "win key": release + Key("win"),
-        "paste": release + Key("c-v/5"),
-        "copy": release + Key("c-c/5"),
-        "cut": release + Key("c-x/5"),
-        "select all": release + Key("c-a"),
-        "undo <n> [times]": release + Key("c-z:%(n)d"),
-        "redo": release + Key("c-y"),
-        "redo <n> [times]": release + Key("c-y:%(n)d"),
-        "[hold] alt": Key("alt:down/5"),
+        "application key": release + Key("apps/10"),
+        "win key": release + Key("win/10"),
+        "paste": release + Key("c-v/10"),
+        "copy": release + Key("c-c/10"),
+        "cut": release + Key("c-x/10"),
+        "select all": release + Key("c-a/10"),
+        "undo <n> [times]": release + Key("c-z/10:%(n)d"),
+        "redo <n> [times]": release + Key("c-y/10:%(n)d"),
+        "[hold] alt": Key("alt:down/10"),
         "release alt": Key("alt:up"),
-        "[hold] shift": Key("shift:down/5"),
+        "[hold] shift": Key("shift:down/10"),
         "release shift": Key("shift:up"),
-        "[hold] control": Key("ctrl:down/5"),
+        "[hold] control": Key("ctrl:down/10"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
@@ -280,9 +279,9 @@ config.cmd.map = Item(
         "lowercase <text>": Function(lib.format.lowercase_text),
         "lowercase <n> [words]": Function(lib.format.lowercase_count),
         # Text corrections.
-        "(add|fix) missing space": Key("c-left, space, c-right"),
-        "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
-        "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
+        "(add|fix) missing space": Key("c-left/10, space, c-right/10"),
+        "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/10, backspace, c-right/10"),  # @IgnorePep8
+        "(delete|remove) (double|extra) (type|char|character)": Key("c-left/10, del, c-right/10"),  # @IgnorePep8
         # Canceling of started sentence.
         # Useful for canceling what inconsiderate loud mouths have started.
         "<text> cancel dictation": Function(cancel_dictation),
