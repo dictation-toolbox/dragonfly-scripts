@@ -6,35 +6,20 @@ For instace, the dynamic grammars saves their state of enabled or disabled in
 runtime. If Natlink is reloaded or Dragon is restarted, the previous state is
 loaded and the previously enabled dynamic grammars are enabled again.
 
+The advantage of using a flat structure in the config, as opposed to a nested,
+is that the code for reading and writing becomes very simple.
+
 Example config:
 {
-    "aenea_connection": {
-        "enabled": False,
-        "path": None  // Set path if Aenea is located outside MacroSystem dir.
-    },
-    "dynamic_modules": {
-        "bash": {
-            "enabled": true
-        },
-        "css": {
-            "enabled": false
-        },
-        "git": {
-            "enabled": false–
-        },
-        "html": {
-            "enabled": false
-        },
-        "javascript": {
-            "enabled": false
-        },
-        "python": {
-            "enabled": false
-        }
-    },
-    "system": {
-        "base_path": "C:\\Natlink\\Natlink\\MacroSystem"
-    }
+    "aenea.enabled": false,
+    "aenea.path": null,  // Set path if Aenea is outside MacroSystem dir.
+    "dynamics.bash.enabled": true,
+    "dynamics.css.enabled": false,
+    "dynamics.git.enabled": false,
+    "dynamics.html.enabled": false,
+    "dynamics.javascript.enabled": false,
+    "dynamics.python.enabled": false,
+    "system.base_path": "C:\\Natlink\\Natlink\\MacroSystem"
 }
 """
 import os
