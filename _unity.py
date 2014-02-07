@@ -6,7 +6,8 @@ from dragonfly import (
     IntegerRef,
     Grammar,
     Dictation,
-    Choice
+    Choice,
+    Key,  # @UnusedImport
 )
 
 aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
@@ -14,7 +15,7 @@ if not aeneaPath in sys.path:
     sys.path.insert(0, aeneaPath)
 
 try:
-    from proxy_nicknames import Key
+    from proxy_nicknames import Key  # @Reimport
 #     from proxy_actions import communication
     import aenea
 except:
@@ -92,7 +93,7 @@ rules = MappingRule(
     }
 )
 
-grammar = Grammar("Unity desktop control grammar", context=aenea.global_context)
+grammar = Grammar("Unity desktop grammar", context=aenea.global_context)
 grammar.add_rule(rules)
 grammar.load()
 
