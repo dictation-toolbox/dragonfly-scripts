@@ -1,10 +1,47 @@
+"""Configuration module, saves the config in a json file.
+
+Keeping the configuration in a json file has the advantage that it can be
+changed in runtime by voice commands.
+For instace, the dynamic grammars saves their state of enabled or disabled in
+runtime. If Natlink is reloaded or Dragon is restarted, the previous state is
+loaded and the previously enabled dynamic grammars are enabled again.
+
+Example config:
+{
+    "aenea_connection": {
+        "enabled": False,
+        "path": None  // Set path if Aenea is located outside MacroSystem dir.
+    },
+    "dynamic_modules": {
+        "bash": {
+            "enabled": true
+        },
+        "css": {
+            "enabled": false
+        },
+        "git": {
+            "enabled": false–
+        },
+        "html": {
+            "enabled": false
+        },
+        "javascript": {
+            "enabled": false
+        },
+        "python": {
+            "enabled": false
+        }
+    },
+    "system": {
+        "base_path": "C:\\Natlink\\Natlink\\MacroSystem"
+    }
+}
+"""
 import os
 import json
 
 WORKING_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = os.path.join(WORKING_PATH, "config.json")
-
-# Default config.
 CONFIG = {}
 
 
