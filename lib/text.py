@@ -1,19 +1,13 @@
 import re
-import sys
 
 from dragonfly import Text  # @UnusedImport
 from dragonfly.actions.keyboard import Keyboard
 
-aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
-if not aeneaPath in sys.path:
-    sys.path.insert(0, aeneaPath)
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Text  # @Reimport
 
-USING_AENEA = False
-try:
-    from proxy_nicknames import Text
-    USING_AENEA = True
-except ImportError:
-    pass
 
 specialCharacterTranslations = {
     "?\\question-mark": "?",
@@ -68,7 +62,7 @@ class SCText(Text):  # Special Characters Text.
             work = work.replace("%s " % text, char)
             work = work.replace("%s" % text, char)
         spec = parts[0] + work + parts[1]
-        if USING_AENEA == True:
+        if config.get("aenea.enabled", False) == True:
             return spec
         events = []
         for character in spec:

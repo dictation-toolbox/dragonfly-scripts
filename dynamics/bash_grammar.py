@@ -1,4 +1,3 @@
-import sys
 from dragonfly import (
     Text,  # @UnusedImport
     Key,  # @UnusedImport
@@ -9,14 +8,10 @@ from dragonfly import (
     Dictation
 )
 
-aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
-if not aeneaPath in sys.path:
-    sys.path.insert(0, aeneaPath)
-
-try:
-    from proxy_nicknames import Key, Text
-except ImportError:
-    pass
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
 
 from lib.text import SCText
 
