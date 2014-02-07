@@ -1,5 +1,17 @@
-from dragonfly import (Text, Key, Function, MappingRule, IntegerRef, Grammar,
-    Dictation)
+from dragonfly import (
+    Text,  # @UnusedImport
+    Key,  # @UnusedImport
+    Function,
+    MappingRule,
+    IntegerRef,
+    Grammar,
+    Dictation
+)
+
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
 
 from lib.text import SCText
 import lib.format
