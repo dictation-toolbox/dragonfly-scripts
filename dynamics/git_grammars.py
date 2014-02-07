@@ -109,6 +109,7 @@ series_rule = SeriesMappingRule(
         "git (check out|checkout) force <text>": SCText("git checkout -f %(text)s"),  # @IgnorePep8
         "git clone": Text("git clone "),
         "git clone <text>": SCText("git clone %(text)s"),
+        "git cherry-pick": Text("git cherry-pick "),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
         "git commit amend": Text("git commit --amend -m "),
