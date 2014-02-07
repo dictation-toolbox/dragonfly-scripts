@@ -152,6 +152,7 @@ def enable_aenea():
         config["aenea.enabled"] = True
         lib.config.save_config()
         print("<<< Aenea enabled, reload required. >>>")
+        print("<<< Don't forget, start the server and the client window. >>>")
 
 
 def disable_aenea():
