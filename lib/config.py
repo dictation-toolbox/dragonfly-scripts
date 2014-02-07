@@ -21,13 +21,18 @@ Example config:
     "dynamics.python.enabled": false,
     "system.base_path": "C:\\Natlink\\Natlink\\MacroSystem"
 }
+
+If you want to set a value like a path, you have to do that manually in the
+json file.
+
 """
 import os
+import sys
 import json
 
 WORKING_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = os.path.join(WORKING_PATH, "config.json")
-CONFIG = {}
+CONFIG = {}  # Empty, default config.
 
 
 def save_config():
@@ -49,10 +54,26 @@ def load_config():
         if os.path.isfile(CONFIG_PATH):  # If the config file exists.
             with open(CONFIG_PATH, "r") as f:
                 CONFIG = json.loads(f.read())  # Load saved configuration.
+                init_default_values()
         else:  # If the config file does not exist.
             save_config()  # Save the default config to file.
     except Exception as e:
         print("Could not load config file: %s" % str(e))
+
+
+def init_default_values():
+    global CONFIG
+    valueChangeCount = 0
+    defaultValues = [
+        ("aenea.enabled", False),
+        ("aenea.path", None),
+    ]
+    for (name, value) in defaultValues:
+        if not name in CONFIG.keys():
+            CONFIG[name] = value
+            valueChangeCount += 1
+    if valueChangeCount > 0:
+        save_config()
 
 
 def get_config():
@@ -61,3 +82,10 @@ def get_config():
 
 
 load_config()
+
+aeneaPath = CONFIG.get("aenea.path", None)
+if not aeneaPath:
+    path = os.path.dirname(os.path.abspath(__file__))
+    aeneaPath = os.path.split(path)[:-1]
+if not aeneaPath in sys.path:
+    sys.path.insert(0, aeneaPath)
