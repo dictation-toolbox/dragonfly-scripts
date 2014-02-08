@@ -6,7 +6,6 @@ http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
-import sys
 from natlink import setMicState
 from dragonfly import (
     Key,  # @UnusedImport
@@ -32,17 +31,12 @@ from dragonfly import (
 import win32con
 from dragonfly.actions.keyboard import Typeable
 from dragonfly.actions.typeables import typeables
-
 typeables["Control_R"] = Typeable(code=win32con.VK_RCONTROL, name="Control_R")
 
-aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
-if not aeneaPath in sys.path:
-    sys.path.insert(0, aeneaPath)
-
-try:
-    from proxy_nicknames import Key, Text
-except ImportError:
-    pass
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
 
 import lib.sound as sound
 import lib.format
@@ -125,7 +119,7 @@ modifierMap = {
 # Modifiers for the press-command, if only the modifier is pressed.
 singleModifierMap = {
     "alt": "alt",
-    "control": "control",
+    "control": "ctrl",
     "shift": "shift",
     "super": "win",
 }

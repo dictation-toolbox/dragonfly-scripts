@@ -4,11 +4,6 @@
 Licensed under the LGPL3.
 
 """
-import sys
-aeneaPath = r"E:\dev\projects\aenea\util"
-if not aeneaPath in sys.path:
-    sys.path.insert(0, aeneaPath)
-
 from dragonfly import (
     MappingRule,
     AppContext,
@@ -17,12 +12,11 @@ from dragonfly import (
     Key,  # @UnusedImport
 )
 
-try:
-    from proxy_nicknames import Key
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key  # @Reimport
     from proxy_nicknames import AppContext as NixAppContext
-    USING_AENEA = True
-except ImportError:
-    USING_AENEA = False
 
 
 rules = MappingRule(
@@ -76,7 +70,7 @@ context = None
 winContext1 = AppContext(executable="javaw", title="Eclipse")
 winContext2 = AppContext(executable="eclipse", title="Eclipse")
 winContext = winContext1 | winContext2
-if USING_AENEA == True:
+if config.get("aenea.enabled", False) == True:
     nixContext = NixAppContext(executable="java", title="Eclipse")
     context = winContext | nixContext
 else:
