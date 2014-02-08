@@ -37,6 +37,7 @@ import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
     from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 import lib.sound as sound
 import lib.format
@@ -204,9 +205,9 @@ pressKeyMap.update(controlKeyMap)
 pressKeyMap.update(functionKeyMap)
 
 
-config = Config("multi edit")
-config.cmd = Section("Language section")
-config.cmd.map = Item(
+grammarCfg = Config("multi edit")
+grammarCfg.cmd = Section("Language section")
+grammarCfg.cmd.map = Item(
     {
         # Navigation keys.
         "up [<n>]": Key("up:%(n)d"),
@@ -294,7 +295,7 @@ config.cmd.map = Item(
 
 class KeystrokeRule(MappingRule):
     exported = False
-    mapping = config.cmd.map
+    mapping = grammarCfg.cmd.map
     extras = [
         IntegerRef("n", 1, 100),
         Dictation("text"),
@@ -337,8 +338,10 @@ class RepeatRule(CompoundRule):
                 action.execute()
         release.execute()
 
-
-grammar = Grammar("Generic edit")  # Create this module's grammar.
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Generic edit", context=context)
 grammar.add_rule(RepeatRule())  # Add the top-level rule.
 grammar.load()  # Load the grammar.
 

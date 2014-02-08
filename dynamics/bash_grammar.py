@@ -12,6 +12,7 @@ import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
     from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 from lib.text import SCText
 
@@ -57,6 +58,7 @@ rules = MappingRule(
         "kill": Text("kill "),
         "kill (hard|[dash]9)": Text("kill -9 "),
         "list files": Text("ls -la") + Key("enter"),
+        "list files <text>": Text("ls -la %(text)s"),
         "list files time sort": Text("ls -lat") + Key("enter"),
         "make (directory|dir)": Text("mkdir "),
         "make (directory|dir) <text>": SCText("mkdir %(text)s"),
@@ -103,8 +105,10 @@ rules = MappingRule(
     }
 )
 
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Python grammar", context=global_context)
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Python grammar", context=context)
 grammar.add_rule(rules)
 grammar.load()
 grammar.disable()

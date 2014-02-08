@@ -1,5 +1,21 @@
-from dragonfly import (Text, Key, MappingRule, IntegerRef, Grammar, Dictation,
-    CompoundRule, RuleRef, Repetition, Choice)
+from dragonfly import (
+    Text,  # @UnusedImport
+    Key,  # @UnusedImport
+    MappingRule,
+    IntegerRef,
+    Grammar,
+    Dictation,
+    CompoundRule,
+    RuleRef,
+    Repetition,
+    Choice
+)
+
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 from lib.text import SCText
 
@@ -185,8 +201,11 @@ series_rule = SeriesMappingRule(
         "n": 1
     }
 )
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Git commands", context=global_context)
+
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Git commands", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
 grammar.disable()

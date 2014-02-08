@@ -1,5 +1,18 @@
-from dragonfly import (Text, Key, Choice, MappingRule, IntegerRef, Grammar,
-    Dictation)
+from dragonfly import (
+    Text,  # @UnusedImport
+    Key,  # @UnusedImport
+    Choice,
+    MappingRule,
+    IntegerRef,
+    Grammar,
+    Dictation
+)
+
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 from lib.text import SCText
 
@@ -252,8 +265,10 @@ rules = MappingRule(
     }
 )
 
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Css grammar", context=global_context)
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Css grammar", context=context)
 grammar.add_rule(rules)
 grammar.load()
 grammar.disable()

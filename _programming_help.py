@@ -14,6 +14,7 @@ import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
     from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 
 class SeriesMappingRule(CompoundRule):
@@ -79,8 +80,11 @@ series_rule = SeriesMappingRule(
         "n": 1
     }
 )
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Programming help", context=global_context)
+
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Programming help", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
 
