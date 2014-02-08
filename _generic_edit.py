@@ -234,17 +234,19 @@ grammarCfg.cmd.map = Item(
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps/3"),
         "win key": release + Key("win/3"),
-        "paste": release + Key("c-v/3"),
-        "copy": release + Key("c-c/3"),
-        "cut": release + Key("c-x/3"),
+        "paste [that]": release + Key("c-v/3"),
+        "copy [that]": release + Key("c-c/3"),
+        "cut [that]": release + Key("c-x/3"),
         "select all": release + Key("c-a/3"),
+        "undo": release + Key("c-z/3"),
         "undo <n> [times]": release + Key("c-z/3:%(n)d"),
+        "redo": release + Key("c-y/3"),
         "redo <n> [times]": release + Key("c-y/3:%(n)d"),
-        "[hold] alt": Key("alt:down/3"),
+        "[(hold|press)] alt": Key("alt:down/3"),
         "release alt": Key("alt:up"),
-        "[hold] shift": Key("shift:down/3"),
+        "[(hold|press)] shift": Key("shift:down/3"),
         "release shift": Key("shift:up"),
-        "[hold] control": Key("ctrl:down/3"),
+        "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
@@ -256,9 +258,9 @@ grammarCfg.cmd.map = Item(
         "double escape": Key("escape, escape"),  # Exiting menus.
         # Keypresses, to get that working in Linux.
         "press right control": Key("Control_R"),
-        "press <modifierSingle>": Key("%(modifierSingle)s"),
-        "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
-        "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+#         "press <modifierSingle>": Key("%(modifierSingle)s"),
+#         "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+#         "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
          # Formatting.
         "camel case <text>": Function(lib.format.camel_case_text),
         "camel case <n> [words]": Function(lib.format.camel_case_count),
