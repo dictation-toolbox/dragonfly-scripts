@@ -211,8 +211,31 @@ class TransparentWin(tk.Tk):
 def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                pos6=None, pos7=None, pos8=None, pos9=None, action=None):
     """Creates new or reuses grid windows. Can also delegate positioning."""
-    params = {"do": "mouse_grid"}
-    communication.server.mouse_grid(params)
+    params = {
+        "do": "mouse_grid",
+        "attributes": {}
+    }
+    if pos1:
+        params["pos1"] = pos1
+    if pos2:
+        params["pos2"] = pos2
+    if pos3:
+        params["pos3"] = pos3
+    if pos4:
+        params["pos4"] = pos4
+    if pos5:
+        params["pos5"] = pos5
+    if pos6:
+        params["pos6"] = pos6
+    if pos7:
+        params["pos7"] = pos7
+    if pos8:
+        params["pos8"] = pos8
+    if pos9:
+        params["pos9"] = pos9
+    if action:
+        params["action"] = action
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def hide_grids(excludePosition=None):
@@ -223,7 +246,7 @@ def hide_grids(excludePosition=None):
 
     """
     params = {"do": "hide_grids"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
@@ -236,14 +259,37 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
     grid is moved into.
 
     """
-    params = {"do": "mouse_pos"}
-    communication.server.mouse_grid(params)
+    params = {
+        "do": "mouse_pos",
+        "attributes": {
+            "pos1": pos1
+        }
+    }
+    if pos2:
+        params["pos2"] = pos2
+    if pos3:
+        params["pos3"] = pos3
+    if pos4:
+        params["pos4"] = pos4
+    if pos5:
+        params["pos5"] = pos5
+    if pos6:
+        params["pos6"] = pos6
+    if pos7:
+        params["pos7"] = pos7
+    if pos8:
+        params["pos8"] = pos8
+    if pos9:
+        params["pos9"] = pos9
+    if action:
+        params["action"] = action
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def go():
     """Places the mouse at the grid coordinates. Hides the grid."""
     params = {"do": "go"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def left_click():
@@ -252,7 +298,7 @@ def left_click():
 
     """
     params = {"do": "left_click"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def right_click():
@@ -261,7 +307,7 @@ def right_click():
 
     """
     params = {"do": "write_click"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def double_click():
@@ -270,7 +316,7 @@ def double_click():
 
     """
     params = {"do": "double_click"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def control_click():
@@ -279,7 +325,7 @@ def control_click():
 
     """
     params = {"do": "control_click"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def shift_click():
@@ -288,7 +334,7 @@ def shift_click():
 
     """
     params = {"do": "shift_click"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def mouse_mark():
@@ -297,7 +343,7 @@ def mouse_mark():
 
     """
     params = {"do": "mouse_mark"}
-    communication.server.mouse_grid(params)
+    communication.server.mouse_grid_dispatcher(params)
 
 
 def mouse_drag():
@@ -306,11 +352,4 @@ def mouse_drag():
 
     """
     params = {"do": "mouse_drag"}
-    communication.server.mouse_grid(params)
-
-
-def call_action(action, monitorSelected):
-    """Calls a action function, depending on the spoken action."""
-    global MONITOR_SELECTED
-    MONITOR_SELECTED = monitorSelected
-    action()
+    communication.server.mouse_grid_dispatcher(params)
