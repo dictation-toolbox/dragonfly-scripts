@@ -16,8 +16,18 @@ Licensed under the LGPL, see http://www.gnu.org/licenses/
 #
 # import datetime
 
-from dragonfly import MappingRule, Function, IntegerRef, Choice, Dictation, \
-    Grammar, AppContext, Rectangle, Mouse, Key
+from dragonfly import (
+    MappingRule,
+    Function,
+    IntegerRef,
+    Choice,
+    Dictation,
+    Grammar,
+    AppContext,
+    Rectangle,
+    Mouse,
+    Key
+)
 
 import grid_base
 import lib.sound as sound
