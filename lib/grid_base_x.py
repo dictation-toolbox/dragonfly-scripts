@@ -3,6 +3,8 @@ import Tkinter as tk
 from Tkconstants import *  # @UnusedWildImport
 import time
 
+from proxy_actions import communication
+
 
 class GridConfig:
     def __init__(self, positionX=0, positionY=0, width=1024, height=768,
@@ -200,65 +202,17 @@ class TransparentWin(tk.Tk):
         self.destroy()
 
 
-GRID_WINDOWS = {}
-MONITORS = {}
-MONITOR_SELECTED = None
-MOUSE_MARK_POSITION = None
+# GRID_WINDOWS = {}
+# MONITORS = {}
+# MONITOR_SELECTED = None
+# MOUSE_MARK_POSITION = None
 
 
 def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                pos6=None, pos7=None, pos8=None, pos9=None, action=None):
     """Creates new or reuses grid windows. Can also delegate positioning."""
-    global GRID_WINDOWS
-    global MONITORS
-    global MONITOR_SELECTED
-    # Hide any existing grid windows.
-    for win in GRID_WINDOWS.values():
-        if win.winfo_viewable():
-            win.withdraw()
-#     global POLLING_THREAD
-    if len(MONITORS) == 1 and pos1 == None:
-        pos1 = 1
-    if pos1 and pos1 <= len(MONITORS):
-        index = pos1 - 1
-        monitor = MONITORS[str(pos1)]
-        MONITOR_SELECTED = pos1
-        if not index in GRID_WINDOWS.keys():
-            r = monitor.rectMonitor
-            if len(MONITORS) == 1:
-                monitorNum = None
-            else:
-                monitorNum = str(pos1)
-            grid = GridConfig(positionX=int(r.x),
-                positionY=int(r.y), width=int(r.dx), height=int(r.dy),
-                monitorNum=monitorNum)
-            win = TransparentWin(grid)
-            if action == None:
-                win.refresh(MONITOR_SELECTED)
-            GRID_WINDOWS[index] = win
-        else:
-            win = GRID_WINDOWS[index]
-            win.get_grid().reset()
-            if action == None:
-                win.refresh(MONITOR_SELECTED)
-        if pos2:  # Continue using other given positions.
-            mouse_pos(pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9,
-                      action=None)
-    else:
-        MONITOR_SELECTED = None
-        for index, monitor in MONITORS.items():
-            if not index in GRID_WINDOWS.keys():
-                r = monitor.rectMonitor
-                grid = GridConfig(positionX=int(r.x),
-                    positionY=int(r.y), width=int(r.dx), height=int(r.dy),
-                    monitorNum=str(index))
-                win = TransparentWin(grid)
-                win.refresh(MONITOR_SELECTED)
-                GRID_WINDOWS[int(index) - 1] = win
-            else:
-                win = GRID_WINDOWS[int(index) - 1]
-                win.get_grid().reset()
-                win.refresh(MONITOR_SELECTED)
+    params = {"do": "mouse_grid"}
+    communication.server.mouse_grid(params)
 
 
 def hide_grids(excludePosition=None):
@@ -268,18 +222,8 @@ def hide_grids(excludePosition=None):
     If excludePosition matches the position of a grid, it is not hidden.
 
     """
-    global GRID_WINDOWS
-    global MONITOR_SELECTED
-    count = 0
-    for index, win in GRID_WINDOWS.items():
-        if excludePosition and str(excludePosition) == index:
-            continue
-        if win.winfo_viewable():
-            win.withdraw()
-        count += 1
-    if count == len(GRID_WINDOWS):
-        MONITOR_SELECTED = None
-#         _stop_polling()
+    params = {"do": "hide_grids"}
+    communication.server.mouse_grid(params)
 
 
 def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
@@ -292,70 +236,14 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
     grid is moved into.
 
     """
-    global GRID_WINDOWS
-    global MONITOR_SELECTED
-    monitorSelected = MONITOR_SELECTED
-    # Hide any existing grid windows.
-    for win in GRID_WINDOWS.values():
-        if win.winfo_viewable():
-            win.withdraw()
-    if monitorSelected != None:
-        variables = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
-    elif pos1 > len(GRID_WINDOWS):
-#         notify_action_aborted("Monitor number %s out of range." % pos1)
-        return
-    else:
-        variables = [pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9]
-        monitorSelected = pos1
-        hide_grids(excludePosition=pos1)
-    win = GRID_WINDOWS[monitorSelected - 1]
-    sections = [var for var in variables if var != None]
-    for section in sections:
-        _reposition_grid(win, section)
-    if action:
-        call_action(action, monitorSelected)
-        monitorSelected = None
-    else:
-        win.refresh(monitorSelected)
-    MONITOR_SELECTED = monitorSelected
-
-
-def _reposition_grid(win, section):
-    """Repositions the grid window to a specified section in the grid.
-
-    If the grid is smaller than 25 pixels across, the grid is not repositioned
-    into a section, but instead moved one section width in the direction of
-    the selected section.
-
-    """
-    grid = win.get_grid()
-    if grid.width > 25:
-        grid.recalculate_to_section(section)
-        grid.calculate_axis()
-    else:
-        grid.move_to_section(section)
-
-
-def _init_mouse_action():
-    """Gets the selected grid's coordinates, then hides the grid."""
-    global GRID_WINDOWS
-    global MONITOR_SELECTED
-    if MONITOR_SELECTED != None:
-        win = GRID_WINDOWS[MONITOR_SELECTED - 1]
-        (positionX, positionY) = win.get_grid().get_absolute_centerpoint()
-        # Hide the grid so mouse actions can reach the applications below.
-        hide_grids()
-        return (positionX, positionY)
-    else:  # Can happen when all grids are visible.
-        hide_grids()
-        return (None, None)
+    params = {"do": "mouse_pos"}
+    communication.server.mouse_grid(params)
 
 
 def go():
     """Places the mouse at the grid coordinates. Hides the grid."""
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Mouse("[%s, %s]" % (positionX, positionY))
+    params = {"do": "go"}
+    communication.server.mouse_grid(params)
 
 
 def left_click():
@@ -363,9 +251,8 @@ def left_click():
     button.
 
     """
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
+    params = {"do": "left_click"}
+    communication.server.mouse_grid(params)
 
 
 def right_click():
@@ -373,9 +260,8 @@ def right_click():
     button.
 
     """
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Mouse("[%s, %s], right" % (positionX, positionY)).execute()
+    params = {"do": "write_click"}
+    communication.server.mouse_grid(params)
 
 
 def double_click():
@@ -383,9 +269,8 @@ def double_click():
     button.
 
     """
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Mouse("[%s, %s], left:2" % (positionX, positionY)).execute()
+    params = {"do": "double_click"}
+    communication.server.mouse_grid(params)
 
 
 def control_click():
@@ -393,11 +278,8 @@ def control_click():
     clicking the left mouse button.
 
     """
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Key("ctrl:down/5").execute()
-        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
-        Key("ctrl:up/5").execute()
+    params = {"do": "control_click"}
+    communication.server.mouse_grid(params)
 
 
 def shift_click():
@@ -405,11 +287,8 @@ def shift_click():
     clicking the left mouse button.
 
     """
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        Key("shift:down/5").execute()
-        Mouse("[%s, %s], left" % (positionX, positionY)).execute()
-        Key("shift:up/5").execute()
+    params = {"do": "shift_click"}
+    communication.server.mouse_grid(params)
 
 
 def mouse_mark():
@@ -417,12 +296,8 @@ def mouse_mark():
     mouse drag.
 
     """
-    global MOUSE_MARK_POSITION
-    (positionX, positionY) = _init_mouse_action()
-    if positionX != None and positionY != None:
-        MOUSE_MARK_POSITION = (positionX, positionY)
-    else:
-        MOUSE_MARK_POSITION = None
+    params = {"do": "mouse_mark"}
+    communication.server.mouse_grid(params)
 
 
 def mouse_drag():
@@ -430,16 +305,8 @@ def mouse_drag():
     previous position to the current position.
 
     """
-    global MOUSE_MARK_POSITION
-    if MOUSE_MARK_POSITION:
-        (startX, startY) = MOUSE_MARK_POSITION
-        (targetX, targetY) = _init_mouse_action()
-        mouseString = "[%s, %s], left:down/10, [%s, %s], left:up/10" % (startX,
-            startY, targetX, targetY)
-        Mouse(mouseString).execute()
-        MOUSE_MARK_POSITION = None
-    else:
-        print("Mouse drag failed, no start position marked.")
+    params = {"do": "mouse_drag"}
+    communication.server.mouse_grid(params)
 
 
 def call_action(action, monitorSelected):
