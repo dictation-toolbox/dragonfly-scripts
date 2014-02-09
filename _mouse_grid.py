@@ -21,19 +21,37 @@ from dragonfly import (
     AppContext,
 )
 
-from lib.grid_base import (
-    left_click,
-    right_click,
-    double_click,
-    control_click,
-    shift_click,
-    mouse_mark,
-    mouse_drag,
-    go,
-    mouse_grid,
-    hide_grids,
-    mouse_pos
-)
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    import aenea
+    from lib.grid_base_x import (
+        left_click,  # @UnusedImport
+        right_click,  # @UnusedImport
+        double_click,  # @UnusedImport
+        control_click,  # @UnusedImport
+        shift_click,  # @UnusedImport
+        mouse_mark,  # @UnusedImport
+        mouse_drag,  # @UnusedImport
+        go,  # @UnusedImport
+        mouse_grid,  # @UnusedImport
+        hide_grids,  # @UnusedImport
+        mouse_pos  # @UnusedImport
+    )
+else:
+    from lib.grid_base_win import (
+        left_click,  # @Reimport
+        right_click,  # @Reimport
+        double_click,  # @Reimport
+        control_click,  # @Reimport
+        shift_click,  # @Reimport
+        mouse_mark,  # @Reimport
+        mouse_drag,  # @Reimport
+        go,  # @Reimport
+        mouse_grid,  # @Reimport
+        hide_grids,  # @Reimport
+        mouse_pos  # @Reimport
+    )
 
 
 actions = {
