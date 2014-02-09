@@ -121,6 +121,8 @@ series_rule = SeriesMappingRule(
         "git branch delete <text>": SCText("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
         "git (check out|checkout) <text>": SCText("git checkout %(text)s"),
+        "git (check out|checkout) branch": Text("git checkout -b "),
+        "git (check out|checkout) branch <text>": SCText("git checkout -b %(text)s"),  # @IgnorePep8
         "git (check out|checkout) force": Text("git checkout -f "),
         "git (check out|checkout) force <text>": SCText("git checkout -f %(text)s"),  # @IgnorePep8
         "git clone": Text("git clone "),
