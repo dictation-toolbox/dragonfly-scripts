@@ -455,14 +455,7 @@ def call_action(action, monitorSelected):
     action()
 
 
-
-
-
-
-
-
-
-def unload():
+def unload_grids():
     global MONITORS
     global GRID_WINDOWS
     for win in GRID_WINDOWS.values():
