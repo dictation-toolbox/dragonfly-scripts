@@ -172,6 +172,8 @@ series_rule = SeriesMappingRule(
         "git remote show": Text("git remote show "),
         "git remote show <text>": SCText("git remote show %(text)s"),
         "git remote rename": Text("git remote rename "),
+        "git remote prune ": Text("git remote prune "),
+        "git remote prune <text>": SCText("git remote prune %(text)s"),
         "git remote rename <text>": SCText("git remote rename %(text)s"),
         "git remote (remove|R M)": Text("git remote rm "),
         "git remote (remove|R M) <text>": SCText("git remote rm %(text)s"),
