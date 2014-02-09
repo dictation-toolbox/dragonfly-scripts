@@ -61,13 +61,11 @@ if config.get("aenea.enabled", False) == True:
     rules = MappingRule(
         mapping={
             # Commands and keywords:
-            "workspace <wsDirection1> [<wsDirection2>]": Function(workspace_direction),  # @IgnorePep8
-            "show launcher": Key("a-f1"),
-            "show hud": Key("win"),
-            "toggle panel menu": Key("a-f10"),
-            "toggle desktop": Key("cw-d"),
-            "toggle spread mode": Key("w-w"),
-            "toggle expo mode": Key("w-s"),
+            "go to launcher": Key("a-f1"),
+            "go to hud": Key("win"),
+            "go to panel menu": Key("a-f10"),
+            "go to spread mode": Key("w-w"),
+            "go to expo mode": Key("w-s"),
             # Window control
             "close window": Key("a-f4"),
             "minimize window": Key("ca-KP_Insert"),
@@ -75,9 +73,9 @@ if config.get("aenea.enabled", False) == True:
             "restore window": Key("cw-down"),
             "move window": Key("a-f7"),
             "resize window": Key("a-f8"),
-            # Window placement.
             "place window <winDirection>": Function(window_direction),
-    #         "": Key(""),
+            "toggle desktop": Key("cw-d"),
+            "workspace <wsDirection1> [<wsDirection2>]": Function(workspace_direction),  # @IgnorePep8
         },
         extras=[
             IntegerRef("n", 1, 100),
