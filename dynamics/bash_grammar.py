@@ -51,7 +51,7 @@ rules = MappingRule(
         "find": Text("find . -name "),
         "find <text>": SCText("find . -name %(text)s"),
         "[go to] end of line": Key("c-e"),
-        "start of line": Key("c-a"),
+        "[go to] start of line": Key("c-a"),
         "grep": Text("grep "),
         "grep <text>": SCText("grep %(text)s"),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
