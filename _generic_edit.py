@@ -43,7 +43,7 @@ import lib.sound as sound
 import lib.format
 
 
-release = Key("shift:up, ctrl:up")
+release = Key("shift:up, ctrl:up, alt:up")
 
 
 def cancel_dictation(text=None, text2=None):
