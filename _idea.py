@@ -17,13 +17,11 @@ class CommandRule(MappingRule):
     "open file chooser <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
     "open symbol <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
     "open symbol chooser <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
-    "go to line": Key("c-g"),
-    "go to line <n>": Key("c-g/25") + Text("%(n)d") + Key("enter"),
-    "find usages": Key("a-f7"),
     "(go to|open) declaration": Key("c-b"),
     "(go to|open) implementation": Key("ctrl:down, alt:down, b, alt:up, ctrl:up"),
     "(go to|open) super": Key("c-u"),
     "(go to|switch to|open) (class|test)": Key("ctrl:down, shift:down, t, shift:up, ctrl:up"),
+    "go back": Key("ctrl:down, alt:down, left, alt:up, ctrl:up"),
 
     # Project settings.
     "switch to project": Key("a-1"),
@@ -31,34 +29,42 @@ class CommandRule(MappingRule):
     "open [project] settings": Key("ctrl:down, alt:down, s, alt:up, ctrl:up"),
     "synchronize files": Key("ctrl:down, alt:down, y, alt:up, ctrl:up"),
 
-    # Terminal
+    # Terminal.
     "open terminal": Key("a-f12"),
-    }
+
+    # Search.
+    "find in path": Key("ctrl:down, shift:down, f, shift:up, ctrl:up"),
+    "find usages": Key("a-f7"),
+
+    # Code.
+    "show intentions": Key("a-enter"),
+    "accept choice": Key("c-enter"),
+    "go to line": Key("c-g"),
+    "go to line <n>": Key("c-g/25") + Text("%(n)d") + Key("enter"),
+    "[go to] start of line": Key("home"),
+    "[go to] end of line": Key("end"),
+
+    # Window handling.
+    "next tab": Key("a-right"),
+    "previous tab": Key("a-left"),
+    "close tab": Key("c-f4"),
+
+    # Version control.
+    "show diff": Key("c-d"),
+
+    # Ruby specific.
+    "run rake [task]": Key("ctrl:down, alt:down, r, alt:up, ctrl:up"),
+    "run rake spec": Key("ctrl:down, alt:down, r, alt:up, ctrl:up") + Pause("25") + Text("spec") + Key("enter") + Pause("25") + Key("enter"),
+    "run rails generator": Key("ctrl:down, alt:down, g, alt:up, ctrl:up"),
+
+    # Custom key mappings.
+    "(start SSH session|open SSH console|open remote terminal|open remote console)": Key("a-f11/25, enter"),
+  }
 
   extras = [
     Dictation("text"),
     IntegerRef("n", 1, 50000)
   ]
-
-#class NavigationRule(CompoundRule):
-#  spec = "open class <class_text>"
-#  extras = [Dictation("class_text")]
-#
-#  def _process_recognition(self, node, extras):
-#    class_text = extras["class_text"]
-#    print "Fuck off: %s" % format_class(class_text.words)
-#    Key("c-n/25").execute()
-#    Text(format_class(class_text.words), pause=0.1).execute()
-#    Key("enter").execute()
-
-#class NavigationRule(MappingRule):
-#  mapping = {
-#    "open class <class_text>": Key("c-n/25") + Text(class_name(class_text), True) + Key("enter"),
-#  }
-#
-#  extras = [
-#    Dictation("class_text"),
-#  ]
 
 idea_context = AppContext(executable="idea")
 rubymine_context = AppContext(executable="rubymine")
