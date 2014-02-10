@@ -279,8 +279,8 @@ config.cmd.map = Item(
         "lowercase <n> [words]": Function(lib.format.lowercase_count),
         # Text corrections.
         "(add|fix) missing space": Key("c-left, space, c-right"),
-        "(delete|remove) (double|extra) (space|whitespace)": Key("c-left, backspace, c-right"),  # @IgnorePep8
-        "(delete|remove) (double|extra) (type|char|character)": Key("c-left, del, c-right"),  # @IgnorePep8
+        "(delete|remove) (double|extra) (space|whitespace)": Key("a-left, backspace, a-right"),  # @IgnorePep8
+        "(delete|remove) (double|extra) (type|char|character)": Key("a-left, del, a-right"),  # @IgnorePep8
         # Canceling of started sentence.
         # Useful for canceling what inconsiderate loud mouths have started.
         "<text> cancel dictation": Function(cancel_dictation),
