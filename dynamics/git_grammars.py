@@ -1,5 +1,21 @@
-from dragonfly import (Text, Key, MappingRule, IntegerRef, Grammar, Dictation,
-    CompoundRule, RuleRef, Repetition, Choice)
+from dragonfly import (
+    Text,  # @UnusedImport
+    Key,  # @UnusedImport
+    MappingRule,
+    IntegerRef,
+    Grammar,
+    Dictation,
+    CompoundRule,
+    RuleRef,
+    Repetition,
+    Choice
+)
+
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 from lib.text import SCText
 
@@ -105,10 +121,13 @@ series_rule = SeriesMappingRule(
         "git branch delete <text>": SCText("git branch -d %(text)s"),
         "git (check out|checkout)": Text("git checkout "),
         "git (check out|checkout) <text>": SCText("git checkout %(text)s"),
+        "git (check out|checkout) branch": Text("git checkout -b "),
+        "git (check out|checkout) branch <text>": SCText("git checkout -b %(text)s"),  # @IgnorePep8
         "git (check out|checkout) force": Text("git checkout -f "),
         "git (check out|checkout) force <text>": SCText("git checkout -f %(text)s"),  # @IgnorePep8
         "git clone": Text("git clone "),
         "git clone <text>": SCText("git clone %(text)s"),
+        "git cherry-pick": Text("git cherry-pick "),
         "git commit": Text("git commit -m \"\"") + Key("left:1"),
         "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
         "git commit amend": Text("git commit --amend -m "),
@@ -155,6 +174,8 @@ series_rule = SeriesMappingRule(
         "git remote show": Text("git remote show "),
         "git remote show <text>": SCText("git remote show %(text)s"),
         "git remote rename": Text("git remote rename "),
+        "git remote prune ": Text("git remote prune "),
+        "git remote prune <text>": SCText("git remote prune %(text)s"),
         "git remote rename <text>": SCText("git remote rename %(text)s"),
         "git remote (remove|R M)": Text("git remote rm "),
         "git remote (remove|R M) <text>": SCText("git remote rm %(text)s"),
@@ -184,8 +205,11 @@ series_rule = SeriesMappingRule(
         "n": 1
     }
 )
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Git commands", context=global_context)
+
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Git commands", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
 grammar.disable()

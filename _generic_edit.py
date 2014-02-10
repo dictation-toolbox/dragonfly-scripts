@@ -6,7 +6,6 @@ http://dragonfly-modules.googlecode.com/svn/trunk/command-modules/documentation/
 Licensed under the LGPL, see http://www.gnu.org/licenses/
 
 """
-import sys
 from natlink import setMicState
 from dragonfly import (
     Key,  # @UnusedImport
@@ -32,17 +31,13 @@ from dragonfly import (
 import win32con
 from dragonfly.actions.keyboard import Typeable
 from dragonfly.actions.typeables import typeables
-
 typeables["Control_R"] = Typeable(code=win32con.VK_RCONTROL, name="Control_R")
 
-aeneaPath = r"E:\dev\projects\aenea\util"  # ToDo: move to configuration.
-if not aeneaPath in sys.path:
-    sys.path.insert(0, aeneaPath)
-
-try:
-    from proxy_nicknames import Key, Text
-except ImportError:
-    pass
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    import aenea
 
 import lib.sound as sound
 import lib.format
@@ -114,7 +109,7 @@ specialCharMap = {
     "space": " "
 }
 
-# Modifiers for press-command.
+# Modifiers for the press-command.
 modifierMap = {
     "alt": "a",
     "control": "c",
@@ -122,10 +117,10 @@ modifierMap = {
     "super": "w",
 }
 
-# Modifiers for press-command.
+# Modifiers for the press-command, if only the modifier is pressed.
 singleModifierMap = {
     "alt": "alt",
-    "control": "contrl",
+    "control": "ctrl",
     "shift": "shift",
     "super": "win",
 }
@@ -210,9 +205,9 @@ pressKeyMap.update(controlKeyMap)
 pressKeyMap.update(functionKeyMap)
 
 
-config = Config("multi edit")
-config.cmd = Section("Language section")
-config.cmd.map = Item(
+grammarCfg = Config("multi edit")
+grammarCfg.cmd = Section("Language section")
+grammarCfg.cmd.map = Item(
     {
         # Navigation keys.
         "up [<n>]": Key("up:%(n)d"),
@@ -227,8 +222,8 @@ config.cmd.map = Item(
         "right <n> (word | words)": Key("c-right:%(n)d"),
         "home": Key("home"),
         "end": Key("end"),
-        "doc home": Key("c-home"),
-        "doc end": Key("c-end"),
+        "doc home": Key("c-home/3"),
+        "doc end": Key("c-end/3"),
         # Functional keys.
         "space": release + Key("space"),
         "space [<n>]": release + Key("space:%(n)d"),
@@ -237,18 +232,21 @@ config.cmd.map = Item(
         "delete [<n>]": release + Key("del:%(n)d/5"),
         "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
-        "application key": release + Key("apps"),
-        "win key": release + Key("win"),
-        "paste": release + Key("c-v/5"),
-        "copy": release + Key("c-c/5"),
-        "cut": release + Key("c-x/5"),
-        "select all": release + Key("c-a"),
-        "undo <n> [times]": release + Key("c-z:%(n)d"),
-        "redo": release + Key("c-y"),
-        "redo <n> [times]": release + Key("c-y:%(n)d"),
-        "[hold] shift": Key("shift:down"),
+        "application key": release + Key("apps/3"),
+        "win key": release + Key("win/3"),
+        "paste [that]": release + Key("c-v/3"),
+        "copy [that]": release + Key("c-c/3"),
+        "cut [that]": release + Key("c-x/3"),
+        "select all": release + Key("c-a/3"),
+        "undo": release + Key("c-z/3"),
+        "undo <n> [times]": release + Key("c-z/3:%(n)d"),
+        "redo": release + Key("c-y/3"),
+        "redo <n> [times]": release + Key("c-y/3:%(n)d"),
+        "[(hold|press)] alt": Key("alt:down/3"),
+        "release alt": Key("alt:up"),
+        "[(hold|press)] shift": Key("shift:down/3"),
         "release shift": Key("shift:up"),
-        "[hold] control": Key("ctrl:down"),
+        "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
@@ -260,9 +258,9 @@ config.cmd.map = Item(
         "double escape": Key("escape, escape"),  # Exiting menus.
         # Keypresses, to get that working in Linux.
         "press right control": Key("Control_R"),
-        "press <modifierSingle>": Key("%(modifierSingle)s"),
-        "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
-        "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+#         "press <modifierSingle>": Key("%(modifierSingle)s"),
+#         "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+#         "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
          # Formatting.
         "camel case <text>": Function(lib.format.camel_case_text),
         "camel case <n> [words]": Function(lib.format.camel_case_count),
@@ -278,7 +276,7 @@ config.cmd.map = Item(
         "lowercase <text>": Function(lib.format.lowercase_text),
         "lowercase <n> [words]": Function(lib.format.lowercase_count),
         # Text corrections.
-        "(add|fix) missing space": Key("c-left, space, c-right"),
+        "(add|fix) missing space": Key("a-left, space, a-right"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("a-left, backspace, a-right"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("a-left, del, a-right"),  # @IgnorePep8
         # Canceling of started sentence.
@@ -299,7 +297,7 @@ config.cmd.map = Item(
 
 class KeystrokeRule(MappingRule):
     exported = False
-    mapping = config.cmd.map
+    mapping = grammarCfg.cmd.map
     extras = [
         IntegerRef("n", 1, 100),
         Dictation("text"),
@@ -342,8 +340,10 @@ class RepeatRule(CompoundRule):
                 action.execute()
         release.execute()
 
-
-grammar = Grammar("Generic edit")  # Create this module's grammar.
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Generic edit", context=context)
 grammar.add_rule(RepeatRule())  # Add the top-level rule.
 grammar.load()  # Load the grammar.
 

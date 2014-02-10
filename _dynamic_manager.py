@@ -1,8 +1,13 @@
 """A command module for Dragonfly, for dynamically enabling/disabling
-different grammars.
+different grammars, and for enabling and disabling other features.
 
-If a grammar is enabled, that is conflicting with a previously enabled grammar,
-the previously enabled grammar will be disabled.
+If a grammar is enabled that is conflicting with a previously enabled grammar,
+the previously enabled grammar will be automatically disabled.
+Each dynamic grammar module is responsible for keeping track of what other
+modules is incompatible with.
+
+Other features that can be enabled/disabled are Aenea, the client-server
+connection to Linux. Note that a reload is required after changing Aenea state.
 
 -----------------------------------------------------------------------------
 Licensed under LGPL3
@@ -11,10 +16,23 @@ Licensed under LGPL3
 import sys
 import pkgutil
 
-from dragonfly import CompoundRule, MappingRule, RuleRef, Repetition, \
-    Function, IntegerRef, Dictation, Choice, Grammar
+from dragonfly import (
+    CompoundRule,
+    MappingRule,
+    RuleRef,
+    Repetition,
+    Function,
+    IntegerRef,
+    Dictation,
+    Choice,
+    Grammar
+)
 
 import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    import aenea
+
 import lib.sound as sound
 import dynamics
 
@@ -66,8 +84,7 @@ def enable_module(module, useSound=True):
     if status:
         notify_module_enabled(moduleName, useSound)
         config = lib.config.get_config()
-        cfg = config["dynamic_modules"][moduleName]
-        cfg["enabled"] = True
+        config["dynamics.%s" % moduleName] = True
         lib.config.save_config()
     else:
         notify_module_action_aborted("Dynamic grammar %s already enabled." %
@@ -83,13 +100,13 @@ def disable_module(module, useSound=True):
     if status:
         notify_module_disabled(moduleName, useSound)
         config = lib.config.get_config()
-        cfg = config["dynamic_modules"][moduleName]
-        cfg["enabled"] = False
+        config["dynamics.%s" % moduleName] = False
         lib.config.save_config()
 
 
 def disable_incompatible_modules(enableModule):
     """Iterates through the list of incompatible modules and disables them."""
+    global moduleMapping
     for moduleName in enableModule.INCOMPATIBLE_MODULES:
         module = moduleMapping.get(moduleName)
         if module:
@@ -99,8 +116,6 @@ def disable_incompatible_modules(enableModule):
 def import_dynamic_modules():
     global moduleMapping
     config = lib.config.get_config()
-    if not config.get("dynamic_modules"):
-        config["dynamic_modules"] = {}
     path = dynamics.__path__
     prefix = dynamics.__name__ + "."
     print("Loading dynamic grammar modules:")
@@ -109,12 +124,9 @@ def import_dynamic_modules():
             module = importer.find_module(package_name).load_module(
                 package_name)
             moduleMapping[module.DYN_MODULE_NAME] = module
-            cfg = config["dynamic_modules"].get(module.DYN_MODULE_NAME)
-            if not cfg:
-                cfg = {"enabled": False}
-                config["dynamic_modules"][module.DYN_MODULE_NAME] = cfg
+            enabled = config.get("dynamics.%s" % module.DYN_MODULE_NAME, False)
             print("    %s" % package_name)
-            if cfg["enabled"] == True:
+            if enabled == True:
                 enable_module(module, useSound=False)
 
 
@@ -123,15 +135,36 @@ import_dynamic_modules()
 
 def disable_all_modules():
     """Iterates through the list of all dynamic modules and disables them."""
+    global moduleMapping
     disableCount = 0
+    config = lib.config.get_config()
     for moduleName, module in moduleMapping.items():
         status = module.dynamic_disable()
         if status:
             disableCount += 1
+            config["dynamics.%s" % moduleName] = False
             notify_module_disabled(moduleName, useSound=False)
     if disableCount > 0:
         sound.play(sound.SND_DEACTIVATE)
+        lib.config.save_config()
     print("----------- All dynamic modules disabled -----------\n")
+
+
+def enable_aenea():
+    config = lib.config.get_config()
+    if config.get("aenea.enabled", False) == False:
+        config["aenea.enabled"] = True
+        lib.config.save_config()
+        print("<<< Aenea enabled, reload required. >>>")
+        print("<<< Don't forget, start the server and the client window. >>>")
+
+
+def disable_aenea():
+    config = lib.config.get_config()
+    if config.get("aenea.enabled", False) == True:
+        config["aenea.enabled"] = False
+        lib.config.save_config()
+        print("<<< Aenea disabled. >>>")
 
 
 class SeriesMappingRule(CompoundRule):
@@ -153,12 +186,14 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        "(enable|load) <module> grammar": Function(enable_module),
-        "(disable|unload) <module> grammar": Function(disable_module),
-        "(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
+        #"(enable|load) <module> grammar": Function(enable_module),
+        #"(disable|unload) <module> grammar": Function(disable_module),
+        #"(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
         "[(start|switch to)] <module> mode": Function(enable_module),  # Too disruptive? Time will tell...    @IgnorePep8
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
+        "enable (Aenea|Linux connection)": Function(enable_aenea),
+        "disable (Aenea|Linux connection)": Function(disable_aenea),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -169,8 +204,11 @@ series_rule = SeriesMappingRule(
         "n": 1
     }
 )
-global_context = None  # Context is None, so grammar will be globally active.
-grammar = Grammar("Dynamic manager", context=global_context)
+
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammar = Grammar("Dynamic manager", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
 
