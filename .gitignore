@@ -30,6 +30,10 @@ nosetests.xml
 .pydevproject
 .settings/
 
+# IntelliJ
+.idea/
+*.iml
+
 # Ignore Natlink files
 core/
 _vocola_main.py
