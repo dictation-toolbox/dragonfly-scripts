@@ -134,7 +134,7 @@ navigate_rule = MappingRule(
 )
 context = None
 if config.get("aenea.enabled", False) == True:
-    nixContext = NixAppContext(executable="java", title="Eclipse")
+    nixContext = NixAppContext(executable="server_x11", title="Grid overlay")
 else:
     context = AppContext(executable="natspeak", title="Grid overlay")
 grammar2 = Grammar("Grid navigation", context=context)
