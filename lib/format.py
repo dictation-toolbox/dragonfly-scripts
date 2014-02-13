@@ -97,7 +97,7 @@ def snake_case_text(text):
     "'snake case my new variable'" => "my_new_variable".
 
     """
-    newText = '_'.join(text.words)
+    newText = '_'.join([word.lower() for word in text.words])
     Text(newText).execute()
 
 
