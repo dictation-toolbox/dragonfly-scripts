@@ -70,6 +70,7 @@ rules = MappingRule(
         "pipe": Text(" | "),
         "ping": Text("ping "),
         "(print working directory|P W D)": Text("pwd") + Key("enter"),
+        "P S": Text("ps -ef"),
         "(R M|remove file)": Text("rm "),
         "(R M|remove file) <text>": SCText("rm %(text)s"),
         "remove (directory|dir|folder|recursive)": Text("rm -rf "),
