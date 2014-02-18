@@ -256,11 +256,8 @@ grammarCfg.cmd.map = Item(
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
-        # Keypresses, to get that working in Linux.
+        # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
-#         "press <modifierSingle>": Key("%(modifierSingle)s"),
-#         "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
-#         "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
          # Formatting.
         "camel case <text>": Function(lib.format.camel_case_text),
         "camel case <n> [words]": Function(lib.format.camel_case_count),
@@ -293,6 +290,15 @@ grammarCfg.cmd.map = Item(
         "Text": Text,
     }
 )
+
+
+if config.get("aenea.enabled") == True:
+    # Keypresses, to get that working better in Linux.
+    grammarCfg.cmd.map.update({
+        "press <modifierSingle>": Key("%(modifierSingle)s"),
+        "press <modifier1> <pressKey> [<n>]": Key("%(modifier1)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+        "press <modifier1> <modifier2> <pressKey> [<n>]": Key("%(modifier1)s%(modifier2)s-%(pressKey)s:%(n)d"),  # @IgnorePep8
+    })
 
 
 class KeystrokeRule(MappingRule):
