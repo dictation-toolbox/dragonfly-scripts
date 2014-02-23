@@ -226,26 +226,27 @@ def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
         "do": "mouse_grid",
         "attributes": {}
     }
+    attributes = params["attributes"]
     if pos1:
-        params["pos1"] = pos1
+        attributes["pos1"] = pos1
     if pos2:
-        params["pos2"] = pos2
+        attributes["pos2"] = pos2
     if pos3:
-        params["pos3"] = pos3
+        attributes["pos3"] = pos3
     if pos4:
-        params["pos4"] = pos4
+        attributes["pos4"] = pos4
     if pos5:
-        params["pos5"] = pos5
+        attributes["pos5"] = pos5
     if pos6:
-        params["pos6"] = pos6
+        attributes["pos6"] = pos6
     if pos7:
-        params["pos7"] = pos7
+        attributes["pos7"] = pos7
     if pos8:
-        params["pos8"] = pos8
+        attributes["pos8"] = pos8
     if pos9:
-        params["pos9"] = pos9
+        attributes["pos9"] = pos9
     if action:
-        params["action"] = action
+        attributes["action"] = action
     communication.server.mouse_grid_dispatcher(params)
 
 
@@ -277,24 +278,25 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
             "pos1": pos1
         }
     }
+    attributes = params["attributes"]
     if pos2:
-        params["pos2"] = pos2
+        attributes["pos2"] = pos2
     if pos3:
-        params["pos3"] = pos3
+        attributes["pos3"] = pos3
     if pos4:
-        params["pos4"] = pos4
+        attributes["pos4"] = pos4
     if pos5:
-        params["pos5"] = pos5
+        attributes["pos5"] = pos5
     if pos6:
-        params["pos6"] = pos6
+        attributes["pos6"] = pos6
     if pos7:
-        params["pos7"] = pos7
+        attributes["pos7"] = pos7
     if pos8:
-        params["pos8"] = pos8
+        attributes["pos8"] = pos8
     if pos9:
-        params["pos9"] = pos9
+        attributes["pos9"] = pos9
     if action:
-        params["action"] = action
+        attributes["action"] = action
     communication.server.mouse_grid_dispatcher(params)
 
 
@@ -320,7 +322,7 @@ def right_click():
     button.
 
     """
-    params = {"do": "write_click"}
+    params = {"do": "right_click"}
     communication.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
