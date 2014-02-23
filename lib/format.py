@@ -1,6 +1,7 @@
 import re
 
 from dragonfly import Key, Text, Clipboard, Pause
+from lib.text import SCText
 
 
 def camel_case_text(text):
@@ -11,7 +12,7 @@ def camel_case_text(text):
 
     """
     newText = _camelify(text.words)
-    Text(newText).execute()
+    SCText(newText).execute()
 
 
 def camel_case_count(n):
@@ -63,7 +64,7 @@ def pascal_case_text(text):
     """
     newText = str(text).title()
     newText = "".join(newText.split(" "))
-    Text(newText).execute()
+    SCText(newText).execute()
 
 
 def pascal_case_count(n):
@@ -98,7 +99,7 @@ def snake_case_text(text):
 
     """
     newText = '_'.join([word.lower() for word in text.words])
-    Text(newText).execute()
+    SCText(newText).execute()
 
 
 def snake_case_count(n):
@@ -133,7 +134,7 @@ def squash_text(text):
 
     """
     newText = ''.join(text.words)
-    Text(newText).execute()
+    SCText(newText).execute()
 
 
 def squash_count(n):
@@ -211,7 +212,7 @@ def uppercase_text(text):
     """
     newText = str(text)
     newText = newText.replace("%", "%%")  # Escape any format chars.
-    Text(newText.upper()).execute()
+    SCText(newText.upper()).execute()
 
 
 def uppercase_count(n):
@@ -242,7 +243,7 @@ def lowercase_text(text):
 
     """
     newText = str(text)
-    Text(newText.lower()).execute()
+    SCText(newText.lower()).execute()
 
 
 def lowercase_count(n):
