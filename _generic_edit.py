@@ -177,8 +177,7 @@ controlKeyMap = {
     "home": "home",
     "end": "end",
     "space": "space",
-    "enter": "enter",
-    "return": "enter",
+    "(enter|return)": "enter",
     "escape": "escape",
     "tab": "tab"
 }
