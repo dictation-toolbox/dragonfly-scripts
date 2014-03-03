@@ -63,8 +63,10 @@ series_rule = SeriesMappingRule(
         "dot (py|pie|P Y)": Text(".py"),
         "dot T X T": Text(".txt"),
         "dot S H": Text(".sh"),
+        "dot J S": Text(".js"),
         # Non mainstream web url extensions.
         "dot S E": Text(".se"),
+        "dot (O R G|org)": Text(".org"),
         # Protocols.
         "protocol H T T P": Text("http://"),
         "protocol H T T P S": Text("https://"),
