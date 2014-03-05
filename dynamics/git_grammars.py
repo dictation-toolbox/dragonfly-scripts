@@ -186,6 +186,7 @@ series_rule = SeriesMappingRule(
         "git revert head": Text("git revert HEAD"),
         "git show": Text("git show "),
         "git stash": Text("git stash") + Key("enter"),
+        "git stash pop": Text("git stash pop") + Key("enter"),
         "git (status|S T)": Text("git status") + Key("enter"),
         "git (status|S T) <gitopt>": Text("git status %(gitopt)s") + Key("enter"),  # @IgnorePep8
         "git tag": Text("git tag "),
