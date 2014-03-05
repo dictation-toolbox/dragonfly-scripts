@@ -64,6 +64,7 @@ series_rule = SeriesMappingRule(
         "dot T X T": Text(".txt"),
         "dot S H": Text(".sh"),
         "dot R B": Text(".rb"),
+        "dot Y M L": Text(".yml"),
         # Non mainstream web url extensions.
         "dot S E": Text(".se"),
         # Protocols.
