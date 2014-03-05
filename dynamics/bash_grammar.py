@@ -35,6 +35,8 @@ rules = MappingRule(
         "apt cache search <text>": Text("apt-cache search %(text)s"),
         "sudo apt get install": Text("sudo apt-get install "),
         "sudo apt get install <text>": Text("sudo apt-get install %(text)s"),
+        "apt get install": Text("apt-get install "),
+        "apt get install <text>": Text("apt-get install %(text)s"),
         "(cat|C A T)": Text("cat "),
         "(cat|C A T) <text>": SCText("cat %(text)s"),
         "(change (directory|dir)|C D)": Text("cd "),
