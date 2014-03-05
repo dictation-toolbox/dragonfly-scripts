@@ -1,6 +1,7 @@
 import re
 
 from dragonfly import Key, Text, Clipboard, Pause
+from lib.text import SCText
 
 
 def camel_case_text(text):
@@ -10,8 +11,18 @@ def camel_case_text(text):
     "'camel case my new variable'" => "myNewVariable".
 
     """
-    newText = _camelify(text.words)
-    Text(newText).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        if newText == '':
+            newText = word[:1].lower() + word[1:]
+        else:
+            newText = '%s%s' % (newText, word.capitalize())
+    SCText("%(text)s").execute({"text": newText})
 
 
 def camel_case_count(n):
@@ -61,9 +72,15 @@ def pascal_case_text(text):
     "'pascal case my new variable'" => "MyNewVariable".
 
     """
-    newText = str(text).title()
-    newText = "".join(newText.split(" "))
-    Text(newText).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        newText = '%s%s' % (newText, word.capitalize())
+    SCText("%(text)s").execute({"text": newText})
 
 
 def pascal_case_count(n):
@@ -97,8 +114,17 @@ def snake_case_text(text):
     "'snake case my new variable'" => "my_new_variable".
 
     """
-    newText = '_'.join([word.lower() for word in text.words])
-    Text(newText).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "_" + word  # Adds underscores between normal words.
+        newText += word.lower()
+    SCText("%(text)s").execute({"text": newText})
 
 
 def snake_case_count(n):
@@ -132,8 +158,15 @@ def squash_text(text):
     "'squash my new variable'" => "mynewvariable".
 
     """
-    newText = ''.join(text.words)
-    Text(newText).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        newText = '%s%s' % (newText, word)
+    SCText("%(text)s").execute({"text": newText})
 
 
 def squash_count(n):
@@ -209,9 +242,17 @@ def uppercase_text(text):
     "'upper case my new variable'" => "MY NEW VARIABLE".
 
     """
-    newText = str(text)
-    newText = newText.replace("%", "%%")  # Escape any format chars.
-    Text(newText.upper()).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = " " + word  # Adds spacing between normal words.
+        newText += word.upper()
+    SCText("%(text)s").execute({"text": newText})
 
 
 def uppercase_count(n):
@@ -241,8 +282,17 @@ def lowercase_text(text):
     "'lower case John Johnson'" => "john johnson".
 
     """
-    newText = str(text)
-    Text(newText.lower()).execute()
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = " " + word  # Adds spacing between normal words.
+        newText += word.lower()
+    SCText("%(text)s").execute({"text": newText})
 
 
 def lowercase_count(n):

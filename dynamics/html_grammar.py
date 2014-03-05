@@ -286,8 +286,8 @@ def attribute_with_content(attribute, text):
 rules = MappingRule(
     mapping={
         # Commands and keywords.
-        "tag": Text("<>") + Key("left"),
-        "tag <element>": Function(start_tag),
+        "[start] tag": Text("<>") + Key("left"),
+        "[start] tag <element>": Function(start_tag),
         "tags <element>": Function(tags),
         "end tag": Text("</>") + Key("left"),
         "end tag <element>": Function(end_tag),

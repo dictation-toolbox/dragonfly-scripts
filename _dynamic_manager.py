@@ -192,8 +192,8 @@ series_rule = SeriesMappingRule(
         "[(start|switch to)] <module> mode": Function(enable_module),  # Too disruptive? Time will tell...    @IgnorePep8
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
-        "enable (Aenea|Linux connection)": Function(enable_aenea),
-        "disable (Aenea|Linux connection)": Function(disable_aenea),
+        "enable (Aenea|Linux) connection": Function(enable_aenea),
+        "disable (Aenea|Linux) connection": Function(disable_aenea),
     },
     extras=[
         IntegerRef("n", 1, 100),

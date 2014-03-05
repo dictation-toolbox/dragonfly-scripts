@@ -22,6 +22,7 @@ if config.get("aenea.enabled", False) == True:
     )
 
     from proxy_nicknames import Key  # @Reimport
+    from proxy_actions import communication
     import aenea
 
     def window_direction(winDirection):
@@ -58,12 +59,16 @@ if config.get("aenea.enabled", False) == True:
         "left": "left"
     }
 
+    def toggle_host_server():
+        communication.toggle_server()
+
     rules = MappingRule(
         mapping={
             # Commands and keywords:
             "go to launcher": Key("a-f1"),
             "go to hud": Key("win"),
             "go to panel menu": Key("a-f10"),
+            "go to window menu": Key("a-space"),
             "go to spread mode": Key("w-w"),
             "go to expo mode": Key("w-s"),
             # Window control
@@ -76,6 +81,7 @@ if config.get("aenea.enabled", False) == True:
             "place window <winDirection>": Function(window_direction),
             "toggle desktop": Key("cw-d"),
             "workspace <wsDirection1> [<wsDirection2>]": Function(workspace_direction),  # @IgnorePep8
+            "toggle host server": Function(toggle_host_server),
         },
         extras=[
             IntegerRef("n", 1, 100),

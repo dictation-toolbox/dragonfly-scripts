@@ -212,6 +212,16 @@ MONITOR_SELECTED = None
 MOUSE_MARK_POSITION = None
 
 
+def set_grammar_reference(grammarRef):
+    global GRAMMAR_REF
+    GRAMMAR_REF = grammarRef
+
+
+def disable_navigation_grammar():
+    global GRAMMAR_REF
+    GRAMMAR_REF.disable()
+
+
 def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
                pos6=None, pos7=None, pos8=None, pos9=None, action=None):
     """Creates new or reuses grid windows. Can also delegate positioning."""
@@ -285,6 +295,7 @@ def hide_grids(excludePosition=None):
         count += 1
     if count == len(GRID_WINDOWS):
         MONITOR_SELECTED = None
+        disable_navigation_grammar()
 #         _stop_polling()
 
 
@@ -362,6 +373,7 @@ def go():
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
         Mouse("[%s, %s]" % (positionX, positionY))
+    disable_navigation_grammar()
 
 
 def left_click():
@@ -372,6 +384,7 @@ def left_click():
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
         Mouse("[%s, %s], left" % (positionX, positionY)).execute()
+    disable_navigation_grammar()
 
 
 def right_click():
@@ -382,6 +395,7 @@ def right_click():
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
         Mouse("[%s, %s], right" % (positionX, positionY)).execute()
+    disable_navigation_grammar()
 
 
 def double_click():
@@ -392,6 +406,7 @@ def double_click():
     (positionX, positionY) = _init_mouse_action()
     if positionX != None and positionY != None:
         Mouse("[%s, %s], left:2" % (positionX, positionY)).execute()
+    disable_navigation_grammar()
 
 
 def control_click():
@@ -404,6 +419,7 @@ def control_click():
         Key("ctrl:down/5").execute()
         Mouse("[%s, %s], left" % (positionX, positionY)).execute()
         Key("ctrl:up/5").execute()
+    disable_navigation_grammar()
 
 
 def shift_click():
@@ -416,6 +432,7 @@ def shift_click():
         Key("shift:down/5").execute()
         Mouse("[%s, %s], left" % (positionX, positionY)).execute()
         Key("shift:up/5").execute()
+    disable_navigation_grammar()
 
 
 def mouse_mark():
@@ -429,6 +446,7 @@ def mouse_mark():
         MOUSE_MARK_POSITION = (positionX, positionY)
     else:
         MOUSE_MARK_POSITION = None
+    disable_navigation_grammar()
 
 
 def mouse_drag():
@@ -446,6 +464,7 @@ def mouse_drag():
         MOUSE_MARK_POSITION = None
     else:
         print("Mouse drag failed, no start position marked.")
+    disable_navigation_grammar()
 
 
 def call_action(action, monitorSelected):
@@ -455,14 +474,7 @@ def call_action(action, monitorSelected):
     action()
 
 
-
-
-
-
-
-
-
-def unload():
+def unload_grids():
     global MONITORS
     global GRID_WINDOWS
     for win in GRID_WINDOWS.values():
