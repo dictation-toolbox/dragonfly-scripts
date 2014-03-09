@@ -56,7 +56,8 @@ mapping = {
 context = None
 if config.get("aenea.enabled", False) == True:
     mapping.update({
-        "go to tab [<n>]": Key("a-%(n)d"),  # Uses alt-key.
+        # Linux uses alt-key.
+        "go to tab [<n>]": Key("a-%(n)d"),  # Not supported by Opera.
     })
     gt = aenea.global_context
     nixContext1 = NixAppContext(executable="firefox", title="Firefox") & gt
@@ -66,7 +67,8 @@ if config.get("aenea.enabled", False) == True:
     context = nixContext1 | nixContext2 | nixContext3 | nixContext4
 else:
     mapping.update({
-        "go to tab [<n>]": Key("c-%(n)d"),  # Uses ctrl-key.
+        # Windows uses ctrl-key.
+        "go to tab [<n>]": Key("c-%(n)d"),  # Not supported by Opera.
     })
     winContext1 = AppContext(executable="firefox", title="Firefox")
     winContext2 = AppContext(executable="chrome", title="Chrome")
