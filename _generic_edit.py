@@ -221,6 +221,25 @@ pressKeyMap.update(controlKeyMap)
 pressKeyMap.update(functionKeyMap)
 
 
+formatMap = {
+    "camel case": ft.camelCase,
+    "pascal case": ft.pascalCase,
+    "snake case": ft.snakeCase,
+    "uppercase": ft.upperCase,
+    "lowercase": ft.lowerCase,
+    "squash": ft.squash,
+    "lowercase squash": [ft.squash, ft.lowerCase],
+    "uppercase squash": [ft.squash, ft.upperCase],
+    "squash lowercase": [ft.squash, ft.lowerCase],
+    "squash uppercase": [ft.squash, ft.upperCase],
+    "dashify": ft.dashify,
+    "lowercase dashify": [ft.dashify, ft.lowerCase],
+    "uppercase dashify": [ft.dashify, ft.upperCase],
+    "dashify lowercase": [ft.dashify, ft.lowerCase],
+    "dashify uppercase": [ft.dashify, ft.upperCase],
+}
+
+
 grammarCfg = Config("multi edit")
 grammarCfg.cmd = Section("Language section")
 grammarCfg.cmd.map = Item(
@@ -275,20 +294,14 @@ grammarCfg.cmd.map = Item(
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
          # Formatting.
-        "camel case <text>": Function(camel_case_text),
         "camel case <n> [words]": Function(camel_case_count),
-        "pascal case <text>": Function(pascal_case_text),
         "pascal case <n> [words]": Function(pascal_case_count),
-        "snake case <text>": Function(snake_case_text),
         "snake case <n> [words]": Function(snake_case_count),
-        "squash <text>": Function(squash_text),
         "squash <n> [words]": Function(squash_count),
         "expand <n> [words]": Function(expand_count),
-        "uppercase <text>": Function(uppercase_text),
         "uppercase <n> [words]": Function(uppercase_count),
-        "lowercase <text>": Function(lowercase_text),
         "lowercase <n> [words]": Function(lowercase_count),
-        "lowercase squash <text>": Function(format_text, formatType=[ft.lowerCase, ft.squash]),  # @IgnorePep8
+        "<formatType> <text>": Function(format_text),
         # Text corrections.
         "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
@@ -330,6 +343,7 @@ class KeystrokeRule(MappingRule):
         Choice("modifier2", modifierMap),
         Choice("modifierSingle", singleModifierMap),
         Choice("pressKey", pressKeyMap),
+        Choice("formatType", formatMap),
     ]
     defaults = {
         "n": 1,

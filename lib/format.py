@@ -11,6 +11,7 @@ class FormatTypes:
     squash = 4
     upperCase = 5
     lowerCase = 6
+    dashify = 7
 
 
 def format_camel_case(text):
@@ -51,6 +52,20 @@ def format_snake_case(text):
         if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
             word = "_" + word  # Adds underscores between normal words.
         newText += word.lower()
+    return newText
+
+
+def format_dashify(text):
+    newText = ""
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "-" + word  # Adds underscores between normal words.
+        newText += word
     return newText
 
 
@@ -100,7 +115,8 @@ FORMAT_TYPES_MAP = {
     FormatTypes.snakeCase: format_snake_case,
     FormatTypes.squash: format_squash,
     FormatTypes.upperCase: format_upper_case,
-    FormatTypes.lowerCase: format_lower_case
+    FormatTypes.lowerCase: format_lower_case,
+    FormatTypes.dashify: format_dashify,
 }
 
 
