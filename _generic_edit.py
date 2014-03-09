@@ -40,7 +40,23 @@ if config.get("aenea.enabled", False) == True:
     import aenea
 
 import lib.sound as sound
-import lib.format
+from lib.format import (
+    camel_case_text,
+    camel_case_count,
+    pascal_case_text,
+    pascal_case_count,
+    snake_case_text,
+    snake_case_count,
+    squash_text,
+    squash_count,
+    expand_count,
+    uppercase_text,
+    uppercase_count,
+    lowercase_text,
+    lowercase_count,
+    format_text,
+    FormatTypes as ft,
+)
 
 
 release = Key("shift:up, ctrl:up, alt:up")
@@ -259,19 +275,20 @@ grammarCfg.cmd.map = Item(
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
          # Formatting.
-        "camel case <text>": Function(lib.format.camel_case_text),
-        "camel case <n> [words]": Function(lib.format.camel_case_count),
-        "pascal case <text>": Function(lib.format.pascal_case_text),
-        "pascal case <n> [words]": Function(lib.format.pascal_case_count),
-        "snake case <text>": Function(lib.format.snake_case_text),
-        "snake case <n> [words]": Function(lib.format.snake_case_count),
-        "squash <text>": Function(lib.format.squash_text),
-        "squash <n> [words]": Function(lib.format.squash_count),
-        "expand <n> [words]": Function(lib.format.expand_count),
-        "uppercase <text>": Function(lib.format.uppercase_text),
-        "uppercase <n> [words]": Function(lib.format.uppercase_count),
-        "lowercase <text>": Function(lib.format.lowercase_text),
-        "lowercase <n> [words]": Function(lib.format.lowercase_count),
+        "camel case <text>": Function(camel_case_text),
+        "camel case <n> [words]": Function(camel_case_count),
+        "pascal case <text>": Function(pascal_case_text),
+        "pascal case <n> [words]": Function(pascal_case_count),
+        "snake case <text>": Function(snake_case_text),
+        "snake case <n> [words]": Function(snake_case_count),
+        "squash <text>": Function(squash_text),
+        "squash <n> [words]": Function(squash_count),
+        "expand <n> [words]": Function(expand_count),
+        "uppercase <text>": Function(uppercase_text),
+        "uppercase <n> [words]": Function(uppercase_count),
+        "lowercase <text>": Function(lowercase_text),
+        "lowercase <n> [words]": Function(lowercase_count),
+        "lowercase squash <text>": Function(format_text, formatType=[ft.lowerCase, ft.squash]),  # @IgnorePep8
         # Text corrections.
         "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
