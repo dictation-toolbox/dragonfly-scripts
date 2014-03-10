@@ -39,7 +39,7 @@ def strip_dragon_info(text):
 
 def extract_dragon_info(text):
     newWords = []
-    words = text.words
+    words = str(text).split(" ")
     for word in words:
         if word.rfind("\\") > -1:
             pos = word.rfind("\\") + 1
@@ -158,8 +158,13 @@ def format_text(text, formatType=None):
         result = ""
         method = None
         for value in formatType:
+            if not result:
+                if formatType == FormatTypes.spokenForm:
+                    result = text.words
+                else:
+                    result = str(text)
             method = FORMAT_TYPES_MAP[value]
-            result = method(text)
+            result = method(result)
         Text("%(text)s").execute({"text": result})
 
 
