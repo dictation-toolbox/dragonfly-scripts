@@ -3,6 +3,7 @@ import re
 from dragonfly import Text  # @UnusedImport
 from dragonfly.actions.keyboard import Keyboard
 
+import lib.format
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
@@ -55,13 +56,15 @@ class SCText(Text):  # Special Characters Text.
             raise Exception("SCText only supports one variable, yet.")
         start = len(parts[0])
         end = len(spec) - len(parts[1])
-        work = spec[start:end]
-        for text, char in specialCharacterTranslations.items():
-            work = work.replace(" %s " % text, char)
-            work = work.replace(" %s" % text, char)
-            work = work.replace("%s " % text, char)
-            work = work.replace("%s" % text, char)
-        spec = parts[0] + work + parts[1]
+        words = spec[start:end]
+        words = lib.format.strip_dragon_info(words)
+        newText = ""
+        for word in words:
+            if (newText != "" and newText[-1:].isalnum() and
+                    word[-1:].isalnum()):
+                word = " " + word  # Adds spacing between normal words.
+            newText += word
+        spec = parts[0] + newText + parts[1]
         if config.get("aenea.enabled", False) == True:
             return spec
         events = []
