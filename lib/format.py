@@ -1,7 +1,166 @@
 import re
 
-from dragonfly import Key, Text, Clipboard, Pause
-from lib.text import SCText
+from dragonfly import (
+    Key,
+    Text,  # @UnusedImport
+    Clipboard,
+    Pause,
+)
+
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Text  # @Reimport
+
+
+class FormatTypes:
+    camelCase = 1
+    pascalCase = 2
+    snakeCase = 3
+    squash = 4
+    upperCase = 5
+    lowerCase = 6
+    dashify = 7
+    dotify = 8
+    spokenForm = 9
+
+
+def strip_dragon_info(text):
+    newWords = []
+    words = str(text).split(" ")
+    for word in words:
+        if word.startswith("\\backslash"):
+            word = "\\"  # Backslash requires special handling.
+        elif word.find("\\") > -1:
+            word = word[:word.find("\\")]  # Remove spoken form info.
+        newWords.append(word)
+    return newWords
+
+
+def extract_dragon_info(text):
+    newWords = []
+    words = text.words
+    for word in words:
+        if word.rfind("\\") > -1:
+            pos = word.rfind("\\") + 1
+            if (len(word) - 1) >= pos:
+                word = word[pos:]  # Remove written form info.
+            else:
+                word = ""
+        newWords.append(word)
+    return newWords
+
+
+def format_camel_case(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText == '':
+            newText = word[:1].lower() + word[1:]
+        else:
+            newText = '%s%s' % (newText, word.capitalize())
+    return newText
+
+
+def format_pascal_case(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        newText = '%s%s' % (newText, word.capitalize())
+    return newText
+
+
+def format_snake_case(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "_" + word  # Adds underscores between normal words.
+        newText += word.lower()
+    return newText
+
+
+def format_dashify(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "-" + word  # Adds dashes between normal words.
+        newText += word
+    return newText
+
+
+def format_dotify(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "." + word  # Adds dashes between normal words.
+        newText += word
+    return newText
+
+
+def format_squash(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        newText = '%s%s' % (newText, word)
+    return newText
+
+
+def format_upper_case(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = " " + word  # Adds spacing between normal words.
+        newText += word.upper()
+    return newText
+
+
+def format_lower_case(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = " " + word  # Adds spacing between normal words.
+        newText += word.lower()
+    return newText
+
+
+def format_spoken_form(text):
+    newText = ""
+    words = extract_dragon_info(text)
+    for word in words:
+        if newText != "":
+            word = " " + word
+        newText += word
+    return newText
+
+
+FORMAT_TYPES_MAP = {
+    FormatTypes.camelCase: format_camel_case,
+    FormatTypes.pascalCase: format_pascal_case,
+    FormatTypes.snakeCase: format_snake_case,
+    FormatTypes.squash: format_squash,
+    FormatTypes.upperCase: format_upper_case,
+    FormatTypes.lowerCase: format_lower_case,
+    FormatTypes.dashify: format_dashify,
+    FormatTypes.dotify: format_dotify,
+    FormatTypes.spokenForm: format_spoken_form,
+}
+
+
+def format_text(text, formatType=None):
+    if formatType:
+        if type(formatType) != type([]):
+            formatType = [formatType]
+        result = ""
+        method = None
+        for value in formatType:
+            method = FORMAT_TYPES_MAP[value]
+            result = method(text)
+        Text("%(text)s").execute({"text": result})
 
 
 def camel_case_text(text):
@@ -11,18 +170,8 @@ def camel_case_text(text):
     "'camel case my new variable'" => "myNewVariable".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        if newText == '':
-            newText = word[:1].lower() + word[1:]
-        else:
-            newText = '%s%s' % (newText, word.capitalize())
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_camel_case(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def camel_case_count(n):
@@ -72,15 +221,8 @@ def pascal_case_text(text):
     "'pascal case my new variable'" => "MyNewVariable".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        newText = '%s%s' % (newText, word.capitalize())
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_pascal_case(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def pascal_case_count(n):
@@ -114,17 +256,8 @@ def snake_case_text(text):
     "'snake case my new variable'" => "my_new_variable".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
-            word = "_" + word  # Adds underscores between normal words.
-        newText += word.lower()
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_snake_case(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def snake_case_count(n):
@@ -158,15 +291,8 @@ def squash_text(text):
     "'squash my new variable'" => "mynewvariable".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        newText = '%s%s' % (newText, word)
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_squash(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def squash_count(n):
@@ -242,17 +368,8 @@ def uppercase_text(text):
     "'upper case my new variable'" => "MY NEW VARIABLE".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
-            word = " " + word  # Adds spacing between normal words.
-        newText += word.upper()
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_upper_case(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def uppercase_count(n):
@@ -282,17 +399,8 @@ def lowercase_text(text):
     "'lower case John Johnson'" => "john johnson".
 
     """
-    newText = ""
-    words = str(text).split(" ")
-    for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
-        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
-            word = " " + word  # Adds spacing between normal words.
-        newText += word.lower()
-    SCText("%(text)s").execute({"text": newText})
+    newText = format_lower_case(text)
+    Text("%(text)s").execute({"text": newText})
 
 
 def lowercase_count(n):

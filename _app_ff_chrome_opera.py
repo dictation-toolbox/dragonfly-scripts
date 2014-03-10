@@ -1,5 +1,5 @@
 """A command module for Dragonfly, for controlling the browsers
-Firefox and Chrome (and Chromium).
+Firefox, Chrome (and Chromium), and Opera.
 
 -----------------------------------------------------------------------------
 Licensed under the LGPL3.
@@ -56,21 +56,25 @@ mapping = {
 context = None
 if config.get("aenea.enabled", False) == True:
     mapping.update({
-        "go to tab [<n>]": Key("a-%(n)d"),  # Uses alt-key.
+        # Linux uses alt-key.
+        "go to tab [<n>]": Key("a-%(n)d"),  # Not supported by Opera.
     })
     gt = aenea.global_context
     nixContext1 = NixAppContext(executable="firefox", title="Firefox") & gt
     nixContext2 = NixAppContext(executable="chrome", title="Chrome") & gt
     nixContext3 = NixAppContext(executable="chrome", title="Chromium") & gt
-    context = nixContext1 | nixContext2 | nixContext3
+    nixContext4 = NixAppContext(executable="opera", title="Opera") & gt
+    context = nixContext1 | nixContext2 | nixContext3 | nixContext4
 else:
     mapping.update({
-        "go to tab [<n>]": Key("c-%(n)d"),  # Uses ctrl-key.
+        # Windows uses ctrl-key.
+        "go to tab [<n>]": Key("c-%(n)d"),  # Not supported by Opera.
     })
     winContext1 = AppContext(executable="firefox", title="Firefox")
     winContext2 = AppContext(executable="chrome", title="Chrome")
     winContext3 = AppContext(executable="chrome", title="Chromium")
-    context = winContext1 | winContext2 | winContext3
+    winContext4 = AppContext(executable="opera", title="Opera")
+    context = winContext1 | winContext2 | winContext3 | winContext4
 
 
 rules = MappingRule(
@@ -84,7 +88,7 @@ rules = MappingRule(
 )
 
 
-grammar = Grammar("FF and Chrome", context=context)
+grammar = Grammar("FF, Chrome, and Opera", context=context)
 grammar.add_rule(rules)
 grammar.load()
 

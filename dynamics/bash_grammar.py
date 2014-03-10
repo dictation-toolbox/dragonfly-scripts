@@ -32,11 +32,11 @@ rules = MappingRule(
         # Commands and keywords:
         "sudo apt get update": Text("sudo apt-get update"),
         "apt cache search": Text("apt-cache search "),
-        "apt cache search <text>": Text("apt-cache search %(text)s"),
+        "apt cache search <text>": SCText("apt-cache search %(text)s"),
         "sudo apt get install": Text("sudo apt-get install "),
-        "sudo apt get install <text>": Text("sudo apt-get install %(text)s"),
+        "sudo apt get install <text>": SCText("sudo apt-get install %(text)s"),
         "apt get install": Text("apt-get install "),
-        "apt get install <text>": Text("apt-get install %(text)s"),
+        "apt get install <text>": SCText("apt-get install %(text)s"),
         "(cat|C A T)": Text("cat "),
         "(cat|C A T) <text>": SCText("cat %(text)s"),
         "(change (directory|dir)|C D)": Text("cd "),
@@ -57,7 +57,7 @@ rules = MappingRule(
         "grep": Text("grep "),
         "grep <text>": SCText("grep %(text)s"),
         "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
-        "grep recursive <text>": Text("grep -rn \"%(text)s\" *") + Key("left:3"),  # @IgnorePep8
+        "grep recursive <text>": SCText("grep -rn \"%(text)s\" *") + Key("left:3"),  # @IgnorePep8
         "ifconfig": Text("ifconfig "),
         "(iptables|I P tables) list": Text("iptables -L"),
         "(iptables|I P tables) flush": Text("iptables -F"),
@@ -65,7 +65,7 @@ rules = MappingRule(
         "kill (hard|[dash]9)": Text("kill -9 "),
         "kill line": Key("c-k"),
         "list files": Text("ls -la") + Key("enter"),
-        "list files <text>": Text("ls -la %(text)s"),
+        "list files <text>": SCText("ls -la %(text)s"),
         "list files time sort": Text("ls -lat") + Key("enter"),
         "make (directory|dir)": Text("mkdir "),
         "make (directory|dir) <text>": SCText("mkdir %(text)s"),

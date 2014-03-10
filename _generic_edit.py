@@ -40,7 +40,17 @@ if config.get("aenea.enabled", False) == True:
     import aenea
 
 import lib.sound as sound
-import lib.format
+from lib.format import (
+    camel_case_count,
+    pascal_case_count,
+    snake_case_count,
+    squash_count,
+    expand_count,
+    uppercase_count,
+    lowercase_count,
+    format_text,
+    FormatTypes as ft,
+)
 
 
 release = Key("shift:up, ctrl:up, alt:up")
@@ -205,6 +215,68 @@ pressKeyMap.update(controlKeyMap)
 pressKeyMap.update(functionKeyMap)
 
 
+formatMap = {
+    "camel case": ft.camelCase,
+    "pascal case": ft.pascalCase,
+    "snake case": ft.snakeCase,
+    "uppercase": ft.upperCase,
+    "lowercase": ft.lowerCase,
+    "squash": ft.squash,
+    "lowercase squash": [ft.squash, ft.lowerCase],
+    "uppercase squash": [ft.squash, ft.upperCase],
+    "squash lowercase": [ft.squash, ft.lowerCase],
+    "squash uppercase": [ft.squash, ft.upperCase],
+    "dashify": ft.dashify,
+    "lowercase dashify": [ft.dashify, ft.lowerCase],
+    "uppercase dashify": [ft.dashify, ft.upperCase],
+    "dashify lowercase": [ft.dashify, ft.lowerCase],
+    "dashify uppercase": [ft.dashify, ft.upperCase],
+    "dotify": ft.dotify,
+    "lowercase dotify": [ft.dotify, ft.lowerCase],
+    "uppercase dotify": [ft.dotify, ft.upperCase],
+    "dotify lowercase": [ft.dotify, ft.lowerCase],
+    "dotify uppercase": [ft.dotify, ft.upperCase],
+    "say": ft.spokenForm,
+}
+
+
+abbreviationMap = {
+    "administrator": "admin",
+    "attribute": "attr",
+    "attributes": "attrs",
+    "authenticate": "auth",
+    "authentication": "auth",
+    "binary": "bin",
+    "button": "btn",
+    "class": "cls",
+    "config": "cfg",
+    "configuration": "cfg",
+    "control": "ctrl",
+    "database": "db",
+    "define": "def",
+    "function": "func",
+    "instance": "inst",
+    "integer": "int",
+    "javascript": "js",
+    "language": "lng",
+    "library": "lib",
+    "length": "len",
+    "object": "obj",
+    "parameter": "param",
+    "parameters": "params",
+    "position": "pos",
+    "previous": "prev",
+    "python": "py",
+    "request": "req",
+    "session aidee": "sid",  # "session id" didn't work for some reason.
+    "source": "src",
+    "string": "str",
+    "temporary": "tmp",
+    "text": "txt",
+    "window": "win",
+}
+
+
 grammarCfg = Config("multi edit")
 grammarCfg.cmd = Section("Language section")
 grammarCfg.cmd.map = Item(
@@ -250,8 +322,7 @@ grammarCfg.cmd.map = Item(
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
-        "say <text>": release + Text("%(text)s"),
-#         "mimic <text>": release + Mimic(extra="text"),
+#         "say <text>": release + NTText("%(text)s"), # Moved to formatting methods. @IgnorePep8
          # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
@@ -259,19 +330,15 @@ grammarCfg.cmd.map = Item(
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
          # Formatting.
-        "camel case <text>": Function(lib.format.camel_case_text),
-        "camel case <n> [words]": Function(lib.format.camel_case_count),
-        "pascal case <text>": Function(lib.format.pascal_case_text),
-        "pascal case <n> [words]": Function(lib.format.pascal_case_count),
-        "snake case <text>": Function(lib.format.snake_case_text),
-        "snake case <n> [words]": Function(lib.format.snake_case_count),
-        "squash <text>": Function(lib.format.squash_text),
-        "squash <n> [words]": Function(lib.format.squash_count),
-        "expand <n> [words]": Function(lib.format.expand_count),
-        "uppercase <text>": Function(lib.format.uppercase_text),
-        "uppercase <n> [words]": Function(lib.format.uppercase_count),
-        "lowercase <text>": Function(lib.format.lowercase_text),
-        "lowercase <n> [words]": Function(lib.format.lowercase_count),
+        "camel case <n> [words]": Function(camel_case_count),
+        "pascal case <n> [words]": Function(pascal_case_count),
+        "snake case <n> [words]": Function(snake_case_count),
+        "squash <n> [words]": Function(squash_count),
+        "expand <n> [words]": Function(expand_count),
+        "uppercase <n> [words]": Function(uppercase_count),
+        "lowercase <n> [words]": Function(lowercase_count),
+        "<formatType> <text>": Function(format_text),
+        "abbreviate <abbreviation>": Text("%(abbreviation)s"),
         # Text corrections.
         "(add|fix) missing space": Key("a-left, space, a-right"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("a-left, backspace, a-right"),  # @IgnorePep8
@@ -313,6 +380,8 @@ class KeystrokeRule(MappingRule):
         Choice("modifier2", modifierMap),
         Choice("modifierSingle", singleModifierMap),
         Choice("pressKey", pressKeyMap),
+        Choice("formatType", formatMap),
+        Choice("abbreviation", abbreviationMap),
     ]
     defaults = {
         "n": 1,
