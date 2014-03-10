@@ -240,6 +240,43 @@ formatMap = {
 }
 
 
+abbreviationMap = {
+    "administrator": "admin",
+    "attribute": "attr",
+    "attributes": "attrs",
+    "authenticate": "auth",
+    "authentication": "auth",
+    "binary": "bin",
+    "button": "btn",
+    "class": "cls",
+    "config": "cfg",
+    "configuration": "cfg",
+    "control": "ctrl",
+    "database": "db",
+    "define": "def",
+    "function": "func",
+    "instance": "inst",
+    "integer": "int",
+    "javascript": "js",
+    "language": "lng",
+    "library": "lib",
+    "length": "len",
+    "object": "obj",
+    "parameter": "param",
+    "parameters": "params",
+    "position": "pos",
+    "previous": "prev",
+    "python": "py",
+    "request": "req",
+    "session aidee": "sid",  # "session id" didn't work for some reason.
+    "source": "src",
+    "string": "str",
+    "temporary": "tmp",
+    "text": "txt",
+    "window": "win",
+}
+
+
 grammarCfg = Config("multi edit")
 grammarCfg.cmd = Section("Language section")
 grammarCfg.cmd.map = Item(
@@ -301,6 +338,7 @@ grammarCfg.cmd.map = Item(
         "uppercase <n> [words]": Function(uppercase_count),
         "lowercase <n> [words]": Function(lowercase_count),
         "<formatType> <text>": Function(format_text),
+        "abbreviate <abbreviation>": Text("%(abbreviation)s"),
         # Text corrections.
         "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
@@ -343,6 +381,7 @@ class KeystrokeRule(MappingRule):
         Choice("modifierSingle", singleModifierMap),
         Choice("pressKey", pressKeyMap),
         Choice("formatType", formatMap),
+        Choice("abbreviation", abbreviationMap),
     ]
     defaults = {
         "n": 1,
