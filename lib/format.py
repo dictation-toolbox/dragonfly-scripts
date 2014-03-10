@@ -13,6 +13,36 @@ if config.get("aenea.enabled", False) == True:
     from proxy_nicknames import Text  # @Reimport
 
 
+letterMap = {
+    "A\\letter": "alpha",
+    "B\\letter": "bravo",
+    "C\\letter": "charlie",
+    "D\\letter": "delta",
+    "E\\letter": "echo",
+    "F\\letter": "foxtrot",
+    "G\\letter": "golf",
+    "H\\letter": "hotel",
+    "I\\letter": "india",
+    "J\\letter": "juliet",
+    "K\\letter": "kilo",
+    "L\\letter": "lima",
+    "M\\letter": "mike",
+    "N\\letter": "november",
+    "O\\letter": "oscar",
+    "P\\letter": "papa",
+    "Q\\letter": "quebec",
+    "R\\letter": "romeo",
+    "S\\letter": "sierra",
+    "T\\letter": "tango",
+    "U\\letter": "uniform",
+    "V\\letter": "victor",
+    "W\\letter": "whiskey",
+    "X\\letter": "x-ray",
+    "Y\\letter": "yankee",
+    "Z\\letter": "zulu",
+}
+
+
 class FormatTypes:
     camelCase = 1
     pascalCase = 2
@@ -41,7 +71,9 @@ def extract_dragon_info(text):
     newWords = []
     words = str(text).split(" ")
     for word in words:
-        if word.rfind("\\") > -1:
+        if word in letterMap.keys():
+            word = letterMap[word]
+        elif word.rfind("\\") > -1:
             pos = word.rfind("\\") + 1
             if (len(word) - 1) >= pos:
                 word = word[pos:]  # Remove written form info.
