@@ -41,18 +41,12 @@ if config.get("aenea.enabled", False) == True:
 
 import lib.sound as sound
 from lib.format import (
-    camel_case_text,
     camel_case_count,
-    pascal_case_text,
     pascal_case_count,
-    snake_case_text,
     snake_case_count,
-    squash_text,
     squash_count,
     expand_count,
-    uppercase_text,
     uppercase_count,
-    lowercase_text,
     lowercase_count,
     format_text,
     FormatTypes as ft,
@@ -237,6 +231,11 @@ formatMap = {
     "uppercase dashify": [ft.dashify, ft.upperCase],
     "dashify lowercase": [ft.dashify, ft.lowerCase],
     "dashify uppercase": [ft.dashify, ft.upperCase],
+    "dotify": ft.dotify,
+    "lowercase dotify": [ft.dotify, ft.lowerCase],
+    "uppercase dotify": [ft.dotify, ft.upperCase],
+    "dotify lowercase": [ft.dotify, ft.lowerCase],
+    "dotify uppercase": [ft.dotify, ft.upperCase],
 }
 
 

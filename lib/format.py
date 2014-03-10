@@ -21,6 +21,7 @@ class FormatTypes:
     upperCase = 5
     lowerCase = 6
     dashify = 7
+    dotify = 8
 
 
 def strip_dragon_info(text):
@@ -74,6 +75,16 @@ def format_dashify(text):
     return newText
 
 
+def format_dotify(text):
+    newText = ""
+    words = strip_dragon_info(text)
+    for word in words:
+        if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
+            word = "." + word  # Adds dashes between normal words.
+        newText += word
+    return newText
+
+
 def format_squash(text):
     newText = ""
     words = strip_dragon_info(text)
@@ -110,6 +121,7 @@ FORMAT_TYPES_MAP = {
     FormatTypes.upperCase: format_upper_case,
     FormatTypes.lowerCase: format_lower_case,
     FormatTypes.dashify: format_dashify,
+    FormatTypes.dotify: format_dotify,
 }
 
 
