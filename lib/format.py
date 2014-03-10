@@ -43,7 +43,6 @@ def extract_dragon_info(text):
     for word in words:
         if word.rfind("\\") > -1:
             pos = word.rfind("\\") + 1
-            print(word, len(word), pos)
             if (len(word) - 1) >= pos:
                 word = word[pos:]  # Remove written form info.
             else:
