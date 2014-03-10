@@ -236,6 +236,7 @@ formatMap = {
     "uppercase dotify": [ft.dotify, ft.upperCase],
     "dotify lowercase": [ft.dotify, ft.lowerCase],
     "dotify uppercase": [ft.dotify, ft.upperCase],
+    "say": ft.spokenForm,
 }
 
 
@@ -284,8 +285,7 @@ grammarCfg.cmd.map = Item(
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
-        "say <text>": release + Text("%(text)s"),
-#         "mimic <text>": release + Mimic(extra="text"),
+#         "say <text>": release + NTText("%(text)s"), # Moved to formatting methods. @IgnorePep8
          # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),

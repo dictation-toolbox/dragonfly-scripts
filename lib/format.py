@@ -22,6 +22,7 @@ class FormatTypes:
     lowerCase = 6
     dashify = 7
     dotify = 8
+    spokenForm = 9
 
 
 def strip_dragon_info(text):
@@ -31,7 +32,22 @@ def strip_dragon_info(text):
         if word.startswith("\\backslash"):
             word = "\\"  # Backslash requires special handling.
         elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Cut ev. spoken form information.
+            word = word[:word.find("\\")]  # Remove spoken form info.
+        newWords.append(word)
+    return newWords
+
+
+def extract_dragon_info(text):
+    newWords = []
+    words = text.words
+    for word in words:
+        if word.rfind("\\") > -1:
+            pos = word.rfind("\\") + 1
+            print(word, len(word), pos)
+            if (len(word) - 1) >= pos:
+                word = word[pos:]  # Remove written form info.
+            else:
+                word = ""
         newWords.append(word)
     return newWords
 
@@ -113,6 +129,16 @@ def format_lower_case(text):
     return newText
 
 
+def format_spoken_form(text):
+    newText = ""
+    words = extract_dragon_info(text)
+    for word in words:
+        if newText != "":
+            word = " " + word
+        newText += word
+    return newText
+
+
 FORMAT_TYPES_MAP = {
     FormatTypes.camelCase: format_camel_case,
     FormatTypes.pascalCase: format_pascal_case,
@@ -122,6 +148,7 @@ FORMAT_TYPES_MAP = {
     FormatTypes.lowerCase: format_lower_case,
     FormatTypes.dashify: format_dashify,
     FormatTypes.dotify: format_dotify,
+    FormatTypes.spokenForm: format_spoken_form,
 }
 
 
@@ -129,11 +156,11 @@ def format_text(text, formatType=None):
     if formatType:
         if type(formatType) != type([]):
             formatType = [formatType]
-        result = str(text)
+        result = ""
         method = None
         for value in formatType:
             method = FORMAT_TYPES_MAP[value]
-            result = method(result)
+            result = method(text)
         Text("%(text)s").execute({"text": result})
 
 
