@@ -222,9 +222,9 @@ class SeriesMappingRule(CompoundRule):
 series_rule = SeriesMappingRule(
     mapping={
         "(start|switch to) <module> mode": Function(enable_module),
+        "(start|switch to) <module> mode only": Function(enable_single_module),
         "(start|switch to) <module> and <module2> mode": Function(enable_multiple_modules),  # @IgnorePep8
         "(start|switch to) <module> and <module2> and <module3> mode": Function(enable_multiple_modules),  # @IgnorePep8
-        "(start|switch to) only <module> mode": Function(enable_single_module),
         "show dynamic [(mode|modes)] status": Function(show_module_status),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
