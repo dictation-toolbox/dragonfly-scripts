@@ -133,7 +133,7 @@ def import_dynamic_modules():
 import_dynamic_modules()
 
 
-def disable_all_modules():
+def disable_all_modules(useSound=True):
     """Iterates through the list of all dynamic modules and disables them."""
     global moduleMapping
     disableCount = 0
@@ -145,11 +145,17 @@ def disable_all_modules():
             config["dynamics.%s" % moduleName] = False
             notify_module_disabled(moduleName, useSound=False)
     if disableCount > 0:
-        sound.play(sound.SND_DEACTIVATE)
         lib.config.save_config()
+        if useSound:
+            sound.play(sound.SND_DEACTIVATE)
         print("----------- All dynamic modules disabled -----------\n")
     else:
         print("---------- No dynamic modules are enabled ----------\n")
+
+
+def enable_single_module(module):
+    disable_all_modules(useSound=False)
+    enable_module(module)
 
 
 def enable_aenea():
@@ -189,6 +195,7 @@ class SeriesMappingRule(CompoundRule):
 series_rule = SeriesMappingRule(
     mapping={
         "(start|switch to) <module> mode": Function(enable_module),
+        "(start|switch to) only <module> mode": Function(enable_single_module),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
     },
