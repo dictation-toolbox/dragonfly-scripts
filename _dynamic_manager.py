@@ -186,11 +186,9 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        "[(start|switch to)] <module> mode": Function(enable_module),
+        "(start|switch to) <module> mode": Function(enable_module),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
-#         "enable (Aenea|Linux) connection": Function(enable_aenea),
-#         "disable (Aenea|Linux) connection": Function(disable_aenea),
     },
     extras=[
         IntegerRef("n", 1, 100),
