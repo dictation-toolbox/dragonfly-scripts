@@ -147,7 +147,9 @@ def disable_all_modules():
     if disableCount > 0:
         sound.play(sound.SND_DEACTIVATE)
         lib.config.save_config()
-    print("----------- All dynamic modules disabled -----------\n")
+        print("----------- All dynamic modules disabled -----------\n")
+    else:
+        print("---------- No dynamic modules are enabled ----------\n")
 
 
 def enable_aenea():
