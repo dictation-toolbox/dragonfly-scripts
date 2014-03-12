@@ -1,13 +1,10 @@
 """A command module for Dragonfly, for dynamically enabling/disabling
-different grammars, and for enabling and disabling other features.
+different grammars.
 
 If a grammar is enabled that is conflicting with a previously enabled grammar,
 the previously enabled grammar will be automatically disabled.
 Each dynamic grammar module is responsible for keeping track of what other
-modules is incompatible with.
-
-Other features that can be enabled/disabled are Aenea, the client-server
-connection to Linux. Note that a reload is required after changing Aenea state.
+modules it is incompatible with.
 
 -----------------------------------------------------------------------------
 Licensed under LGPL3
