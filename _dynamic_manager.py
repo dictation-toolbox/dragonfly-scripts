@@ -153,9 +153,36 @@ def disable_all_modules(useSound=True):
         print("---------- No dynamic modules are enabled ----------\n")
 
 
+def show_module_status():
+    """Iterates through the list of all dynamic modules and shows their
+    status.
+
+    """
+    global moduleMapping
+    config = lib.config.get_config()
+    for moduleName, module in moduleMapping.items():
+        if module.grammar.enabled:
+            notify_module_enabled(moduleName, useSound=False)
+        else:
+            notify_module_disabled(moduleName, useSound=False)
+
+
 def enable_single_module(module):
     disable_all_modules(useSound=False)
     enable_module(module)
+
+
+def enable_multiple_modules(module, module2, module3=None):
+    modules = [module, module2, module3]
+    incompatibleModules = []
+    for module in modules:
+        if module:
+            if not module.DYN_MODULE_NAME in incompatibleModules:
+                enable_module(module)
+                incompatibleModules.extend(module.INCOMPATIBLE_MODULES)
+            else:
+                print("Grammar %s is incompatible with previous grammar" %
+                    module.DYN_MODULE_NAME)
 
 
 def enable_aenea():
@@ -195,7 +222,10 @@ class SeriesMappingRule(CompoundRule):
 series_rule = SeriesMappingRule(
     mapping={
         "(start|switch to) <module> mode": Function(enable_module),
+        "(start|switch to) <module> and <module2> mode": Function(enable_multiple_modules),  # @IgnorePep8
+        "(start|switch to) <module> and <module2> and <module3> mode": Function(enable_multiple_modules),  # @IgnorePep8
         "(start|switch to) only <module> mode": Function(enable_single_module),
+        "show dynamic [(mode|modes)] status": Function(show_module_status),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
     },
@@ -203,6 +233,8 @@ series_rule = SeriesMappingRule(
         IntegerRef("n", 1, 100),
         Dictation("text"),
         Choice("module", moduleMapping),
+        Choice("module2", moduleMapping),
+        Choice("module3", moduleMapping),
     ],
     defaults={
         "n": 1
