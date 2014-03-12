@@ -186,14 +186,11 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        #"(enable|load) <module> grammar": Function(enable_module),
-        #"(disable|unload) <module> grammar": Function(disable_module),
-        #"(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
-        "[(start|switch to)] <module> mode": Function(enable_module),  # Too disruptive? Time will tell...    @IgnorePep8
+        "[(start|switch to)] <module> mode": Function(enable_module),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
-        "enable (Aenea|Linux) connection": Function(enable_aenea),
-        "disable (Aenea|Linux) connection": Function(disable_aenea),
+#         "enable (Aenea|Linux) connection": Function(enable_aenea),
+#         "disable (Aenea|Linux) connection": Function(disable_aenea),
     },
     extras=[
         IntegerRef("n", 1, 100),
