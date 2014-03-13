@@ -237,6 +237,7 @@ formatMap = {
     "dotify lowercase": [ft.dotify, ft.lowerCase],
     "dotify uppercase": [ft.dotify, ft.upperCase],
     "say": ft.spokenForm,
+    "environment variable": [ft.snakeCase, ft.upperCase],
 }
 
 

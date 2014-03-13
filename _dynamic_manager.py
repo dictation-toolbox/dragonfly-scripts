@@ -1,13 +1,10 @@
 """A command module for Dragonfly, for dynamically enabling/disabling
-different grammars, and for enabling and disabling other features.
+different grammars.
 
 If a grammar is enabled that is conflicting with a previously enabled grammar,
 the previously enabled grammar will be automatically disabled.
 Each dynamic grammar module is responsible for keeping track of what other
-modules is incompatible with.
-
-Other features that can be enabled/disabled are Aenea, the client-server
-connection to Linux. Note that a reload is required after changing Aenea state.
+modules it is incompatible with.
 
 -----------------------------------------------------------------------------
 Licensed under LGPL3
@@ -133,7 +130,7 @@ def import_dynamic_modules():
 import_dynamic_modules()
 
 
-def disable_all_modules():
+def disable_all_modules(useSound=True):
     """Iterates through the list of all dynamic modules and disables them."""
     global moduleMapping
     disableCount = 0
@@ -145,9 +142,44 @@ def disable_all_modules():
             config["dynamics.%s" % moduleName] = False
             notify_module_disabled(moduleName, useSound=False)
     if disableCount > 0:
-        sound.play(sound.SND_DEACTIVATE)
         lib.config.save_config()
-    print("----------- All dynamic modules disabled -----------\n")
+        if useSound:
+            sound.play(sound.SND_DEACTIVATE)
+        print("----------- All dynamic modules disabled -----------\n")
+    else:
+        print("---------- No dynamic modules are enabled ----------\n")
+
+
+def show_module_status():
+    """Iterates through the list of all dynamic modules and shows their
+    status.
+
+    """
+    global moduleMapping
+    config = lib.config.get_config()
+    for moduleName, module in moduleMapping.items():
+        if module.grammar.enabled:
+            notify_module_enabled(moduleName, useSound=False)
+        else:
+            notify_module_disabled(moduleName, useSound=False)
+
+
+def enable_single_module(module):
+    disable_all_modules(useSound=False)
+    enable_module(module)
+
+
+def enable_multiple_modules(module, module2, module3=None):
+    modules = [module, module2, module3]
+    incompatibleModules = []
+    for module in modules:
+        if module:
+            if not module.DYN_MODULE_NAME in incompatibleModules:
+                enable_module(module)
+                incompatibleModules.extend(module.INCOMPATIBLE_MODULES)
+            else:
+                print("Grammar %s is incompatible with previous grammar" %
+                    module.DYN_MODULE_NAME)
 
 
 def enable_aenea():
@@ -186,19 +218,20 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        #"(enable|load) <module> grammar": Function(enable_module),
-        #"(disable|unload) <module> grammar": Function(disable_module),
-        #"(disable|unload) [all] dynamic grammars": Function(disable_all_modules),  # @IgnorePep8
-        "[(start|switch to)] <module> mode": Function(enable_module),  # Too disruptive? Time will tell...    @IgnorePep8
+        "(start|switch to) <module> mode": Function(enable_module),
+        "(start|switch to) <module> mode only": Function(enable_single_module),
+        "(start|switch to) <module> and <module2> mode": Function(enable_multiple_modules),  # @IgnorePep8
+        "(start|switch to) <module> and <module2> and <module3> mode": Function(enable_multiple_modules),  # @IgnorePep8
+        "show dynamic [(mode|modes)] status": Function(show_module_status),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
-        "enable (Aenea|Linux) connection": Function(enable_aenea),
-        "disable (Aenea|Linux) connection": Function(disable_aenea),
     },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
         Choice("module", moduleMapping),
+        Choice("module2", moduleMapping),
+        Choice("module3", moduleMapping),
     ],
     defaults={
         "n": 1
