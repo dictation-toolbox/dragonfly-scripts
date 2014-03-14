@@ -25,7 +25,8 @@ from dragonfly import (
     RuleRef,
     Grammar,
     Repetition,
-    CompoundRule
+    CompoundRule,
+    AppContext,
 )
 
 import win32con
@@ -278,6 +279,24 @@ abbreviationMap = {
 }
 
 
+def copy_command():
+    context = AppContext(executable="console")
+    window = Window.get_foreground()
+    if context.matches(window.executable, window.title, window.handle):
+        return
+    release.execute()
+    Key("c-c/3").execute()
+
+
+def paste_command():
+    context = AppContext(executable="console")
+    window = Window.get_foreground()
+    if context.matches(window.executable, window.title, window.handle):
+        return
+    release.execute()
+    Key("c-v/3").execute()
+
+
 grammarCfg = Config("multi edit")
 grammarCfg.cmd = Section("Language section")
 grammarCfg.cmd.map = Item(
@@ -307,8 +326,8 @@ grammarCfg.cmd.map = Item(
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps/3"),
         "win key": release + Key("win/3"),
-        "paste [that]": release + Key("c-v/3"),
-        "copy [that]": release + Key("c-c/3"),
+        "paste [that]": Function(paste_command),
+        "copy [that]": Function(copy_command),
         "cut [that]": release + Key("c-x/3"),
         "select all": release + Key("c-a/3"),
         "undo": release + Key("c-z/3"),
