@@ -342,14 +342,13 @@ grammarCfg.cmd.map = Item(
         "release control": Key("ctrl:up"),
         "release [all]": release,
         # Type written form of "that which would otherwise not be written".
-#         "say <text>": release + NTText("%(text)s"), # Moved to formatting methods. @IgnorePep8
-         # Shorthand multiple characters.
+        # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
-         # Formatting.
+        # Formatting.
         "camel case <n> [words]": Function(camel_case_count),
         "pascal case <n> [words]": Function(pascal_case_count),
         "snake case <n> [words]": Function(snake_case_count),
@@ -364,7 +363,7 @@ grammarCfg.cmd.map = Item(
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left/3, del, c-right/3"),  # @IgnorePep8
         # Canceling of started sentence.
-        # Useful for canceling what inconsiderate loud mouths have started.
+        # Useful for canceling what inconsiderate loud mouths have started. :)
         "<text> cancel dictation": Function(cancel_dictation),
         "<text> cancel dictation <text2>": Function(cancel_dictation),
         "[<text>] cancel and sleep": Function(cancel_and_sleep),
