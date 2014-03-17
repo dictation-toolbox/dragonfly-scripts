@@ -75,7 +75,7 @@ series_rule = SeriesMappingRule(
         svn + "(diff|difference|differentiate) <text>": SCText("svn diff %(text)s"),  # @IgnorePep8
         svn + "help": Text("svn --help") + Key("enter"),
         svn + "help <svncmd>": Text("svn --help %(svncmd)s") + Key("enter"),
-        svn + "log": Text("svn log") + Key("enter"),
+        svn + "log": Text("svn log "),
         svn + "log <text>": SCText("svn log %(text)s"),
         svn + "log limit <n>": Text("svn log -l %(n)d "),
         svn + "(move|M V)": Text("svn move "),
