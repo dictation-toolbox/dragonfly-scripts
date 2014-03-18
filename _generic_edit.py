@@ -256,6 +256,7 @@ abbreviationMap = {
     "control": "ctrl",
     "database": "db",
     "define": "def",
+    "(develop|development)": "dev",
     "(dictionary|dictation)": "dict",
     "dynamic": "dyn",
     "(direction|directory)": "dir",
@@ -282,6 +283,35 @@ abbreviationMap = {
     "temporary": "tmp",
     "text": "txt",
     "window": "win",
+}
+
+
+reservedWord = {
+    "up": "up",
+    "down": "down",
+    "left": "left",
+    "right": "right",
+    "home": "home",
+    "end": "end",
+    "space": "space",
+    "tab": "tab",
+    "backspace": "backspace",
+    "delete": "delete",
+    "paste": "paste",
+    "copy": "copy",
+    "cut": "cut",
+    "undo": "undo",
+    "release": "release",
+    "page up": "page up",
+    "page down": "page down",
+    "say": "say",
+    "select": "select",
+    "select all": "select all",
+    "abbreviate": "abbreviate",
+    "uppercase": "uppercase",
+    "lowercase": "lowercase",
+    "expand": "expand",
+    "squash": "squash",
 }
 
 
@@ -363,6 +393,7 @@ grammarCfg.cmd.map = Item(
         "uppercase <n> [words]": Function(uppercase_count),
         "lowercase <n> [words]": Function(lowercase_count),
         "<formatType> <text>": Function(format_text),
+        "say <reservedWord>": Text("%(reservedWord)s"),
         "abbreviate <abbreviation>": Text("%(abbreviation)s"),
         # Text corrections.
         "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
@@ -407,6 +438,7 @@ class KeystrokeRule(MappingRule):
         Choice("pressKey", pressKeyMap),
         Choice("formatType", formatMap),
         Choice("abbreviation", abbreviationMap),
+        Choice("reservedWord", reservedWord),
     ]
     defaults = {
         "n": 1,
