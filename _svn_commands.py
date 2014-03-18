@@ -48,6 +48,7 @@ svncmd = {
     "(diff|difference|differentiate)": "diff",
     "help": "help",
     "log": "log",
+    "list": "list",
     "move": "move",
     "status": "status",
     "update": "update",
@@ -57,7 +58,7 @@ svnopt = {
 
 }
 
-svn = "(subversion| S V N) "
+svn = "(subversion|S V N) "
 
 series_rule = SeriesMappingRule(
     mapping={
@@ -78,6 +79,7 @@ series_rule = SeriesMappingRule(
         svn + "log": Text("svn log "),
         svn + "log <text>": SCText("svn log %(text)s"),
         svn + "log limit <n>": Text("svn log -l %(n)d "),
+        svn + "(list [files]|L S)": Text("svn lshim "),
         svn + "(move|M V)": Text("svn move "),
         svn + "(move|M V) <text>": SCText("svn move %(text)s"),
         svn + "(status|S T)": Text("svn st") + Key("enter"),
