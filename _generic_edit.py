@@ -276,6 +276,7 @@ abbreviationMap = {
     "python": "py",
     "request": "req",
     "reference": "ref",
+    "ruby": "rb",
     "session aidee": "sid",  # "session id" didn't work for some reason.
     "source": "src",
     "(special|specify|specification)": "spec",

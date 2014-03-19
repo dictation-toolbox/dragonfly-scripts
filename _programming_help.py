@@ -37,17 +37,13 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        # VBScript specific.
-        "variable (dimension|dim)": Text("dim "),
         # Closures.
-        "angle brackets": Key("langle, rangle") + Key("left"),
-        "brackets": Key("lbracket, rbracket") + Key("left"),
-        "braces": Key("lbrace, rbrace") + Key("left"),
-        "parens": Key("lparen, rparen") + Key("left"),
-        "quotes": Key("dquote:2") + Key("left"),
-        "single quotes": Key("squote:2") + Key("left"),
-        # Common terms.
-        "lib": Text("lib"),
+        "angle brackets": Key("langle, rangle, left"),
+        "brackets": Key("lbracket, rbracket, left"),
+        "braces": Key("lbrace, rbrace, left"),
+        "parens": Key("lparen, rparen, left"),
+        "quotes": Key("dquote, dquote, left"),
+        "single quotes": Key("squote, squote, left"),
         # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),
@@ -65,6 +61,7 @@ series_rule = SeriesMappingRule(
         "dot less": Text(".less"),
         "dot J S": Text(".js"),
         "dot (py|pie|P Y)": Text(".py"),
+        "dot (ruby|R B)": Text(".rb"),
         "dot (rar|R A R)": Text(".rar"),
         "dot sass": Text(".sass"),
         "dot S H": Text(".sh"),
