@@ -346,13 +346,13 @@ grammarCfg.cmd.map = Item(
     {
         # Navigation keys.
         "up [<n>]": Key("up:%(n)d"),
-        "up [<n>] slow": Key("up/20:%(n)d"),
+        "up [<n>] slow": Key("up/15:%(n)d"),
         "down [<n>]": Key("down:%(n)d"),
-        "down [<n>] slow": Key("down/20:%(n)d"),
+        "down [<n>] slow": Key("down/15:%(n)d"),
         "left [<n>]": Key("left:%(n)d"),
-        "left [<n>] slow": Key("left/20:%(n)d"),
+        "left [<n>] slow": Key("left/15:%(n)d"),
         "right [<n>]": Key("right:%(n)d"),
-        "right [<n>] slow": Key("right/20:%(n)d"),
+        "right [<n>] slow": Key("right/15:%(n)d"),
         "page up [<n>]": Key("pgup:%(n)d"),
         "page down [<n>]": Key("pgdown:%(n)d"),
         "up <n> (page | pages)": Key("pgup:%(n)d"),
