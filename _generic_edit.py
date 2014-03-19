@@ -286,7 +286,9 @@ abbreviationMap = {
     "window": "win",
 }
 
-
+# For use with "say"-command. Words that are commands in the generic edit
+# grammar were treated as separate commands and could not be written with the
+# "say"-command. This overrides that behavior.
 reservedWord = {
     "up": "up",
     "down": "down",
@@ -317,6 +319,7 @@ reservedWord = {
 
 
 def copy_command():
+    # Add Command Prompt, putty, ...?
     context = AppContext(executable="console")
     window = Window.get_foreground()
     if context.matches(window.executable, window.title, window.handle):
@@ -326,6 +329,7 @@ def copy_command():
 
 
 def paste_command():
+    # Add Command Prompt, putty, ...?
     context = AppContext(executable="console")
     window = Window.get_foreground()
     if context.matches(window.executable, window.title, window.handle):
@@ -358,8 +362,8 @@ grammarCfg.cmd.map = Item(
         "space [<n>]": release + Key("space:%(n)d"),
         "enter [<n>]": release + Key("enter:%(n)d"),
         "tab [<n>]": Key("tab:%(n)d"),
-        "delete [<n>]": release + Key("del:%(n)d/5"),
-        "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
+        "delete [<n>]": Key("del/3:%(n)d"),
+        "delete [this] line": Key("home, s-end, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps/3"),
         "win key": release + Key("win/3"),
