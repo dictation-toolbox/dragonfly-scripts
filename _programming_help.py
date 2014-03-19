@@ -60,6 +60,7 @@ series_rule = SeriesMappingRule(
         "dot css": Text(".css"),
         "dot less": Text(".less"),
         "dot J S": Text(".js"),
+        "dot jar": Text(".jar"),
         "dot (py|pie|P Y)": Text(".py"),
         "dot (ruby|R B)": Text(".rb"),
         "dot (rar|R A R)": Text(".rar"),

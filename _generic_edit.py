@@ -264,6 +264,7 @@ abbreviationMap = {
     "function": "func",
     "instance": "inst",
     "integer": "int",
+    "java archive": "jar",
     "javascript": "js",
     "language": "lng",
     "library": "lib",
