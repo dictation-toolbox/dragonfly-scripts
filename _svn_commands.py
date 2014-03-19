@@ -70,8 +70,8 @@ series_rule = SeriesMappingRule(
         svn + "(check out|checkout)": Text("svn checkout "),
         svn + "(check out|checkout) <text>": SCText("svn checkout %(text)s"),
         svn + "commit": Text("svn commit -m \"\"") + Key("left:1"),
-        svn + "(delete)": Text("svn delete "),
-        svn + "(delete) <text>": SCText("svn delete %(text)s"),\
+        svn + "delete": Text("svn delete "),
+        svn + "delete <text>": SCText("svn delete %(text)s"),\
         svn + "(diff|difference|differentiate)": Text("svn diff "),
         svn + "(diff|difference|differentiate) <text>": SCText("svn diff %(text)s"),  # @IgnorePep8
         svn + "help": Text("svn --help") + Key("enter"),
@@ -79,7 +79,7 @@ series_rule = SeriesMappingRule(
         svn + "log": Text("svn log "),
         svn + "log <text>": SCText("svn log %(text)s"),
         svn + "log limit <n>": Text("svn log -l %(n)d "),
-        svn + "(list [files]|L S)": Text("svn lshim "),
+        svn + "(list [files]|L S)": Text("svn ls "),
         svn + "(move|M V)": Text("svn move "),
         svn + "(move|M V) <text>": SCText("svn move %(text)s"),
         svn + "(status|S T)": Text("svn st") + Key("enter"),
