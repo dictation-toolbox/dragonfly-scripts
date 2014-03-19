@@ -262,6 +262,7 @@ abbreviationMap = {
     "(direction|directory)": "dir",
     "(example|execute|exception)": "ex",
     "function": "func",
+    "(initialize|initializer)": "init",
     "instance": "inst",
     "integer": "int",
     "java archive": "jar",
