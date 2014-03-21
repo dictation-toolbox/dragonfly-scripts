@@ -112,6 +112,8 @@ series_rule = SeriesMappingRule(
         # Git commands.
         "git add": Text("git add "),
         "git add <text>": SCText("git add %(text)s"),
+        "git add patch": Text("git add --patch "),
+        "git add patch <text>": SCText("git add --patch %(text)s"),
         "git add (all|period|dot)": Text("git add .") + Key("enter"),
         "git archive": Text("git archive --format=tar "),
         "git blame": Text("git blame "),
