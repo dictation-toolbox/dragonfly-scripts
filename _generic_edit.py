@@ -278,6 +278,7 @@ abbreviationMap = {
     "parameters": "params",
     "position": "pos",
     "previous": "prev",
+    "property": "prop",
     "python": "py",
     "request": "req",
     "reference": "ref",
@@ -418,10 +419,7 @@ grammarCfg.cmd.map = Item(
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left/3, del, c-right/3"),  # @IgnorePep8
         # Canceling of started sentence.
         # Useful for canceling what inconsiderate loud mouths have started. :)
-        "<text> cancel dictation": Function(cancel_dictation),
-        "<text> cancel dictation <text2>": Function(cancel_dictation),
-        "[<text>] cancel and sleep": Function(cancel_and_sleep),
-        "[<text>] cancel and sleep [<text2>]": Function(cancel_and_sleep),
+        "[<text>] (go to sleep|cancel and sleep) [<text2>]": Function(cancel_and_sleep),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
     },
