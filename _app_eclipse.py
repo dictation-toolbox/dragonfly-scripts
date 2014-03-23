@@ -57,7 +57,7 @@ rules = MappingRule(
         "show shortcuts": Key("cs-l"),
         "show file properties": Key("a-enter"),
         "show view menu": Key("c-f10"),
-        "switch editor": Key("c-e"),
+        "show editors": Key("c-e"),
     },
     extras=[
         IntegerRef("n", 1, 100),
