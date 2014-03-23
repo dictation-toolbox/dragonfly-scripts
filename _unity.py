@@ -62,6 +62,10 @@ if config.get("aenea.enabled", False) == True:
     def toggle_host_server():
         communication.toggle_server()
 
+    def switch_to_window(text):
+        txt = str(text).lower()
+        communication.server.switch_to_window(txt)
+
     rules = MappingRule(
         mapping={
             # Commands and keywords:
@@ -82,6 +86,7 @@ if config.get("aenea.enabled", False) == True:
             "toggle desktop": Key("cw-d"),
             "workspace <wsDirection1> [<wsDirection2>]": Function(workspace_direction),  # @IgnorePep8
             "toggle host server": Function(toggle_host_server),
+            "switch to <text>": Function(switch_to_window),
         },
         extras=[
             IntegerRef("n", 1, 100),
