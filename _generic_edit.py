@@ -57,19 +57,6 @@ from lib.format import (
 release = Key("shift:up, ctrl:up, alt:up")
 
 
-def cancel_dictation(text=None, text2=None):
-    """Used to cancel an ongoing dictation.
-
-    This method only notifies the user that the dictation was in fact canceled,
-    with a sound and a message in the Natlink feedback window.
-    Example:
-    "'random mumbling or other noises cancel dictation'" => No action.
-
-    """
-    print("* Dictation canceled, by user command. *")
-    sound.play(sound.SND_DING)
-
-
 def cancel_and_sleep(text=None, text2=None):
     """Used to cancel an ongoing dictation and puts microphone to sleep.
 
@@ -80,7 +67,7 @@ def cancel_and_sleep(text=None, text2=None):
     "'random mumbling or other noises cancel and sleep'" => Microphone sleep.
 
     """
-    print("* Dictation canceled, by user command. Going to sleep. *")
+    print("* Dictation canceled. Going to sleep. *")
     sound.play(sound.SND_DING)
     setMicState("sleeping")
 
@@ -407,6 +394,8 @@ grammarCfg.cmd.map = Item(
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
+        "colon": Key("colon, space"),
+        "comma": Key("comma, space"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
         # Formatting.
