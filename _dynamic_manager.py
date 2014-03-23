@@ -215,12 +215,12 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        "(start|switch to) <module> mode": Function(enable_modules),
-        "(start|switch to) <module> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
-        "(start|switch to) <module> and <module2> mode": Function(enable_modules),  # @IgnorePep8
-        "(start|switch to) <module> and <module2> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
-        "(start|switch to) <module> and <module2> and <module3> mode": Function(enable_modules),  # @IgnorePep8
-        "(start|switch to) <module> and <module2> and <module3> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
+        "start <module> mode": Function(enable_modules),
+        "start <module> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
+        "start <module> and <module2> mode": Function(enable_modules),  # @IgnorePep8
+        "start <module> and <module2> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
+        "start <module> and <module2> and <module3> mode": Function(enable_modules),  # @IgnorePep8
+        "start <module> and <module2> and <module3> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
         "show dynamic [(mode|modes)] status": Function(show_module_status),
         "(stop|end) <module> mode": Function(disable_module),
         "(stop|end) [all] dynamic modes": Function(disable_all_modules),
