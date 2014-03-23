@@ -394,8 +394,10 @@ grammarCfg.cmd.map = Item(
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
-        "colon": Key("colon, space"),
-        "comma": Key("comma, space"),
+        "colon": Key("colon"),
+        "semi-colon": Key("semicolon"),
+        "comma": Key("comma"),
+        "(dot|period)": Key("period"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
         # Formatting.
