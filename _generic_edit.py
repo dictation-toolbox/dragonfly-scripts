@@ -247,6 +247,8 @@ abbreviationMap = {
     "administrators": "admins",
     "application": "app",
     "applications": "apps",
+    "argument": "arg",
+    "arguments": "args",
     "attribute": "attr",
     "attributes": "attrs",
     "(authenticate|authentication)": "auth",
