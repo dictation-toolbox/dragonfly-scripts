@@ -30,9 +30,13 @@ from dragonfly import (
 )
 
 import win32con
-from dragonfly.actions.keyboard import Typeable
+from dragonfly.actions.keyboard import Typeable, keyboard
 from dragonfly.actions.typeables import typeables
-typeables["Control_R"] = Typeable(code=win32con.VK_RCONTROL, name="Control_R")
+if not 'Control_R' in typeables:
+    keycode = win32con.VK_RCONTROL
+    typeables["Control_R"] = Typeable(code=keycode, name="Control_R")
+if not 'semicolon' in typeables:
+    typeables["semicolon"] = keyboard.get_typeable(char=';')
 
 import lib.config
 config = lib.config.get_config()
@@ -389,18 +393,18 @@ grammarCfg.cmd.map = Item(
         "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
-        # Type written form of "that which would otherwise not be written".
         # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
+        # Punctuation and separation characters, for quick editing.
         "colon": Key("colon"),
         "semi-colon": Key("semicolon"),
         "comma": Key("comma"),
-        "(dot|period)": Key("period"),
+        "(dot|period)": Key("dot"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
-        # Formatting.
+        # Formatting <n> words to the left of the cursor.
         "camel case <n> [words]": Function(camel_case_count),
         "pascal case <n> [words]": Function(pascal_case_count),
         "snake case <n> [words]": Function(snake_case_count),
@@ -408,15 +412,22 @@ grammarCfg.cmd.map = Item(
         "expand <n> [words]": Function(expand_count),
         "uppercase <n> [words]": Function(uppercase_count),
         "lowercase <n> [words]": Function(lowercase_count),
+        # Format dictated words. See the formatMap for all available types.
+        # Ex: "camel case my new variable" -> "myNewVariable"
+        # Ex: "snake case my new variable" -> "my_new_variable"
+        # Ex: "uppercase squash my new hyphen variable" -> "MYNEW-VARIABLE"
         "<formatType> <text>": Function(format_text),
+        # For writing words that would otherwise be characters or commands.
+        # Ex: "period", tab", "left", "right", "home".
         "say <reservedWord>": Text("%(reservedWord)s"),
+        # Abbreviate words commonly used in programming.
+        # Ex: arguments -> args, parameters -> params.
         "abbreviate <abbreviation>": Text("%(abbreviation)s"),
         # Text corrections.
         "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
         "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
         "(delete|remove) (double|extra) (type|char|character)": Key("c-left/3, del, c-right/3"),  # @IgnorePep8
-        # Canceling of started sentence.
-        # Useful for canceling what inconsiderate loud mouths have started. :)
+        # Microphone sleep/cancel started dictation.
         "[<text>] (go to sleep|cancel and sleep) [<text2>]": Function(cancel_and_sleep),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
