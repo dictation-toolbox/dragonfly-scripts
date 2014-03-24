@@ -19,6 +19,9 @@ if config.get("aenea.enabled", False) == True:
 
 from lib.text import SCText
 
+DYN_MODULE_NAME = "subversion"
+INCOMPATIBLE_MODULES = []
+
 
 class SeriesMappingRule(CompoundRule):
 
@@ -107,6 +110,25 @@ if config.get("aenea.enabled", False) == True:
 grammar = Grammar("Subversion commands", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
+grammar.disable()
+
+
+def dynamic_enable():
+    global grammar
+    if grammar.enabled:
+        return False
+    else:
+        grammar.enable()
+        return True
+
+
+def dynamic_disable():
+    global grammar
+    if grammar.enabled:
+        grammar.disable()
+        return True
+    else:
+        return False
 
 
 # Unload function which will be called at unload time.
