@@ -21,7 +21,7 @@ if config.get("aenea.enabled", False) == True:
         Choice
     )
 
-    from proxy_nicknames import Key  # @Reimport
+    from proxy_nicknames import Key, Mouse
     from proxy_actions import communication
     import aenea
 
@@ -44,15 +44,32 @@ if config.get("aenea.enabled", False) == True:
         "(bottom|down) right": "KP_Next",
     }
 
-    def workspace_direction(wsDirection1, wsDirection2=None):
+    def workspace_direction(direction1, direction2=None):
         try:
-            Key("ctrl:down, alt:down, %s/5" % wsDirection1).execute()
-            if wsDirection2:
-                Key("%s/5" % wsDirection2).execute()
+            Key("ctrl:down, alt:down, %s/5" % direction1).execute()
+            if direction2:
+                Key("%s/5" % direction2).execute()
         finally:  # Make sure to release the modifier keys.
             Key("alt:up, ctrl:up").execute()
 
-    workspaceDirections = {
+    def mouse_direction(direction1, n1, direction2=None, n2=0):
+        dir1 = {
+            "up": (0, -n1),
+            "down": (0, n1),
+            "right": (n1, 0),
+            "left": (-n1, 0)
+        }
+        Mouse("(%s, %s)" % dir1[direction1]).execute()
+        if direction2:
+            dir2 = {
+                "up": (0, -n2),
+                "down": (0, n2),
+                "right": (n2, 0),
+                "left": (-n2, 0)
+            }
+            Mouse("(%s, %s)" % dir2[direction2]).execute()
+
+    basicDirections = {
         "up": "up",
         "down": "down",
         "right": "right",
@@ -84,15 +101,17 @@ if config.get("aenea.enabled", False) == True:
             "resize window": Key("a-f8"),
             "place window <winDirection>": Function(window_direction),
             "toggle desktop": Key("cw-d"),
-            "workspace <wsDirection1> [<wsDirection2>]": Function(workspace_direction),  # @IgnorePep8
+            "workspace <direction1> [<direction2>]": Function(workspace_direction),  # @IgnorePep8
             "toggle host server": Function(toggle_host_server),
             "switch to <text>": Function(switch_to_window),
+            "mouse <direction1> <n1> [<direction2> <n2>]": Function(mouse_direction),  # @IgnorePep8
         },
         extras=[
-            IntegerRef("n", 1, 100),
+            IntegerRef("n1", 1, 5000),
+            IntegerRef("n2", 1, 5000),
             Dictation("text"),
-            Choice("wsDirection1", workspaceDirections),
-            Choice("wsDirection2", workspaceDirections),
+            Choice("direction1", basicDirections),
+            Choice("direction2", basicDirections),
             Choice("winDirection", windowDirections),
         ],
         defaults={
