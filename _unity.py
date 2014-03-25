@@ -69,6 +69,23 @@ if config.get("aenea.enabled", False) == True:
             }
             Mouse("<%s %s>" % dir2[direction2]).execute()
 
+    def mouse_double_direction(direction1, direction2, n1):
+        dir1 = {
+            "up": (0, -n1),
+            "down": (0, n1),
+            "right": (n1, 0),
+            "left": (-n1, 0)
+        }
+        dir2 = {
+            "up": (0, -n1),
+            "down": (0, n1),
+            "right": (n1, 0),
+            "left": (-n1, 0)
+        }
+        directions = (dir1[direction1][0], dir1[direction1][1],
+            dir2[direction2][0], dir2[direction2][1])
+        Mouse("<%s %s>, <%s %s>" % directions).execute()
+
     basicDirections = {
         "up": "up",
         "down": "down",
@@ -105,6 +122,7 @@ if config.get("aenea.enabled", False) == True:
             "toggle host server": Function(toggle_host_server),
             "switch to <text>": Function(switch_to_window),
             "mouse <direction1> <n1> [<direction2> <n2>]": Function(mouse_direction),  # @IgnorePep8
+            "mouse <direction1> <direction2> <n1>": Function(mouse_double_direction),  # @IgnorePep8
         },
         extras=[
             IntegerRef("n1", 1, 5000),
