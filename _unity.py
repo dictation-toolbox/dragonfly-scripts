@@ -59,7 +59,7 @@ if config.get("aenea.enabled", False) == True:
             "right": (n1, 0),
             "left": (-n1, 0)
         }
-        Mouse("(%s, %s)" % dir1[direction1]).execute()
+        Mouse("<%s %s>" % dir1[direction1]).execute()
         if direction2:
             dir2 = {
                 "up": (0, -n2),
@@ -67,7 +67,7 @@ if config.get("aenea.enabled", False) == True:
                 "right": (n2, 0),
                 "left": (-n2, 0)
             }
-            Mouse("(%s, %s)" % dir2[direction2]).execute()
+            Mouse("<%s %s>" % dir2[direction2]).execute()
 
     basicDirections = {
         "up": "up",
