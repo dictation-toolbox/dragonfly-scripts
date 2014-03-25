@@ -102,13 +102,15 @@ if config.get("aenea.enabled", False) == True:
 
     rules = MappingRule(
         mapping={
-            # Commands and keywords:
+            # Overall navigation.
+            "workspace <direction1> [<direction2>]": Function(workspace_direction),  # @IgnorePep8
             "go to launcher": Key("a-f1"),
             "go to hud": Key("win"),
-            "go to panel menu": Key("a-f10"),
-            "go to window menu": Key("a-space"),
-            "go to spread mode": Key("w-w"),
-            "go to expo mode": Key("w-s"),
+            "go to run": Key("a-f2"),
+            "go to spread view": Key("w-w"),
+            "go to expo view": Key("w-s"),
+            "show panel menu": Key("a-f10"),
+            "show window menu": Key("a-space"),
             # Window control
             "close window": Key("a-f4"),
             "minimize window": Key("ca-KP_Insert"),
@@ -117,10 +119,9 @@ if config.get("aenea.enabled", False) == True:
             "move window": Key("a-f7"),
             "resize window": Key("a-f8"),
             "place window <winDirection>": Function(window_direction),
-            "toggle desktop": Key("cw-d"),
-            "workspace <direction1> [<direction2>]": Function(workspace_direction),  # @IgnorePep8
-            "toggle host server": Function(toggle_host_server),
             "switch to <text>": Function(switch_to_window),
+            "toggle desktop": Key("cw-d"),
+            # Mouse commands.
             "mouse [left] click": Mouse("left"),
             "mouse shift [left] click": Key("shift:down/3") + Mouse("left") + Key("shift:up/3"),  # @IgnorePep8
             "mouse control [left] click": Key("ctrl:down/3") + Mouse("left") + Key("ctrl:up/3"),  # @IgnorePep8
@@ -129,6 +130,10 @@ if config.get("aenea.enabled", False) == True:
             "mouse control right click": Key("ctrl:down/3") + Mouse("right") + Key("ctrl:up/3"),  # @IgnorePep8
             "mouse <direction1> <n1> [<direction2> <n2>]": Function(mouse_direction),  # @IgnorePep8
             "mouse <direction1> <direction2> <n1>": Function(mouse_double_direction),  # @IgnorePep8
+            # Starting applications.
+            "start terminal": Key("ca-t"),
+            # Development option only.
+            "toggle host server": Function(toggle_host_server),
         },
         extras=[
             IntegerRef("n1", 1, 5000),
