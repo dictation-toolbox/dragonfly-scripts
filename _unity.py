@@ -121,6 +121,12 @@ if config.get("aenea.enabled", False) == True:
             "workspace <direction1> [<direction2>]": Function(workspace_direction),  # @IgnorePep8
             "toggle host server": Function(toggle_host_server),
             "switch to <text>": Function(switch_to_window),
+            "mouse [left] click": Mouse("left"),
+            "mouse shift [left] click": Key("shift:down/3") + Mouse("left") + Key("shift:up/3"),  # @IgnorePep8
+            "mouse control [left] click": Key("ctrl:down/3") + Mouse("left") + Key("ctrl:up/3"),  # @IgnorePep8
+            "mouse right click": Mouse("right"),
+            "mouse shift right click": Key("shift:down/3") + Mouse("right") + Key("shift:up/3"),  # @IgnorePep8
+            "mouse control right click": Key("ctrl:down/3") + Mouse("right") + Key("ctrl:up/3"),  # @IgnorePep8
             "mouse <direction1> <n1> [<direction2> <n2>]": Function(mouse_direction),  # @IgnorePep8
             "mouse <direction1> <direction2> <n1>": Function(mouse_double_direction),  # @IgnorePep8
         },
