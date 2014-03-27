@@ -131,7 +131,7 @@ series_rule = SeriesMappingRule(
         "git clone": Text("git clone "),
         "git clone <text>": SCText("git clone %(text)s"),
         "git cherry-pick": Text("git cherry-pick "),
-        "git commit": Text("git commit -m ") + Key("dquote/3, dquote/3, left/3"),
+        "git commit": Text("git commit -m ") + Key("dquote/3, dquote/3, left/3"),  # @IgnorePep8
         "git commit all tracked": Text("git commit -a -m ") + Key("dquote/3, dquote/3, left/3"),  # @IgnorePep8
         "git commit amend": Text("git commit --amend -m "),
         "git config": Text("git config "),
