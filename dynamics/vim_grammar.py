@@ -11,103 +11,55 @@ from dragonfly import (
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
+    from proxy_nicknames import Key  # , Text  # @Reimport
     import aenea
 
-from lib.text import SCText
+# from lib.text import SCText
 
 
-DYN_MODULE_NAME = "bash"
+DYN_MODULE_NAME = "vim"
 INCOMPATIBLE_MODULES = []
 
 
-def directory_up(n):
-    repeat = ['..' for i in range(n)]  # @UnusedVariable
-    txt = "cd %s\n" % ("/".join(repeat))
-    Text(txt).execute()
+def enable_insert_mode(char):
+    global grammarCommand
+    global grammarInsert
+    grammarCommand.disable()
+    grammarInsert.enable()
+    print(char)
+    Key(char).execute()
+    print("Vim: Insert mode")
 
 
-rules = MappingRule(
+def enable_command_mode():
+    global grammarCommand
+    global grammarInsert
+    grammarCommand.enable()
+    Key("escape").execute()
+    print("Vim: Command mode")
+
+
+def illegal_command(text):
+    print("Vim: Illegal command - '%s'" % str(text))
+
+
+commandMode = MappingRule(
     mapping={
         # Commands and keywords:
-        "sudo apt get update": Text("sudo apt-get update"),
-        "apt cache search": Text("apt-cache search "),
-        "apt cache search <text>": SCText("apt-cache search %(text)s"),
-        "sudo apt get install": Text("sudo apt-get install "),
-        "sudo apt get install <text>": SCText("sudo apt-get install %(text)s"),
-        "(cat|C A T)": Text("cat "),
-        "(cat|C A T) <text>": SCText("cat %(text)s"),
-        "(change (directory|dir)|C D)": Text("cd "),
-        "(change (directory|dir)|C D) <text>": SCText("cd %(text)s"),
-        "[press] control break": Key("ctrl:down, c/10, ctrl:up"),
-        "(copy|C P)": Text("cp "),
-        "(copy|C P) recursive": Text("cp -r "),
-        "copy terminal": Key("cs-c/3"),
-        "(change mode)|C H mod": Text("chmod "),
-        "diff": Text("diff "),
-        "directory up <n> [times]": Function(directory_up),
-        "D P K G": Text("dpkg "),
-        "D P K G list": Text("dpkg -l "),
-        "exit": Text("exit"),
-        "find": Text("find . -name "),
-        "find <text>": SCText("find . -name %(text)s"),
-        "[go to] end of line": Key("c-e"),
-        "[go to] start of line": Key("c-a"),
-        "grep": Text("grep "),
-        "grep <text>": SCText("grep %(text)s"),
-        "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
-        "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
-        "ifconfig": Text("ifconfig "),
-        "kill": Text("kill "),
-        "kill (hard|[dash]9)": Text("kill -9 "),
-        "kill line": Key("c-k"),
-        "(link|L N)": Text("ln "),
-        "list files": Text("ls -la") + Key("enter"),
-        "list files <text>": SCText("ls -la %(text)s"),
-        "list files time sort": Text("ls -lat") + Key("enter"),
-        "make (directory|dir)": Text("mkdir "),
-        "make (directory|dir) <text>": SCText("mkdir %(text)s"),
-        "move": Text("mv "),
-        "move <text>": SCText("mv %(text)s"),
-        "paste terminal": Key("cs-v/3"),
-        "pipe": Text(" | "),
-        "ping": Text("ping "),
-        "(print working directory|P W D)": Text("pwd") + Key("enter"),
-        "P S": Text("ps -ef"),
-        "(R M|remove file)": Text("rm "),
-        "(R M|remove file) <text>": SCText("rm %(text)s"),
-        "remove (directory|dir|folder|recursive)": Text("rm -rf "),
-        "remove (directory|dir|folder|recursive) <text>": SCText("rm -rf %(text)s"),  # @IgnorePep8
-        "(sed|S E D)": Text("sed "),
-        "(secure copy|S C P)": Text("scp "),
-        "(secure copy|S C P) <text>": SCText("scp %(text)"),
-        "soft link": Text("ln -s "),
-        "soft link <text>": SCText("ln -s %(text)"),
-        "sudo": Text("sudo "),
-        "(secure shell|S S H)": Text("ssh "),
-        "(secure shell|S S H) <text>": SCText("ssh %(text)"),
-        "tail": Text("tail "),
-        "tail <text>": SCText("tail %(text)s"),
-        "tail (F|follow)": Text("tail -f "),
-        "tail (F|follow) <text>": SCText("tail -f %(text)s"),
-        "telnet": Text("telnet "),
-        "touch": Text("touch "),
-        "touch <text>": SCText("touch %(text)s"),
-        "vim": Text("vim "),
-        "vim <text>": SCText("vim %(text)s"),
-        "(W C|word count)": Text("wc "),
-        "(W C|word count) lines": Text("wc -l "),
-        "W get ": Text("wget "),
-        "X args": Text("xargs "),
-        "X D O tool": Text("xdotool "),
-        "X M L lint": Text("xmllint "),
-        "X M L lint <text>": SCText("xmllint %(text)s"),
-        "X M L lint format": Text("xmllint -format "),
-        "X M L lint format <text>": SCText("xmllint -format %(text)s"),
-        "X M L lint schema": Text("xmllint -schema "),
-        "X M L lint schema <text>": SCText("xmllint -schema %(text)s"),
-        "X prop": Text("xprop "),
-        "X win info": Text("xwininfo "),
+        "append [text]": Function(enable_insert_mode, char="a"),
+        "append [text] (to|at) end [of line]": Function(enable_insert_mode, char="A"),  # @IgnorePep8
+        "copy [(line|lines)]": Key("y, y"),
+        "insert ([text [before]]|mode)": Function(enable_insert_mode, char="i"),  # @IgnorePep8
+        "insert [text] at beginning [of line]": Function(enable_insert_mode, char="I"),  # @IgnorePep8
+        "insert line before": Function(enable_insert_mode, char="O"),
+        "insert line after": Function(enable_insert_mode, char="o"),
+        "paste [(line|lines)]": Key("p"),
+        "save [file]": Key("colon, w, enter"),
+        "save and exit": Key("colon, x, space"),
+        "save as": Key("colon, w, space"),
+        "undo": Key("u"),
+        "yank [(line|lines)]": Key("d, d"),
+        "<text>": Function(illegal_command),
     },
     extras=[
         IntegerRef("n", 1, 100),
@@ -121,25 +73,52 @@ rules = MappingRule(
 context = None
 if config.get("aenea.enabled", False) == True:
     context = aenea.global_context
-grammar = Grammar("Python grammar", context=context)
-grammar.add_rule(rules)
-grammar.load()
-grammar.disable()
+grammarCommand = Grammar("Vim command grammar", context=context)
+grammarCommand.add_rule(commandMode)
+grammarCommand.load()
+grammarCommand.disable()
+
+
+insertMode = MappingRule(
+    mapping={
+        # Commands and keywords:
+        "(command mode|press escape)": Function(enable_command_mode),
+    },
+    extras=[
+        IntegerRef("n", 1, 100),
+        Dictation("text"),
+    ],
+    defaults={
+        "n": 1
+    }
+)
+
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = aenea.global_context
+grammarInsert = Grammar("Vim insert grammar", context=context)
+grammarInsert.add_rule(insertMode)
+grammarInsert.load()
+grammarInsert.disable()
 
 
 def dynamic_enable():
-    global grammar
-    if grammar.enabled:
+    global grammarCommand
+    global grammarInsert
+    if grammarCommand.enabled:
         return False
     else:
-        grammar.enable()
+        grammarCommand.enable()
+        grammarInsert.disable()  # Initially disabled.
         return True
 
 
 def dynamic_disable():
-    global grammar
-    if grammar.enabled:
-        grammar.disable()
+    global grammarCommand
+    global grammarInsert
+    if grammarCommand.enabled or grammarInsert.enabled:
+        grammarCommand.disable()
+        grammarInsert.disable()
         return True
     else:
         return False
@@ -147,7 +126,11 @@ def dynamic_disable():
 
 # Unload function which will be called at unload time.
 def unload():
-    global grammar
-    if grammar:
-        grammar.unload()
-    grammar = None
+    global grammarCommand
+    global grammarInsert
+    if grammarCommand:
+        grammarCommand.unload()
+    grammarCommand = None
+    if grammarInsert:
+        grammarInsert.unload()
+    grammarInsert
