@@ -322,6 +322,13 @@ reservedWord = {
     "lowercase": "lowercase",
     "expand": "expand",
     "squash": "squash",
+    "dash": "dash",
+    "underscore": "underscore",
+    "dot": "dot",
+    "period": "period",
+    "minus": "minus",
+    "semi-colon": "semi-colon",
+    "hyphen": "hyphen",
 }
 
 
@@ -405,10 +412,12 @@ grammarCfg.cmd.map = Item(
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
         # Punctuation and separation characters, for quick editing.
-        "colon": Key("colon"),
-        "semi-colon": Key("semicolon"),
-        "comma": Key("comma"),
-        "(dot|period)": Key("dot"),
+        "colon [<n>]": Key("colon/2:%(n)d"),
+        "semi-colon [<n>]": Key("semicolon/2:%(n)d"),
+        "comma [<n>]": Key("comma/2:%(n)d"),
+        "(dot|period) [<n>]": Key("dot/2:%(n)d"),
+        "(dash|hyphen|minus) [<n>]": Key("hyphen/2:%(n)d"),
+        "underscore [<n>]": Key("underscore/2:%(n)d"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
         # Formatting <n> words to the left of the cursor.
