@@ -36,6 +36,9 @@ class CommandRule(MappingRule):
     "find in path": Key("ctrl:down, shift:down, f, shift:up, ctrl:up"),
     "find usages": Key("a-f7"),
 
+    # Edit.
+    "save [file|all]": Key("c-s"),
+
     # Code.
     "show intentions": Key("a-enter"),
     "accept choice": Key("c-enter"),
