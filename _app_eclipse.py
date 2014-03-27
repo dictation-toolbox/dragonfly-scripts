@@ -46,7 +46,7 @@ rules = MappingRule(
         "terminate all launches": Key("ca-f9"),  # Will switch TTY in Linux!!
         "toggle breakpoint": Key("cs-b"),
         "toggle comment": Key("c-slash"),
-        "toggle editor": Key("c-f6"),
+        "toggle (tab|editor)": Key("c-f6"),
         "toggle expand": Key("c-m"),
         "toggle perspective": Key("c-f8"),
         "toggle view": Key("c-f7"),
@@ -57,7 +57,7 @@ rules = MappingRule(
         "show shortcuts": Key("cs-l"),
         "show file properties": Key("a-enter"),
         "show view menu": Key("c-f10"),
-        "switch editor": Key("c-e"),
+        "show editors": Key("c-e"),
     },
     extras=[
         IntegerRef("n", 1, 100),

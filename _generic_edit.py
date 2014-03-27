@@ -30,9 +30,13 @@ from dragonfly import (
 )
 
 import win32con
-from dragonfly.actions.keyboard import Typeable
+from dragonfly.actions.keyboard import Typeable, keyboard
 from dragonfly.actions.typeables import typeables
-typeables["Control_R"] = Typeable(code=win32con.VK_RCONTROL, name="Control_R")
+if not 'Control_R' in typeables:
+    keycode = win32con.VK_RCONTROL
+    typeables["Control_R"] = Typeable(code=keycode, name="Control_R")
+if not 'semicolon' in typeables:
+    typeables["semicolon"] = keyboard.get_typeable(char=';')
 
 import lib.config
 config = lib.config.get_config()
@@ -57,19 +61,6 @@ from lib.format import (
 release = Key("shift:up, ctrl:up, alt:up")
 
 
-def cancel_dictation(text=None, text2=None):
-    """Used to cancel an ongoing dictation.
-
-    This method only notifies the user that the dictation was in fact canceled,
-    with a sound and a message in the Natlink feedback window.
-    Example:
-    "'random mumbling or other noises cancel dictation'" => No action.
-
-    """
-    print("* Dictation canceled, by user command. *")
-    sound.play(sound.SND_DING)
-
-
 def cancel_and_sleep(text=None, text2=None):
     """Used to cancel an ongoing dictation and puts microphone to sleep.
 
@@ -80,7 +71,7 @@ def cancel_and_sleep(text=None, text2=None):
     "'random mumbling or other noises cancel and sleep'" => Microphone sleep.
 
     """
-    print("* Dictation canceled, by user command. Going to sleep. *")
+    print("* Dictation canceled. Going to sleep. *")
     sound.play(sound.SND_DING)
     setMicState("sleeping")
 
@@ -89,7 +80,7 @@ def reload_natlink():
     """Reloads Natlink and custom Python modules."""
     win = Window.get_foreground()
     FocusWindow(executable="natspeak",
-        title="Messages from Python Macros").execute()
+                title="Messages from Python Macros").execute()
     Pause("10").execute()
     Key("a-f, r").execute()
     Pause("10").execute()
@@ -126,7 +117,7 @@ modifierMap = {
     "control": "c",
     "shift": "s",
     "super": "w",
-}
+    }
 
 # Modifiers for the press-command, if only the modifier is pressed.
 singleModifierMap = {
@@ -134,7 +125,7 @@ singleModifierMap = {
     "control": "ctrl",
     "shift": "shift",
     "super": "win",
-}
+    }
 
 letterMap = {
     "(A|alpha)": "a",
@@ -163,7 +154,7 @@ letterMap = {
     "(X|x-ray) ": "x",
     "(Y|yankee) ": "y",
     "(Z|zulu) ": "z",
-}
+    }
 
 numberMap = {
     "zero": "0",
@@ -176,7 +167,7 @@ numberMap = {
     "seven": "7",
     "eight": "8",
     "nine": "9",
-}
+    }
 
 controlKeyMap = {
     "left": "left",
@@ -207,7 +198,7 @@ functionKeyMap = {
     'F ten': 'f10',
     'F eleven': 'f11',
     'F twelve': 'f12',
-}
+    }
 
 pressKeyMap = {}
 pressKeyMap.update(letterMap)
@@ -239,26 +230,38 @@ formatMap = {
     "dotify uppercase": [ft.dotify, ft.upperCase],
     "say": ft.spokenForm,
     "environment variable": [ft.snakeCase, ft.upperCase],
-}
+    }
 
 
 abbreviationMap = {
     "administrator": "admin",
+    "administrators": "admins",
+    "application": "app",
+    "applications": "apps",
+    "argument": "arg",
+    "arguments": "args",
     "attribute": "attr",
     "attributes": "attrs",
-    "authenticate": "auth",
-    "authentication": "auth",
+    "(authenticate|authentication)": "auth",
     "binary": "bin",
     "button": "btn",
     "class": "cls",
-    "config": "cfg",
-    "configuration": "cfg",
+    "command": "cmd",
+    "(config|configuration)": "cfg",
+    "context": "ctx",
     "control": "ctrl",
     "database": "db",
-    "define": "def",
+    "(define|definition)": "def",
+    "(develop|development)": "dev",
+    "(dictionary|dictation)": "dict",
+    "dynamic": "dyn",
+    "(direction|directory)": "dir",
+    "(example|execute|exception)": "ex",
     "function": "func",
+    "(initialize|initializer)": "init",
     "instance": "inst",
     "integer": "int",
+    "java archive": "jar",
     "javascript": "js",
     "language": "lng",
     "library": "lib",
@@ -266,20 +269,64 @@ abbreviationMap = {
     "object": "obj",
     "parameter": "param",
     "parameters": "params",
+    "pixel": "px",
     "position": "pos",
+    "point": "pt",
     "previous": "prev",
+    "property": "prop",
     "python": "py",
+    "query string": "qs",
     "request": "req",
+    "reference": "ref",
+    "references": "refs",
+    "ruby": "rb",
     "session aidee": "sid",  # "session id" didn't work for some reason.
     "source": "src",
+    "(special|specify|specification)": "spec",
     "string": "str",
+    "(synchronize|synchronous)": "sync",
+    "utility": "util",
+    "utilities": "utils",
     "temporary": "tmp",
     "text": "txt",
+    "value": "val",
     "window": "win",
-}
+    }
+
+# For use with "say"-command. Words that are commands in the generic edit
+# grammar were treated as separate commands and could not be written with the
+# "say"-command. This overrides that behavior.
+reservedWord = {
+    "up": "up",
+    "down": "down",
+    "left": "left",
+    "right": "right",
+    "home": "home",
+    "end": "end",
+    "space": "space",
+    "tab": "tab",
+    "backspace": "backspace",
+    "delete": "delete",
+    "paste": "paste",
+    "copy": "copy",
+    "cut": "cut",
+    "undo": "undo",
+    "release": "release",
+    "page up": "page up",
+    "page down": "page down",
+    "say": "say",
+    "select": "select",
+    "select all": "select all",
+    "abbreviate": "abbreviate",
+    "uppercase": "uppercase",
+    "lowercase": "lowercase",
+    "expand": "expand",
+    "squash": "squash",
+    }
 
 
 def copy_command():
+    # Add Command Prompt, putty, ...?
     context = AppContext(executable="console")
     window = Window.get_foreground()
     if context.matches(window.executable, window.title, window.handle):
@@ -289,6 +336,7 @@ def copy_command():
 
 
 def paste_command():
+    # Add Command Prompt, putty, ...?
     context = AppContext(executable="console")
     window = Window.get_foreground()
     if context.matches(window.executable, window.title, window.handle):
@@ -303,9 +351,13 @@ grammarCfg.cmd.map = Item(
     {
         # Navigation keys.
         "up [<n>]": Key("up:%(n)d"),
+        "up [<n>] slow": Key("up/15:%(n)d"),
         "down [<n>]": Key("down:%(n)d"),
+        "down [<n>] slow": Key("down/15:%(n)d"),
         "left [<n>]": Key("left:%(n)d"),
+        "left [<n>] slow": Key("left/15:%(n)d"),
         "right [<n>]": Key("right:%(n)d"),
+        "right [<n>] slow": Key("right/15:%(n)d"),
         "page up [<n>]": Key("pgup:%(n)d"),
         "page down [<n>]": Key("pgdown:%(n)d"),
         "up <n> (page | pages)": Key("pgup:%(n)d"),
@@ -321,8 +373,8 @@ grammarCfg.cmd.map = Item(
         "space [<n>]": release + Key("space:%(n)d"),
         "enter [<n>]": release + Key("enter:%(n)d"),
         "tab [<n>]": Key("tab:%(n)d"),
-        "delete [<n>]": release + Key("del:%(n)d/5"),
-        "delete [<n> | this] (line|lines)": release + Key("home, s-down:%(n)d, del"),  # @IgnorePep8
+        "delete [<n>]": Key("del/3:%(n)d"),
+        "delete [this] line": Key("home, s-end, del"),  # @IgnorePep8
         "backspace [<n>]": release + Key("backspace:%(n)d"),
         "application key": release + Key("apps/3"),
         "win key": release + Key("win/3"),
@@ -341,15 +393,18 @@ grammarCfg.cmd.map = Item(
         "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
-        # Type written form of "that which would otherwise not be written".
-#         "say <text>": release + NTText("%(text)s"), # Moved to formatting methods. @IgnorePep8
-         # Shorthand multiple characters.
+        # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
+        # Punctuation and separation characters, for quick editing.
+        "colon": Key("colon"),
+        "semi-colon": Key("semicolon"),
+        "comma": Key("comma"),
+        "(dot|period)": Key("dot"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
-         # Formatting.
+        # Formatting <n> words to the left of the cursor.
         "camel case <n> [words]": Function(camel_case_count),
         "pascal case <n> [words]": Function(pascal_case_count),
         "snake case <n> [words]": Function(snake_case_count),
@@ -357,25 +412,30 @@ grammarCfg.cmd.map = Item(
         "expand <n> [words]": Function(expand_count),
         "uppercase <n> [words]": Function(uppercase_count),
         "lowercase <n> [words]": Function(lowercase_count),
+        # Format dictated words. See the formatMap for all available types.
+        # Ex: "camel case my new variable" -> "myNewVariable"
+        # Ex: "snake case my new variable" -> "my_new_variable"
+        # Ex: "uppercase squash my new hyphen variable" -> "MYNEW-VARIABLE"
         "<formatType> <text>": Function(format_text),
+        # For writing words that would otherwise be characters or commands.
+        # Ex: "period", tab", "left", "right", "home".
+        "say <reservedWord>": Text("%(reservedWord)s"),
+        # Abbreviate words commonly used in programming.
+        # Ex: arguments -> args, parameters -> params.
         "abbreviate <abbreviation>": Text("%(abbreviation)s"),
         # Text corrections.
-        "(add|fix) missing space": Key("a-left, space, a-right"),
-        "(delete|remove) (double|extra) (space|whitespace)": Key("a-left, backspace, a-right"),  # @IgnorePep8
-        "(delete|remove) (double|extra) (type|char|character)": Key("a-left, del, a-right"),  # @IgnorePep8
-        # Canceling of started sentence.
-        # Useful for canceling what inconsiderate loud mouths have started.
-        "<text> cancel dictation": Function(cancel_dictation),
-        "<text> cancel dictation <text2>": Function(cancel_dictation),
-        "[<text>] cancel and sleep": Function(cancel_and_sleep),
-        "[<text>] cancel and sleep [<text2>]": Function(cancel_and_sleep),
+        "(add|fix) missing space": Key("c-left/3, space, c-right/3"),
+        "(delete|remove) (double|extra) (space|whitespace)": Key("c-left/3, backspace, c-right/3"),  # @IgnorePep8
+        "(delete|remove) (double|extra) (type|char|character)": Key("c-left/3, del, c-right/3"),  # @IgnorePep8
+        # Microphone sleep/cancel started dictation.
+        "[<text>] (go to sleep|cancel and sleep) [<text2>]": Function(cancel_and_sleep),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
-    },
+        },
     namespace={
         "Key": Key,
         "Text": Text,
-    }
+        }
 )
 
 
@@ -402,10 +462,11 @@ class KeystrokeRule(MappingRule):
         Choice("pressKey", pressKeyMap),
         Choice("formatType", formatMap),
         Choice("abbreviation", abbreviationMap),
-    ]
+        Choice("reservedWord", reservedWord),
+        ]
     defaults = {
         "n": 1,
-    }
+        }
 
 
 alternatives = []

@@ -100,6 +100,7 @@ gitopt = {
     "short": "--short",
     "skip": "--skip",
     "tags": "--tags",
+    "staged": "--staged",
     "theirs": "--theirs",
     "track": "--track",
     "verbose": "--verbose",
@@ -111,6 +112,8 @@ series_rule = SeriesMappingRule(
         # Git commands.
         "git add": Text("git add "),
         "git add <text>": SCText("git add %(text)s"),
+        "git add patch": Text("git add --patch "),
+        "git add patch <text>": SCText("git add --patch %(text)s"),
         "git add (all|period|dot)": Text("git add .") + Key("enter"),
         "git archive": Text("git archive --format=tar "),
         "git blame": Text("git blame "),
@@ -135,10 +138,12 @@ series_rule = SeriesMappingRule(
         "git config add": Text("git config --add "),
         "git config add <text>": SCText("git config --add %(text)s "),
         "git config list": Text("git config --list") + Key("enter"),
-        "git (diff|difference|differentiate)": Text("git diff "),
-        "git (diff|difference|differentiate) <text>": SCText("git diff %(text)s"),  # @IgnorePep8
-        "git (diff|difference|differentiate) cached": Text("git diff --cashed") + Key("enter"),  # @IgnorePep8
-        "git (diff|difference|differentiate) cached <text>": SCText("git diff --cashed %(text)s") + Key("enter"),  # @IgnorePep8
+        "git diff": Text("git diff "),
+        "git diff <text>": SCText("git diff %(text)s"),
+        "git diff cached": Text("git diff --cached "),
+        "git diff cached <text>": SCText("git diff --cached %(text)s"),
+        "git diff staged": Text("git diff --staged "),
+        "git diff staged <text>": SCText("git diff --staged %(text)s"),
         "git fetch": Text("git fetch") + Key("enter"),
         "git fetch <text>": SCText("git fetch %(text)s "),
         "git fetch prune": Text("git fetch -p"),  # Remove local refs to deleted remote branches.  # @IgnorePep8

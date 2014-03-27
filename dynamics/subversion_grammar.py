@@ -19,6 +19,9 @@ if config.get("aenea.enabled", False) == True:
 
 from lib.text import SCText
 
+DYN_MODULE_NAME = "subversion"
+INCOMPATIBLE_MODULES = []
+
 
 class SeriesMappingRule(CompoundRule):
 
@@ -48,6 +51,7 @@ svncmd = {
     "(diff|difference|differentiate)": "diff",
     "help": "help",
     "log": "log",
+    "list": "list",
     "move": "move",
     "status": "status",
     "update": "update",
@@ -57,7 +61,7 @@ svnopt = {
 
 }
 
-svn = "(subversion| S V N) "
+svn = "(subversion|S V N) "
 
 series_rule = SeriesMappingRule(
     mapping={
@@ -69,15 +73,16 @@ series_rule = SeriesMappingRule(
         svn + "(check out|checkout)": Text("svn checkout "),
         svn + "(check out|checkout) <text>": SCText("svn checkout %(text)s"),
         svn + "commit": Text("svn commit -m \"\"") + Key("left:1"),
-        svn + "(delete)": Text("svn delete "),
-        svn + "(delete) <text>": SCText("svn delete %(text)s"),\
+        svn + "delete": Text("svn delete "),
+        svn + "delete <text>": SCText("svn delete %(text)s"),\
         svn + "(diff|difference|differentiate)": Text("svn diff "),
         svn + "(diff|difference|differentiate) <text>": SCText("svn diff %(text)s"),  # @IgnorePep8
         svn + "help": Text("svn --help") + Key("enter"),
         svn + "help <svncmd>": Text("svn --help %(svncmd)s") + Key("enter"),
-        svn + "log": Text("svn log") + Key("enter"),
+        svn + "log": Text("svn log "),
         svn + "log <text>": SCText("svn log %(text)s"),
         svn + "log limit <n>": Text("svn log -l %(n)d "),
+        svn + "(list [files]|L S)": Text("svn ls "),
         svn + "(move|M V)": Text("svn move "),
         svn + "(move|M V) <text>": SCText("svn move %(text)s"),
         svn + "(status|S T)": Text("svn st") + Key("enter"),
@@ -105,6 +110,25 @@ if config.get("aenea.enabled", False) == True:
 grammar = Grammar("Subversion commands", context=context)
 grammar.add_rule(series_rule)
 grammar.load()
+grammar.disable()
+
+
+def dynamic_enable():
+    global grammar
+    if grammar.enabled:
+        return False
+    else:
+        grammar.enable()
+        return True
+
+
+def dynamic_disable():
+    global grammar
+    if grammar.enabled:
+        grammar.disable()
+        return True
+    else:
+        return False
 
 
 # Unload function which will be called at unload time.

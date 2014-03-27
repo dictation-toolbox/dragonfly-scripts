@@ -504,7 +504,6 @@ def _select_and_cut_text(wordCount):
     try:  # Try selecting n number of words.
         Key('ctrl:down, shift:down').execute()
         Key('left:%s' % wordCount).execute()
-        Key('shift:up').execute()
     finally:
         # It is important to make sure that the buttons are released.
         # Otherwise you get stuck in an unpleasant situation.

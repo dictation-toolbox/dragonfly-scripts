@@ -164,12 +164,9 @@ def show_module_status():
             notify_module_disabled(moduleName, useSound=False)
 
 
-def enable_single_module(module):
-    disable_all_modules(useSound=False)
-    enable_module(module)
-
-
-def enable_multiple_modules(module, module2, module3=None):
+def enable_modules(module, module2=None, module3=None, disableOthers=False):
+    if disableOthers:
+        disable_all_modules(useSound=False)
     modules = [module, module2, module3]
     incompatibleModules = []
     for module in modules:
@@ -182,21 +179,21 @@ def enable_multiple_modules(module, module2, module3=None):
                     module.DYN_MODULE_NAME)
 
 
-def enable_aenea():
-    config = lib.config.get_config()
-    if config.get("aenea.enabled", False) == False:
-        config["aenea.enabled"] = True
-        lib.config.save_config()
-        print("<<< Aenea enabled, reload required. >>>")
-        print("<<< Don't forget, start the server and the client window. >>>")
+# def enable_aenea():
+#     config = lib.config.get_config()
+#     if config.get("aenea.enabled", False) == False:
+#         config["aenea.enabled"] = True
+#         lib.config.save_config()
+#         print("<<< Aenea enabled, reload required. >>>")
+#         print("<<< Don't forget, start the server and the client window. >>>") @IgnorePep8
 
 
-def disable_aenea():
-    config = lib.config.get_config()
-    if config.get("aenea.enabled", False) == True:
-        config["aenea.enabled"] = False
-        lib.config.save_config()
-        print("<<< Aenea disabled. >>>")
+# def disable_aenea():
+#     config = lib.config.get_config()
+#     if config.get("aenea.enabled", False) == True:
+#         config["aenea.enabled"] = False
+#         lib.config.save_config()
+#         print("<<< Aenea disabled. >>>")
 
 
 class SeriesMappingRule(CompoundRule):
@@ -218,13 +215,15 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        "(start|switch to) <module> mode": Function(enable_module),
-        "(start|switch to) <module> mode only": Function(enable_single_module),
-        "(start|switch to) <module> and <module2> mode": Function(enable_multiple_modules),  # @IgnorePep8
-        "(start|switch to) <module> and <module2> and <module3> mode": Function(enable_multiple_modules),  # @IgnorePep8
+        "enable <module> mode": Function(enable_modules),
+        "enable <module> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
+        "enable <module> and <module2> mode": Function(enable_modules),  # @IgnorePep8
+        "enable <module> and <module2> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
+        "enable <module> and <module2> and <module3> mode": Function(enable_modules),  # @IgnorePep8
+        "enable <module> and <module2> and <module3> mode only": Function(enable_modules, disableOthers=True),  # @IgnorePep8
         "show dynamic [(mode|modes)] status": Function(show_module_status),
-        "(stop|end) <module> mode": Function(disable_module),
-        "(stop|end) [all] dynamic modes": Function(disable_all_modules),
+        "disable <module> mode": Function(disable_module),
+        "disable [all] dynamic modes": Function(disable_all_modules),
     },
     extras=[
         IntegerRef("n", 1, 100),

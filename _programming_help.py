@@ -21,14 +21,14 @@ class SeriesMappingRule(CompoundRule):
 
     def __init__(self, mapping, extras=None, defaults=None):
         mapping_rule = MappingRule(mapping=mapping, extras=extras,
-            defaults=defaults, exported=False)
+                                   defaults=defaults, exported=False)
         single = RuleRef(rule=mapping_rule)
         series = Repetition(single, min=1, max=16, name="series")
 
         compound_spec = "<series>"
         compound_extras = [series]
         CompoundRule.__init__(self, spec=compound_spec,
-            extras=compound_extras, exported=True)
+                              extras=compound_extras, exported=True)
 
     def _process_recognition(self, node, extras):  # @UnusedVariable
         series = extras["series"]
@@ -37,17 +37,13 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        # VBScript specific.
-        "variable (dimension|dim)": Text("dim "),
         # Closures.
-        "angle brackets": Key("langle, rangle") + Key("left"),
-        "brackets": Key("lbracket, rbracket") + Key("left"),
-        "braces": Key("lbrace, rbrace") + Key("left"),
-        "parens": Key("lparen, rparen") + Key("left"),
-        "quotes": Key("dquote:2") + Key("left"),
-        "single quotes": Key("squote:2") + Key("left"),
-        # Common terms.
-        "lib": Text("lib"),
+        "angle brackets": Key("langle, rangle, left"),
+        "brackets": Key("lbracket, rbracket, left"),
+        "braces": Key("lbrace, rbrace, left"),
+        "parens": Key("lparen, rparen, left"),
+        "quotes": Key("dquote, dquote, left"),
+        "single quotes": Key("squote, squote, left"),
         # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),
@@ -63,13 +59,14 @@ series_rule = SeriesMappingRule(
         "dot C S": Text(".cs"),
         "dot css": Text(".css"),
         "dot less": Text(".less"),
-        "dot sass": Text(".sass"),
-        "dot (py|pie|P Y)": Text(".py"),
-        "dot T X T": Text(".txt"),
-        "dot S H": Text(".sh"),
         "dot J S": Text(".js"),
-        "dot R B": Text(".rb"),
-        "dot Y M L": Text(".yml"),
+        "dot jar": Text(".jar"),
+        "dot (py|pie|P Y)": Text(".py"),
+        "dot (ruby|R B)": Text(".rb"),
+        "dot (rar|R A R)": Text(".rar"),
+        "dot sass": Text(".sass"),
+        "dot S H": Text(".sh"),
+        "dot T X T": Text(".txt"),
         # Non mainstream web url extensions.
         "dot S E": Text(".se"),
         "dot (O R G|org)": Text(".org"),
@@ -79,11 +76,11 @@ series_rule = SeriesMappingRule(
         "protocol (git|G I T)": Text("git://"),
         "protocol F T P": Text("ftp://"),
         "protocol S S H": Text("ssh://"),
-    },
+        },
     extras=[
         IntegerRef("n", 1, 100),
         Dictation("text"),
-    ],
+        ],
     defaults={
         "n": 1
     }
