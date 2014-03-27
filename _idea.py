@@ -55,6 +55,21 @@ class CommandRule(MappingRule):
     # Version control.
     "show diff": Key("c-d"),
 
+    # Refactoring.
+    "(refactor|re-factor) (this|choose)": Key("cas-t"),
+    "(refactor|re-factor) rename": Key("s-f6"),
+    "(refactor|re-factor) change signature": Key("c-f6"),
+    "(refactor|re-factor) move": Key("f6"),
+    "(refactor|re-factor) copy": Key("f5"),
+    "(refactor|re-factor) safe delete": Key("a-del"),
+    "(refactor|re-factor) extract variable": Key("ca-v"),
+    "(refactor|re-factor) extract constant": Key("ca-c"),
+    "(refactor|re-factor) extract field": Key("ca-f"),
+    "(refactor|re-factor) extract parameter": Key("ca-p"),
+    "(refactor|re-factor) extract variable": Key("ca-v"),
+    "(refactor|re-factor) extract method": Key("ca-m"),
+    "(refactor|re-factor) (in line|inline)": Key("ca-n"),
+
     # Ruby specific.
     "run rake [task]": Key("ctrl:down, alt:down, r, alt:up, ctrl:up"),
     "run rake spec": Key("ctrl:down, alt:down, r, alt:up, ctrl:up") + Pause("25") + Text("spec") + Key("enter") + Pause("25") + Key("enter"),
