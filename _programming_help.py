@@ -37,13 +37,6 @@ class SeriesMappingRule(CompoundRule):
 
 series_rule = SeriesMappingRule(
     mapping={
-        # Closures.
-        "angle brackets": Key("langle, rangle, left/3"),
-        "brackets": Key("lbracket, rbracket, left/3"),
-        "braces": Key("lbrace, rbrace, left/3"),
-        "parens": Key("lparen, rparen, left/3"),
-        "quotes": Key("dquote/3, dquote/3, left/3"),
-        "single quotes": Key("squote, squote, left/3"),
         # Filler words.
         "foobar": Text("foobar"),
         "foo": Text("foo"),

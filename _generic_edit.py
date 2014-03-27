@@ -393,6 +393,13 @@ grammarCfg.cmd.map = Item(
         "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
+        # Closures.
+        "angle brackets": Key("langle, rangle, left/3"),
+        "brackets": Key("lbracket, rbracket, left/3"),
+        "braces": Key("lbrace, rbrace, left/3"),
+        "parens": Key("lparen, rparen, left/3"),
+        "quotes": Key("dquote/3, dquote/3, left/3"),
+        "single quotes": Key("squote, squote, left/3"),
         # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
