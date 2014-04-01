@@ -158,7 +158,7 @@ def show_module_status():
     global moduleMapping
     config = lib.config.get_config()
     for moduleName, module in moduleMapping.items():
-        if module.grammar.enabled:
+        if module.is_enabled():
             notify_module_enabled(moduleName, useSound=False)
         else:
             notify_module_disabled(moduleName, useSound=False)

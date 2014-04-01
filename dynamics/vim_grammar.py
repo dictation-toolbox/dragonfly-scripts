@@ -124,6 +124,15 @@ def dynamic_disable():
         return False
 
 
+def is_enabled():
+    global grammarCommand
+    global grammarInsert
+    if grammarCommand.enabled or grammarInsert.enabled:
+        return True
+    else:
+        return False
+
+
 # Unload function which will be called at unload time.
 def unload():
     global grammarCommand
