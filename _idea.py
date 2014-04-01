@@ -18,26 +18,26 @@ class CommandRule(MappingRule):
     "stop running": Key("ctrl:down, f2, ctrl:up"),
 
     # Code navigation.
-    "open class <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30") + Key("enter"),
-    "open class chooser <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30"),
-    "open file <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
-    "open file chooser <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
-    "open symbol <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
-    "open symbol chooser <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
-    "(go to|open) declaration": Key("c-b"),
-    "(go to|open) implementation": Key("ctrl:down, alt:down, b, alt:up, ctrl:up"),
-    "(go to|open) super": Key("c-u"),
-    "(go to|switch to|open) (class|test)": Key("ctrl:down, shift:down, t, shift:up, ctrl:up"),
+    "navigate to class <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30") + Key("enter"),
+    "navigate to class chooser <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30"),
+    "navigate to file <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
+    "navigate to file chooser <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
+    "navigate to symbol <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
+    "navigate to symbol chooser <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
+    "go to declaration": Key("c-b"),
+    "go to implementation": Key("ctrl:down, alt:down, b, alt:up, ctrl:up"),
+    "go to super": Key("c-u"),
+    "go to (class|test)": Key("ctrl:down, shift:down, t, shift:up, ctrl:up"),
     "go back": Key("ctrl:down, alt:down, left, alt:up, ctrl:up"),
 
     # Project settings.
-    "switch to project": Key("a-1"),
-    "open module settings": Key("f4"),
-    "open [project] settings": Key("ctrl:down, alt:down, s, alt:up, ctrl:up"),
+    "go to project window": Key("a-1"),
+    "go to module settings": Key("f4"),
+    "go to [project] settings": Key("ctrl:down, alt:down, s, alt:up, ctrl:up"),
     "synchronize files": Key("ctrl:down, alt:down, y, alt:up, ctrl:up"),
 
     # Terminal.
-    "open terminal": Key("a-f12"),
+    "start terminal": Key("a-f12"),
 
     # Search.
     "find in path": Key("ctrl:down, shift:down, f, shift:up, ctrl:up"),
@@ -83,7 +83,7 @@ class CommandRule(MappingRule):
     "run rails generator": Key("ctrl:down, alt:down, g, alt:up, ctrl:up"),
 
     # Custom key mappings.
-    "(start SSH session|open SSH console|open remote terminal|open remote console)": Key("a-f11/25, enter"),
+    "(start SSH session|start SSH console|start remote terminal|start remote console)": Key("a-f11/25, enter"),
   }
 
   extras = [
