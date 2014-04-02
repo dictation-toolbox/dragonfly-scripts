@@ -10,7 +10,7 @@ from dragonfly import (
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Text  # @Reimport
+    from proxy_nicknames import Key, Text  # @Reimport
 
 
 letterMap = {
@@ -501,16 +501,7 @@ def _select_and_cut_text(wordCount):
     """
     clipboard = Clipboard()
     clipboard.set_system_text('')
-    try:  # Try selecting n number of words.
-        Key('ctrl:down, shift:down').execute()
-        Key('left:%s' % wordCount).execute()
-    finally:
-        # It is important to make sure that the buttons are released.
-        # Otherwise you get stuck in an unpleasant situation.
-        Key('shift:up, ctrl:up').execute()
-    Pause("10").execute()
-    Key('c-x').execute()  # Cut out the selected words.
-    Pause("20").execute()
+    Key('cs-left/3:%s/10, c-x/10' % wordCount).execute()
     return clipboard.get_system_text()
 
 
