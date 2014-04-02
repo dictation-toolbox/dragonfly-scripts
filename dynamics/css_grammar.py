@@ -244,7 +244,7 @@ rules = MappingRule(
         "hex <hex1><hex2><hex3><hex4><hex5><hex6>": Text("#%(hex1)s%(hex2)s%(hex3)s%(hex4)s%(hex5)s%(hex6)s"),  # @IgnorePep8
         "open comment": Text("/* "),
         "property <prop>": SCText("%(prop)s: "),
-        "property <prop> <text>": SCText("%(prop)s: %(text)s"),
+        "property <prop> <text>": Text("%(prop)s: ") + SCText("%(text)s"),
         "<numeric> E M": Text("%(numeric)sem"),
         "<numeric> P T": Text("%(numeric)spt"),
         "<numeric> P X": Text("%(numeric)spx"),
@@ -287,6 +287,14 @@ def dynamic_disable():
     global grammar
     if grammar.enabled:
         grammar.disable()
+        return True
+    else:
+        return False
+
+
+def is_enabled():
+    global grammar
+    if grammar.enabled:
         return True
     else:
         return False

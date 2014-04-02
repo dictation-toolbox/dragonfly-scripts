@@ -131,8 +131,8 @@ series_rule = SeriesMappingRule(
         "git clone": Text("git clone "),
         "git clone <text>": SCText("git clone %(text)s"),
         "git cherry-pick": Text("git cherry-pick "),
-        "git commit": Text("git commit -m \"\"") + Key("left:1"),
-        "git commit all tracked": Text("git commit -a -m \"\"") + Key("left:1"),  # @IgnorePep8
+        "git commit": Text("git commit -m ") + Key("dquote/3, dquote/3, left/3"),  # @IgnorePep8
+        "git commit all tracked": Text("git commit -a -m ") + Key("dquote/3, dquote/3, left/3"),  # @IgnorePep8
         "git commit amend": Text("git commit --amend -m "),
         "git config": Text("git config "),
         "git config add": Text("git config --add "),
@@ -195,7 +195,7 @@ series_rule = SeriesMappingRule(
         "git (status|S T)": Text("git status") + Key("enter"),
         "git (status|S T) <gitopt>": Text("git status %(gitopt)s") + Key("enter"),  # @IgnorePep8
         "git tag": Text("git tag "),
-        "git tag (annotate|annotated)": Text("git tag -a  -m \"\"") + Key("left:6"),  # @IgnorePep8
+        "git tag (annotate|annotated)": Text("git tag -a  -m ") + Key("dquote/3, dquote/3, left/3:6"),  # @IgnorePep8
         "git tag delete": Text("git tag -d "),
         # Special access to commands and options.
         "git command <gitcmd>": Text("git %(gitcmd)s "),
@@ -234,6 +234,14 @@ def dynamic_disable():
     global grammar
     if grammar.enabled:
         grammar.disable()
+        return True
+    else:
+        return False
+
+
+def is_enabled():
+    global grammar
+    if grammar.enabled:
         return True
     else:
         return False

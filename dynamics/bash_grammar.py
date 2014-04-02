@@ -57,8 +57,8 @@ rules = MappingRule(
         "[go to] start of line": Key("c-a"),
         "grep": Text("grep "),
         "grep <text>": SCText("grep %(text)s"),
-        "grep recursive": Text("grep -rn \"\" *") + Key("left:3"),
-        "grep recursive <text>": SCText("grep -rn \"%(text)s\" *") + Key("left:3"),  # @IgnorePep8
+        "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
+        "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "ifconfig": Text("ifconfig "),
         "(iptables|I P tables) list": Text("iptables -L"),
         "(iptables|I P tables) flush": Text("iptables -F"),
@@ -83,11 +83,13 @@ rules = MappingRule(
         "remove (directory|dir|folder|recursive)": Text("rm -rf "),
         "remove (directory|dir|folder|recursive) <text>": SCText("rm -rf %(text)s"),  # @IgnorePep8
         "(sed|S E D)": Text("sed "),
-        "(secure copy|S C P)": Text("scp"),
-        "(secure copy|S C P) <text>": SCText("scp %(text)"),
+        "(secure copy|S C P)": Text("scp "),
+        "(secure copy|S C P) <text>": SCText("scp %(text)s"),
         "soft link": Text("ln -s "),
-        "soft link <text>": SCText("ln -s %(text)"),
+        "soft link <text>": SCText("ln -s %(text)s"),
         "sudo": Text("sudo "),
+        "(secure shell|S S H)": Text("ssh "),
+        "(secure shell|S S H) <text>": SCText("ssh %(text)s"),
         "tail": Text("tail "),
         "tail <text>": SCText("tail %(text)s"),
         "tail (F|follow)": Text("tail -f "),
@@ -142,6 +144,14 @@ def dynamic_disable():
     global grammar
     if grammar.enabled:
         grammar.disable()
+        return True
+    else:
+        return False
+
+
+def is_enabled():
+    global grammar
+    if grammar.enabled:
         return True
     else:
         return False

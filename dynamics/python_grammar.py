@@ -167,6 +167,14 @@ def dynamic_disable():
         return False
 
 
+def is_enabled():
+    global grammar
+    if grammar.enabled:
+        return True
+    else:
+        return False
+
+
 # Unload function which will be called at unload time.
 def unload():
     global grammar

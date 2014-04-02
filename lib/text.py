@@ -51,27 +51,31 @@ class SCText(Text):  # Special Characters Text.
         Unfortunately, I have not found a better place to solve this.
 
         """
-        parts = re.split("\%\([a-z_0-9]+\)s", self._spec)
-        if len(parts) > 2:
-            raise Exception("SCText only supports one variable, yet.")
-        start = len(parts[0])
-        end = len(spec) - len(parts[1])
-        words = spec[start:end]
-        words = lib.format.strip_dragon_info(words)
-        newText = ""
-        for word in words:
-            if (newText != "" and newText[-1:].isalnum() and
-                    word[-1:].isalnum()):
-                word = " " + word  # Adds spacing between normal words.
-            newText += word
-        spec = parts[0] + newText + parts[1]
-        if config.get("aenea.enabled", False) == True:
-            return spec
         events = []
-        for character in spec:
-            if character in self._specials:
-                typeable = self._specials[character]
-            else:
-                typeable = Keyboard.get_typeable(character)
-            events.extend(typeable.events(self._pause))
+        try:
+            parts = re.split("\%\([a-z_0-9]+\)s", self._spec)
+            if len(parts) > 2:
+                raise Exception("SCText only supports one variable, yet.")
+            start = len(parts[0])
+            end = len(spec) - len(parts[1])
+            words = spec[start:end]
+            words = lib.format.strip_dragon_info(words)
+            newText = ""
+            for word in words:
+                if (newText != "" and newText[-1:].isalnum() and
+                        word[-1:].isalnum()):
+                    word = " " + word  # Adds spacing between normal words.
+                newText += word
+            spec = parts[0] + newText + parts[1]
+            if config.get("aenea.enabled", False) == True:
+                return spec
+            for character in spec:
+                if character in self._specials:
+                    typeable = self._specials[character]
+                else:
+                    typeable = Keyboard.get_typeable(character)
+                events.extend(typeable.events(self._pause))
+        except Exception as e:
+            print self._spec, parts
+            print("Error: %s" % e)
         return events

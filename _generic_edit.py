@@ -68,7 +68,7 @@ def cancel_and_sleep(text=None, text2=None):
     with a sound and a message in the Natlink feedback window.
     Then the the microphone is put to sleep.
     Example:
-    "'random mumbling or other noises cancel and sleep'" => Microphone sleep.
+    "'random mumbling go to sleep'" => Microphone sleep.
 
     """
     print("* Dictation canceled. Going to sleep. *")
@@ -80,7 +80,7 @@ def reload_natlink():
     """Reloads Natlink and custom Python modules."""
     win = Window.get_foreground()
     FocusWindow(executable="natspeak",
-                title="Messages from Python Macros").execute()
+        title="Messages from Python Macros").execute()
     Pause("10").execute()
     Key("a-f, r").execute()
     Pause("10").execute()
@@ -117,7 +117,7 @@ modifierMap = {
     "control": "c",
     "shift": "s",
     "super": "w",
-    }
+}
 
 # Modifiers for the press-command, if only the modifier is pressed.
 singleModifierMap = {
@@ -125,7 +125,7 @@ singleModifierMap = {
     "control": "ctrl",
     "shift": "shift",
     "super": "win",
-    }
+}
 
 letterMap = {
     "(A|alpha)": "a",
@@ -154,7 +154,7 @@ letterMap = {
     "(X|x-ray) ": "x",
     "(Y|yankee) ": "y",
     "(Z|zulu) ": "z",
-    }
+}
 
 numberMap = {
     "zero": "0",
@@ -167,7 +167,7 @@ numberMap = {
     "seven": "7",
     "eight": "8",
     "nine": "9",
-    }
+}
 
 controlKeyMap = {
     "left": "left",
@@ -198,7 +198,7 @@ functionKeyMap = {
     'F ten': 'f10',
     'F eleven': 'f11',
     'F twelve': 'f12',
-    }
+}
 
 pressKeyMap = {}
 pressKeyMap.update(letterMap)
@@ -230,7 +230,7 @@ formatMap = {
     "dotify uppercase": [ft.dotify, ft.upperCase],
     "say": ft.spokenForm,
     "environment variable": [ft.snakeCase, ft.upperCase],
-    }
+}
 
 
 abbreviationMap = {
@@ -291,7 +291,7 @@ abbreviationMap = {
     "text": "txt",
     "value": "val",
     "window": "win",
-    }
+}
 
 # For use with "say"-command. Words that are commands in the generic edit
 # grammar were treated as separate commands and could not be written with the
@@ -322,7 +322,14 @@ reservedWord = {
     "lowercase": "lowercase",
     "expand": "expand",
     "squash": "squash",
-    }
+    "dash": "dash",
+    "underscore": "underscore",
+    "dot": "dot",
+    "period": "period",
+    "minus": "minus",
+    "semi-colon": "semi-colon",
+    "hyphen": "hyphen",
+}
 
 
 def copy_command():
@@ -360,10 +367,10 @@ grammarCfg.cmd.map = Item(
         "right [<n>] slow": Key("right/15:%(n)d"),
         "page up [<n>]": Key("pgup:%(n)d"),
         "page down [<n>]": Key("pgdown:%(n)d"),
-        "up <n> (page | pages)": Key("pgup:%(n)d"),
-        "down <n> (page | pages)": Key("pgdown:%(n)d"),
-        "left <n> (word | words)": Key("c-left:%(n)d"),
-        "right <n> (word | words)": Key("c-right:%(n)d"),
+        "up <n> (page|pages)": Key("pgup:%(n)d"),
+        "down <n> (page|pages)": Key("pgdown:%(n)d"),
+        "left <n> (word|words)": Key("c-left/3:%(n)d/10"),
+        "right <n> (word|words)": Key("c-right/3:%(n)d/10"),
         "home": Key("home"),
         "end": Key("end"),
         "doc home": Key("c-home/3"),
@@ -393,15 +400,24 @@ grammarCfg.cmd.map = Item(
         "[(hold|press)] control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
+        # Closures.
+        "angle brackets": Key("langle, rangle, left/3"),
+        "brackets": Key("lbracket, rbracket, left/3"),
+        "braces": Key("lbrace, rbrace, left/3"),
+        "parens": Key("lparen, rparen, left/3"),
+        "quotes": Key("dquote/3, dquote/3, left/3"),
+        "single quotes": Key("squote, squote, left/3"),
         # Shorthand multiple characters.
         "double <char>": Text("%(char)s%(char)s"),
         "triple <char>": Text("%(char)s%(char)s%(char)s"),
         "double escape": Key("escape, escape"),  # Exiting menus.
         # Punctuation and separation characters, for quick editing.
-        "colon": Key("colon"),
-        "semi-colon": Key("semicolon"),
-        "comma": Key("comma"),
-        "(dot|period)": Key("dot"),
+        "colon [<n>]": Key("colon/2:%(n)d"),
+        "semi-colon [<n>]": Key("semicolon/2:%(n)d"),
+        "comma [<n>]": Key("comma/2:%(n)d"),
+        "(dot|period) [<n>]": Key("dot/2:%(n)d"),
+        "(dash|hyphen|minus) [<n>]": Key("hyphen/2:%(n)d"),
+        "underscore [<n>]": Key("underscore/2:%(n)d"),
         # To release keyboard capture by VirtualBox.
         "press right control": Key("Control_R"),
         # Formatting <n> words to the left of the cursor.
@@ -431,11 +447,11 @@ grammarCfg.cmd.map = Item(
         "[<text>] (go to sleep|cancel and sleep) [<text2>]": Function(cancel_and_sleep),  # @IgnorePep8
         # Reload Natlink.
         "reload Natlink": Function(reload_natlink),
-        },
+    },
     namespace={
         "Key": Key,
         "Text": Text,
-        }
+    }
 )
 
 
@@ -463,10 +479,10 @@ class KeystrokeRule(MappingRule):
         Choice("formatType", formatMap),
         Choice("abbreviation", abbreviationMap),
         Choice("reservedWord", reservedWord),
-        ]
+    ]
     defaults = {
         "n": 1,
-        }
+    }
 
 
 alternatives = []
