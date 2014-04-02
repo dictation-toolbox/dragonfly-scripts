@@ -37,7 +37,7 @@ class CommandRule(MappingRule):
     "synchronize files": Key("ctrl:down, alt:down, y, alt:up, ctrl:up"),
 
     # Terminal.
-    "start terminal": Key("a-f12"),
+    "run terminal": Key("a-f12"),
 
     # Search.
     "find in path": Key("ctrl:down, shift:down, f, shift:up, ctrl:up"),
@@ -83,7 +83,7 @@ class CommandRule(MappingRule):
     "run rails generator": Key("ctrl:down, alt:down, g, alt:up, ctrl:up"),
 
     # Custom key mappings.
-    "(start SSH session|start SSH console|start remote terminal|start remote console)": Key("a-f11/25, enter"),
+    "(run SSH session|run SSH console|run remote terminal|run remote console)": Key("a-f11/25, enter"),
   }
 
   extras = [
