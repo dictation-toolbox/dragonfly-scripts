@@ -14,7 +14,7 @@ if config.get("aenea.enabled", False) == True:
     from proxy_nicknames import Key  # , Text  # @Reimport
     import aenea
 
-# from lib.text import SCText
+import lib.sound as sound
 
 
 DYN_MODULE_NAME = "vim"
@@ -40,6 +40,7 @@ def enable_command_mode():
 
 
 def illegal_command(text):
+    sound.play(sound.SND_ERROR)
     print("Vim: Illegal command - '%s'" % str(text))
 
 
