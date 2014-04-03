@@ -236,18 +236,20 @@ rules = MappingRule(
     mapping={
         # Commands and keywords.
         "class <text>": SCText(".%(text)s {"),
-        "media": Text("@media ") + Key("left:3"),
-        "media query": Text("@media () {") + Key("left:3"),
+        "media": Text("@media ") + Key("left/3:3"),
+        "media query": Text("@media () {") + Key("left/3:3"),
         "close comment": Text(" */"),
-        "comment": Text("/*  */") + Key("left:3"),
+        "comment": Text("/*  */") + Key("left/3:3"),
         "hex <hex1><hex2><hex3>": Text("#%(hex1)s%(hex2)s%(hex3)s"),
         "hex <hex1><hex2><hex3><hex4><hex5><hex6>": Text("#%(hex1)s%(hex2)s%(hex3)s%(hex4)s%(hex5)s%(hex6)s"),  # @IgnorePep8
+        "import": Text("@import "),
         "open comment": Text("/* "),
         "property <prop>": SCText("%(prop)s: "),
         "property <prop> <text>": Text("%(prop)s: ") + SCText("%(text)s"),
         "<numeric> E M": Text("%(numeric)sem"),
         "<numeric> P T": Text("%(numeric)spt"),
         "<numeric> P X": Text("%(numeric)spx"),
+        "url": Text("url('')") + Key("left/3:2"),
     },
     extras=[
         IntegerRef("numeric", 1, 10000),
