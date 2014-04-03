@@ -80,11 +80,11 @@ rules = MappingRule(
         "remove (directory|dir|folder|recursive) <text>": SCText("rm -rf %(text)s"),  # @IgnorePep8
         "(sed|S E D)": Text("sed "),
         "(secure copy|S C P)": Text("scp "),
-        "(secure copy|S C P) <text>": SCText("scp %(text)"),
-        "soft link": Text("ln -s "),
-        "soft link <text>": SCText("ln -s %(text)"),
+        "(secure copy|S C P) <text>": SCText("scp %(text)s"),
         "(secure shell|S S H)": Text("ssh "),
-        "(secure shell|S S H) <text>": SCText("ssh %(text)"),
+        "(secure shell|S S H) <text>": SCText("ssh %(text)s"),
+        "soft link": Text("ln -s "),
+        "soft link <text>": SCText("ln -s %(text)s"),
         "sudo": Text("sudo "),
         "(switch user|S U)": Text("su "),
         "(switch user|S U) login": Text("su - "),
@@ -142,6 +142,14 @@ def dynamic_disable():
     global grammar
     if grammar.enabled:
         grammar.disable()
+        return True
+    else:
+        return False
+
+
+def is_enabled():
+    global grammar
+    if grammar.enabled:
         return True
     else:
         return False

@@ -68,7 +68,7 @@ def cancel_and_sleep(text=None, text2=None):
     with a sound and a message in the Natlink feedback window.
     Then the the microphone is put to sleep.
     Example:
-    "'random mumbling or other noises cancel and sleep'" => Microphone sleep.
+    "'random mumbling go to sleep'" => Microphone sleep.
 
     """
     print("* Dictation canceled. Going to sleep. *")
@@ -367,10 +367,10 @@ grammarCfg.cmd.map = Item(
         "right [<n>] slow": Key("right/15:%(n)d"),
         "page up [<n>]": Key("pgup:%(n)d"),
         "page down [<n>]": Key("pgdown:%(n)d"),
-        "up <n> (page | pages)": Key("pgup:%(n)d"),
-        "down <n> (page | pages)": Key("pgdown:%(n)d"),
-        "left <n> (word | words)": Key("c-left:%(n)d"),
-        "right <n> (word | words)": Key("c-right:%(n)d"),
+        "up <n> (page|pages)": Key("pgup:%(n)d"),
+        "down <n> (page|pages)": Key("pgdown:%(n)d"),
+        "left <n> (word|words)": Key("c-left/3:%(n)d/10"),
+        "right <n> (word|words)": Key("c-right/3:%(n)d/10"),
         "home": Key("home"),
         "end": Key("end"),
         "doc home": Key("c-home/3"),
