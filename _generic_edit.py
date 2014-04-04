@@ -301,6 +301,8 @@ abbreviationMap = {
 # For use with "say"-command. Words that are commands in the generic edit
 # grammar were treated as separate commands and could not be written with the
 # "say"-command. This overrides that behavior.
+# Other words that won't work for one reason or another, can also be added to
+# this list.
 reservedWord = {
     "up": "up",
     "down": "down",
@@ -334,6 +336,7 @@ reservedWord = {
     "minus": "minus",
     "semi-colon": "semi-colon",
     "hyphen": "hyphen",
+    "tripple": "tripple"
 }
 
 
