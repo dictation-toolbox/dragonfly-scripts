@@ -1,0 +1,8 @@
+# Maps phonetic pronunciation of a nick name to the HipChat username.
+#
+# Copy to _app_hipchat.txt and customize with usernames on your team.
+usernames.map = {
+  "All":            "all",
+  "Here":           "here",
+  #"Bob":            "BobJones",
+  }
