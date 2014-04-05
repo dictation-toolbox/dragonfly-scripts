@@ -35,6 +35,8 @@ rules = MappingRule(
         "apt cache search <text>": SCText("apt-cache search %(text)s"),
         "sudo apt get install": Text("sudo apt-get install "),
         "sudo apt get install <text>": SCText("sudo apt-get install %(text)s"),
+        "apt get install": Text("apt-get install "),
+        "apt get install <text>": SCText("apt-get install %(text)s"),
         "background": Text("bg "),
         "(cat|C A T)": Text("cat "),
         "(cat|C A T) <text>": SCText("cat %(text)s"),
@@ -45,6 +47,9 @@ rules = MappingRule(
         "(copy|C P) recursive": Text("cp -r "),
         "copy terminal": Key("cs-c/3"),
         "(change mode)|C H mod": Text("chmod "),
+        "(cron|cron tab|crontab) edit": Text("crontab -e") + Key("enter"),
+        "(cron|cron tab|crontab) list": Text("crontab -l") + Key("enter"),
+        "(cron|cron tab|crontab) reset": Text("crontab -r"),
         "diff": Text("diff "),
         "directory up <n> [times]": Function(directory_up),
         "D P K G": Text("dpkg "),
@@ -60,6 +65,8 @@ rules = MappingRule(
         "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "ifconfig": Text("ifconfig "),
+        "(iptables|I P tables) list": Text("iptables -L"),
+        "(iptables|I P tables) flush": Text("iptables -F"),
         "jobs": Text("jobs "),
         "kill": Text("kill "),
         "kill (hard|[dash]9)": Text("kill -9 "),
