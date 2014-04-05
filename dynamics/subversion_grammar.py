@@ -72,7 +72,7 @@ series_rule = SeriesMappingRule(
         svn + "blame": Text("svn blame "),
         svn + "(check out|checkout)": Text("svn checkout "),
         svn + "(check out|checkout) <text>": SCText("svn checkout %(text)s"),
-        svn + "commit": Text("svn commit -m ") + Key("dquote/3, dquote/3, left/3"),  # @IgnorePep8
+        svn + "commit": Text("svn commit -m ") + Key("dquote/3") + Key("dquote/3, left/3"),  # @IgnorePep8
         svn + "delete": Text("svn delete "),
         svn + "delete <text>": SCText("svn delete %(text)s"),\
         svn + "(diff|difference|differentiate)": Text("svn diff "),
