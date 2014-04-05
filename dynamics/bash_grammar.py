@@ -65,6 +65,8 @@ rules = MappingRule(
         "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "ifconfig": Text("ifconfig "),
+        "(iptables|I P tables) list": Text("iptables -L"),
+        "(iptables|I P tables) flush": Text("iptables -F"),
         "jobs": Text("jobs "),
         "kill": Text("kill "),
         "kill (hard|[dash]9)": Text("kill -9 "),
