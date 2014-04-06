@@ -286,8 +286,12 @@ abbreviationMap = {
     "session aidee": "sid",  # "session id" didn't work for some reason.
     "source": "src",
     "(special|specify|specific|specification)": "spec",
+    "standard": "std",
+    "standard in": "stdin",
+    "standard out": "stdout",
     "string": "str",
     "(synchronize|synchronous)": "sync",
+    "system": "sys",
     "utility": "util",
     "utilities": "utils",
     "temporary": "tmp",
