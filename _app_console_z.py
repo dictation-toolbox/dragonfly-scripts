@@ -1,4 +1,4 @@
-"""A command module for Dragonfly, for controlling Console2.
+"""A command module for Dragonfly, for controlling ConsoleZ.
 
 -----------------------------------------------------------------------------
 Licensed under the LGPL3.
@@ -62,7 +62,7 @@ rules = MappingRule (
 )
 
 context = AppContext(executable="console")
-grammar = Grammar("ZZZ Console2", context=context)
+grammar = Grammar("ConsoleZ", context=context)
 grammar.add_rule(rules)
 grammar.load()
 
