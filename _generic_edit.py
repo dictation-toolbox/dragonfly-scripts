@@ -340,7 +340,7 @@ reservedWord = {
     "minus": "minus",
     "semi-colon": "semi-colon",
     "hyphen": "hyphen",
-    "tripple": "tripple"
+    "triple": "triple"
 }
 
 
