@@ -318,6 +318,7 @@ reservedWord = {
     "tab": "tab",
     "backspace": "backspace",
     "delete": "delete",
+    "enter": "enter",
     "paste": "paste",
     "copy": "copy",
     "cut": "cut",
