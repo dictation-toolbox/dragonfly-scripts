@@ -7,16 +7,22 @@ Licensed under the LGPL3.
 
 from dragonfly import Config, Section, Item, AppContext, Grammar, MappingRule, IntegerRef, Dictation, Choice, Key, Text
 
-config = Config("HipChat")
-config.usernames = Section("Username Mappings")
-config.usernames.map = Item(
+import lib.config
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    from proxy_nicknames import AppContext as NixAppContext
+
+hipchat_config = Config("HipChat")
+hipchat_config.usernames = Section("Username Mappings")
+hipchat_config.usernames.map = Item(
     {
         "All": "all",
         "Here": "here"
     }
 )
 
-config.load()
+hipchat_config.load()
 
 class NavigationRule(MappingRule):
     mapping = {
@@ -42,11 +48,15 @@ class ChatRule(MappingRule):
     }
 
     extras = [
-        Choice("user", config.usernames.map),
+        Choice("user", hipchat_config.usernames.map),
     ]
 
+context = None
+if config.get("aenea.enabled", False) == True:
+    context = NixAppContext(executable="hipchat")
+else:
+    context = AppContext(executable="hipchat")
 
-context = AppContext(executable="hipchat")
 grammar = Grammar("hipchat_general", context=context)
 grammar.add_rule(NavigationRule())
 grammar.add_rule(ChatRule())
