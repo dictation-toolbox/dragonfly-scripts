@@ -26,9 +26,9 @@ hipchat_config.load()
 
 class NavigationRule(MappingRule):
     mapping = {
-        "move up [<n>]":                                    Key("ctrl:down, shift:down, tab:%(n)d, shift:up, ctrl:up"),
-        "move down [<n>]":                                  Key("ctrl:down, tab:%(n)d, ctrl:up"),
-        "close tab":                                        Key("ctrl:down, f4, ctrl:up"),
+        "move up [<n>]":                                    Key("cs-tab:%(n)d"),
+        "move down [<n>]":                                  Key("c-tab:%(n)d"),
+        "close tab":                                        Key("c-w"),
         "(join room | private message) <room>":             Key("c-j/25") + Text("%(room)s") + Key("enter"),
     }
 
