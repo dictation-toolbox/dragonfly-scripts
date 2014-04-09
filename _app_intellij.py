@@ -16,35 +16,35 @@ if config.get("aenea.enabled", False) == True:
 
 mapping = {
     # Code execution.
-    "run app": Key("shift:down, f10, shift:up"),
-    "re-run app": Key("ctrl:down, f5, ctrl:up"),
-    "run test": Key("ctrl:down, shift:down, f10, shift:up, ctrl:up"),
-    "stop running": Key("ctrl:down, f2, ctrl:up"),
+    "run app": Key("s-f10"),
+    "re-run app": Key("c-f5"),
+    "run test": Key("cs-f10"),
+    "stop running": Key("c-f2"),
 
     # Code navigation.
-    "navigate to class <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30") + Key("enter"),
-    "navigate to class chooser <text>": Key("c-n/25") + Function(lib.format.pascal_case_text) + Pause("30"),
-    "navigate to file <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
-    "navigate to file chooser <text>": Key("ctrl:down, shift:down, n, shift:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
-    "navigate to symbol <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
-    "navigate to symbol chooser <text>": Key("ctrl:down, alt:down, shift:down, n, shift:up, alt:up, ctrl:up") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
+    "navigate to class <text>": Key("c-n") + Pause("30") + Function(lib.format.pascal_case_text) + Pause("30") + Key("enter"),
+    "navigate to class chooser <text>": Key("c-n") + Pause("30") + Function(lib.format.pascal_case_text) + Pause("30"),
+    "navigate to file <text>": Key("cs-n") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
+    "navigate to file chooser <text>": Key("cs-n") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
+    "navigate to symbol <text>": Key("cas-n") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30") + Key("enter"),
+    "navigate to symbol chooser <text>": Key("cas-n") + Pause("30") + Function(lib.format.camel_case_text) + Pause("30"),
     "go to declaration": Key("c-b"),
-    "go to implementation": Key("ctrl:down, alt:down, b, alt:up, ctrl:up"),
+    "go to implementation": Key("ca-b"),
     "go to super": Key("c-u"),
-    "go to (class|test)": Key("ctrl:down, shift:down, t, shift:up, ctrl:up"),
-    "go back": Key("ctrl:down, alt:down, left, alt:up, ctrl:up"),
+    "go to (class|test)": Key("cs-t"),
+    "go back": Key("ca-left"),
 
     # Project settings.
     "go to project window": Key("a-1"),
     "go to module settings": Key("f4"),
-    "go to [project] settings": Key("ctrl:down, alt:down, s, alt:up, ctrl:up"),
-    "synchronize files": Key("ctrl:down, alt:down, y, alt:up, ctrl:up"),
+    "go to [project] settings": Key("ca-s"),
+    "synchronize files": Key("ca-y"),
 
     # Terminal.
     "run terminal": Key("a-f12"),
 
     # Search.
-    "find in path": Key("ctrl:down, shift:down, f, shift:up, ctrl:up"),
+    "find in path": Key("cs-f"),
     "find usages": Key("a-f7"),
 
     # Edit.
@@ -82,9 +82,9 @@ mapping = {
     "(refactor|re-factor) (in line|inline)": Key("ca-n"),
 
     # Ruby specific.
-    "run rake [task]": Key("ctrl:down, alt:down, r, alt:up, ctrl:up"),
-    "run rake spec": Key("ctrl:down, alt:down, r, alt:up, ctrl:up") + Pause("25") + Text("spec") + Key("enter") + Pause("25") + Key("enter"),
-    "run rails generator": Key("ctrl:down, alt:down, g, alt:up, ctrl:up"),
+    "run rake [task]": Key("ca-r"),
+    "run rake spec": Key("ca-r") + Pause("25") + Text("spec") + Key("enter") + Pause("25") + Key("enter"),
+    "run rails generator": Key("ca-g"),
 
     # Custom key mappings.
     "(run SSH session|run SSH console|run remote terminal|run remote console)": Key("a-f11/25, enter"),
@@ -93,7 +93,7 @@ mapping = {
 context = None
 if config.get("aenea.enabled", False) == True:
     mapping.update({
-        "go back": Key("alt:down, shift:down, left, shift:up, alt:up"),
+        "go back": Key("as-left"),
         "find usages": Key("as-7"),
     })
 
