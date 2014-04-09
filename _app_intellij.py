@@ -9,8 +9,12 @@ from dragonfly import AppContext, Grammar, MappingRule, Dictation, Key, Pause, F
 
 import lib.format
 
-class CommandRule(MappingRule):
-  mapping = {
+config = lib.config.get_config()
+if config.get("aenea.enabled", False) == True:
+    from proxy_nicknames import Key, Text  # @Reimport
+    from proxy_nicknames import AppContext as NixAppContext
+
+mapping = {
     # Code execution.
     "run app": Key("shift:down, f10, shift:up"),
     "re-run app": Key("ctrl:down, f5, ctrl:up"),
@@ -84,18 +88,33 @@ class CommandRule(MappingRule):
 
     # Custom key mappings.
     "(run SSH session|run SSH console|run remote terminal|run remote console)": Key("a-f11/25, enter"),
-  }
+    }
 
-  extras = [
-    Dictation("text"),
-    IntegerRef("n", 1, 50000)
-  ]
+context = None
+if config.get("aenea.enabled", False) == True:
+    mapping.update({
+        "go back": Key("alt:down, shift:down, left, shift:up, alt:up"),
+        "find usages": Key("as-7"),
+    })
 
-idea_context = AppContext(executable="idea")
-rubymine_context = AppContext(executable="rubymine")
-grammar = Grammar("idea_general", context=(idea_context | rubymine_context))
+    idea_context = NixAppContext(executable="java", title="IntelliJ")
+    rubymine_context = NixAppContext(executable="java", title="RubyMine")
+    context = idea_context | rubymine_context
+else:
+    idea_context = AppContext(executable="idea")
+    rubymine_context = AppContext(executable="rubymine")
+    context = idea_context | rubymine_context
+
+class CommandRule(MappingRule):
+    mapping = mapping
+
+    extras = [
+        Dictation("text"),
+        IntegerRef("n", 1, 50000)
+    ]
+
+grammar = Grammar("idea_general", context=context)
 grammar.add_rule(CommandRule())
-#grammar.add_rule(NavigationRule())
 grammar.load()
 
 # Unload function which will be called by natlink at unload time.
