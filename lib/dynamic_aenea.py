@@ -48,8 +48,6 @@ class Key(ProxyBase):
         self._dragonfly_action = dragonfly.Key(spec, static)
 
     def copy(self):
-        print "Copying Key"
-
         new_copy = Key(self._spec, self._static)
         new_copy._aenea_action = self._aenea_action.copy()
         new_copy._dragonfly_action = self._dragonfly_action.copy()
@@ -68,8 +66,6 @@ class Text(ProxyBase):
         self._dragonfly_action = dragonfly.Text(spec, static, pause, autofmt)
 
     def copy(self):
-        print "Copying Text"
-
         new_copy = Text(self._spec, self._static, self._pause, self._autofmt)
         new_copy._aenea_action = self._aenea_action.copy()
         new_copy._dragonfly_action = self._dragonfly_action.copy()
