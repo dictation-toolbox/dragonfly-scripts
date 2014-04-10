@@ -14,30 +14,73 @@ class ProxyBase:
         #
         # Finally, dragonfly.ActionBase's implementation (the one we're ultimately delegating to) returns a new
         # object with the chained actions, so we need to store that newly created action if we appear on the LHS
-        # of __add__.  We return `self` so if our action ends up on the RHS of an __add__ call, we maintain the
-        # proxy semantics for when the rule is actually executed.
-        self._aenea_action = self._aenea_action.__add__(other)
-        self._dragonfly_action = self._dragonfly_action.__add__(other)
+        # of __add__.  We return a copy so if our action ends up being added with other actions multiple times,
+        # each addition is independent and idempotent.  I.e., this operation should not modify the callee.
+        new_copy = self.copy()
 
-        return self
+        # We don't need to chain together proxy actions since new_copy itself will proxy both actions.  So, if we
+        # see that this proxy is being added to another proxy, unroll the other one to its composite actions and chain
+        # those together.  Otherwise, there's multiple branch points for the Aenea enabled check (one at each step in
+        # the chain rather than at the starting link) and there's unnecessary objection copying & duplication due
+        # to dragonfly.ActionBase also making copies when __add__ is called.
+        if hasattr(other, "_aenea_action"):
+            new_copy._aenea_action = self._aenea_action.__add__(other._aenea_action)
+            new_copy._dragonfly_action = self._dragonfly_action.__add__(other._dragonfly_action)
+        else:
+            new_copy._aenea_action = self._aenea_action.__add__(other)
+            new_copy._dragonfly_action = self._dragonfly_action.__add__(other)
+
+        return new_copy
 
     def __getattr__(self, attribute):
+        print "\n\nCalling %s" % attribute
+        import traceback, sys
+
+        if attribute == "__deepcopy__":
+            traceback.print_stack(file=sys.stdout)
+
         if config.get("aenea.enabled", False) == True:
             return getattr(self.__dict__["_aenea_action"], attribute)
         else:
             return getattr(self.__dict__["_dragonfly_action"], attribute)
 
+
 class Key(ProxyBase):
     def __init__(self, spec=None, static=False):
+        self._spec = spec
+        self._static = static
+
         self._aenea_action = proxy_actions.ProxyKey(spec, static)
         self._dragonfly_action = dragonfly.Key(spec, static)
 
+    def copy(self):
+        print "Copying Key"
+
+        new_copy = Key(self._spec, self._static)
+        new_copy._aenea_action = self._aenea_action.copy()
+        new_copy._dragonfly_action = self._dragonfly_action.copy()
+
+        return new_copy
+
+
 class Text(ProxyBase):
     def __init__(self, spec=None, static=False, pause=0.02, autofmt=False):
+        self._spec = spec
+        self._static = static
+        self._pause = pause
+        self._autofmt = autofmt
+
         self._aenea_action = proxy_actions.ProxyText(spec, static)
         self._dragonfly_action = dragonfly.Text(spec, static, pause, autofmt)
 
+    def copy(self):
+        print "Copying Text"
 
+        new_copy = Text(self._spec, self._static, self._pause, self._autofmt)
+        new_copy._aenea_action = self._aenea_action.copy()
+        new_copy._dragonfly_action = self._dragonfly_action.copy()
+
+        return new_copy
 
 # This is a gigantic hack.  dragonfly.ActionBase performs an `isinstance` check on the supplied action to make
 # sure it is indeed an instance of dragonfly.ActionBase.  Our proxy action implementations do not inherit from
