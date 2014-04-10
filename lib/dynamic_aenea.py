@@ -33,12 +33,6 @@ class ProxyBase:
         return new_copy
 
     def __getattr__(self, attribute):
-        print "\n\nCalling %s" % attribute
-        import traceback, sys
-
-        if attribute == "__deepcopy__":
-            traceback.print_stack(file=sys.stdout)
-
         if config.get("aenea.enabled", False) == True:
             return getattr(self.__dict__["_aenea_action"], attribute)
         else:
