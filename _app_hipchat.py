@@ -5,12 +5,16 @@ Licensed under the LGPL3.
 
 """
 
-from dragonfly import Config, Section, Item, AppContext, Grammar, MappingRule, IntegerRef, Dictation, Choice, Key, Text
+from dragonfly import Config, Section, Item, AppContext, Grammar, MappingRule, IntegerRef, Dictation, Choice
+
+from lib.dynamic_aenea import (
+    Key,
+    Text,
+)
 
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
     from proxy_nicknames import AppContext as NixAppContext
 
 hipchat_config = Config("HipChat")

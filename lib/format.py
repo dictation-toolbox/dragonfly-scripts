@@ -1,16 +1,14 @@
 import re
 
 from dragonfly import (
-    Key,
-    Text,  # @UnusedImport
     Clipboard,
     Pause,
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
+from lib.dynamic_aenea import (
+    Key,
+    Text,
+)
 
 
 letterMap = {

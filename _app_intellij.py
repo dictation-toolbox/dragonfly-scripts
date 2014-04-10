@@ -5,13 +5,17 @@ Licensed under the LGPL3.
 
 """
 
-from dragonfly import AppContext, Grammar, MappingRule, Dictation, Key, Pause, Function, IntegerRef, Text
+from dragonfly import AppContext, Grammar, MappingRule, Dictation, Pause, Function, IntegerRef
+
+from lib.dynamic_aenea import (
+    Key,
+    Text,
+)
 
 import lib.format
 
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
     from proxy_nicknames import AppContext as NixAppContext
 
 mapping = {

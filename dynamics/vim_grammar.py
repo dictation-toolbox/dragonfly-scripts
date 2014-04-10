@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     Function,
     MappingRule,
     IntegerRef,
@@ -8,10 +6,13 @@ from dragonfly import (
     Dictation
 )
 
+from lib.dynamic_aenea import (
+    Key,
+)
+
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key  # , Text  # @Reimport
     import aenea
 
 import lib.sound as sound

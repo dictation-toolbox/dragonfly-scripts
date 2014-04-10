@@ -9,13 +9,15 @@ from dragonfly import (
     AppContext,
     IntegerRef,
     Grammar,
-    Key,  # @UnusedImport
+)
+
+from lib.dynamic_aenea import (
+    Key,
 )
 
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key  # @Reimport
     from proxy_nicknames import AppContext as NixAppContext
 
 

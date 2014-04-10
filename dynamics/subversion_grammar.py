@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     CompoundRule,
     MappingRule,
     RuleRef,
@@ -11,10 +9,14 @@ from dragonfly import (
     Dictation
 )
 
+from lib.dynamic_aenea import (
+    Key,
+    Text,
+)
+
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
     import aenea
 
 from lib.text import SCText
