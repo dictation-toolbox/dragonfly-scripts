@@ -8,6 +8,7 @@ Licensed under the LGPL3.
 from dragonfly import Config, Section, Item, AppContext, Grammar, MappingRule, IntegerRef, Dictation, Choice
 
 from lib.dynamic_aenea import (
+    DynamicContext,
     Key,
     Text,
 )
@@ -56,13 +57,11 @@ class ChatRule(MappingRule):
         Choice("user", hipchat_config.usernames.map),
     ]
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = NixAppContext(executable="hipchat")
-else:
-    context = AppContext(executable="hipchat")
 
-grammar = Grammar("hipchat_general", context=context)
+nixContext = NixAppContext(executable="hipchat")
+winContext = AppContext(executable="hipchat")
+
+grammar = Grammar("hipchat_general", context=DynamicContext(winContext, nixContext))
 grammar.add_rule(NavigationRule())
 grammar.add_rule(ChatRule())
 grammar.load()

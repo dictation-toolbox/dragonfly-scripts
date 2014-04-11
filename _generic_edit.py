@@ -28,6 +28,7 @@ from dragonfly import (
 )
 
 from lib.dynamic_aenea import (
+    GlobalDynamicContext,
     Key,
     Text,
 )
@@ -43,8 +44,6 @@ if not 'semicolon' in typeables:
 
 import lib.config
 config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    import aenea
 
 import lib.sound as sound
 from lib.format import (
@@ -527,10 +526,7 @@ class RepeatRule(CompoundRule):
                 action.execute()
         release.execute()
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("Generic edit", context=context)
+grammar = Grammar("Generic edit", context=GlobalDynamicContext())
 grammar.add_rule(RepeatRule())  # Add the top-level rule.
 grammar.load()  # Load the grammar.
 

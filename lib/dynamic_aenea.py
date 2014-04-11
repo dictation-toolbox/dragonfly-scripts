@@ -1,5 +1,41 @@
-import dragonfly, proxy_actions, lib.config
+import aenea, dragonfly, proxy_actions, lib.config
 config = lib.config.get_config()
+
+class DynamicContext(dragonfly.Context):
+    """A context which matches commands against a configured Aenea context or a Dragonfly context depending
+    upon whether Aenea is currently enabled."""
+    def __init__(self, dragonfly_context=None, aenea_context=None):
+        self._dragonfly_context = dragonfly_context
+
+        if aenea_context is not None and aenea_context != aenea.global_context:
+            # If an Aenea context is provided, make sure it's constrained to the Aenea command window.  We  place
+            # that at the front of the list so it can short-circuit any calls to the Aenea server if the command
+            # window is not in focus.  If the command window is already in the context list, it'll simply be checked
+            # twice, which is harmless.
+            self._aenea_context = aenea.global_context
+        else:
+            self._aenea_context = aenea_context
+
+    def matches(self, executable, title, handle):
+        if config.get("aenea.enabled", False) == True:
+            if self._aenea_context:
+                return self._aenea_context.matches(executable, title, handle)
+            else:
+                # If Aenea is enabled but no context was registered, assume the command is not to be handle by Aenea.
+                return False
+        else:
+            if self._dragonfly_context:
+                return self._dragonfly_context.matches(executable, title, handle)
+            else:
+                # If Aenea is disabled and no context is configured, then the command should apply to all contents,
+                # per the invariant for dragonfly.grammar_base.Grammar.
+                return True
+
+class GlobalDynamicContext(DynamicContext):
+    """A dynamic context implementation that allows commands to be processed in any remote application if Aenea is
+    enabled and any local application if Aenea is disabled."""
+    def __init__(self):
+        DynamicContext.__init__(self, None, aenea.global_context)
 
 class ProxyBase:
     """Base class for dynamic proxy actions. It wraps both Aenea's proxy action implementation as well

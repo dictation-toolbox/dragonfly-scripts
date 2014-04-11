@@ -13,6 +13,7 @@ from dragonfly import (
 )
 
 from lib.dynamic_aenea import (
+    DynamicContext,
     Key,
 )
 
@@ -64,22 +65,23 @@ if config.get("aenea.enabled", False) == True:
         # Linux uses alt-key.
         "go to tab [<n>]": Key("a-%(n)d"),  # Not supported by Opera.
     })
-    gt = aenea.global_context
-    nixContext1 = NixAppContext(executable="firefox", title="Firefox") & gt
-    nixContext2 = NixAppContext(executable="chrome", title="Chrome") & gt
-    nixContext3 = NixAppContext(executable="chrome", title="Chromium") & gt
-    nixContext4 = NixAppContext(executable="opera", title="Opera") & gt
-    context = nixContext1 | nixContext2 | nixContext3 | nixContext4
 else:
     mapping.update({
         # Windows uses ctrl-key.
         "go to tab [<n>]": Key("c-%(n)d"),  # Not supported by Opera.
     })
-    winContext1 = AppContext(executable="firefox", title="Firefox")
-    winContext2 = AppContext(executable="chrome", title="Chrome")
-    winContext3 = AppContext(executable="chrome", title="Chromium")
-    winContext4 = AppContext(executable="opera", title="Opera")
-    context = winContext1 | winContext2 | winContext3 | winContext4
+
+nixContext1 = NixAppContext(executable="firefox", title="Firefox")
+nixContext2 = NixAppContext(executable="chrome", title="Chrome")
+nixContext3 = NixAppContext(executable="chrome", title="Chromium")
+nixContext4 = NixAppContext(executable="opera", title="Opera")
+nixContext = nixContext1 | nixContext2 | nixContext3 | nixContext4
+
+winContext1 = AppContext(executable="firefox", title="Firefox")
+winContext2 = AppContext(executable="chrome", title="Chrome")
+winContext3 = AppContext(executable="chrome", title="Chromium")
+winContext4 = AppContext(executable="opera", title="Opera")
+winContext = winContext1 | winContext2 | winContext3 | winContext4
 
 
 rules = MappingRule(
@@ -93,7 +95,7 @@ rules = MappingRule(
 )
 
 
-grammar = Grammar("FF, Chrome, and Opera", context=context)
+grammar = Grammar("FF, Chrome, and Opera", context=DynamicContext(winContext, nixContext))
 grammar.add_rule(rules)
 grammar.load()
 
