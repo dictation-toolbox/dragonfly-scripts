@@ -9,15 +9,10 @@ from dragonfly import (
 )
 
 from lib.dynamic_aenea import (
+    GlobalDynamicContext,
     Key,
     Text,
 )
-
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    import aenea
-
 
 class SeriesMappingRule(CompoundRule):
 
@@ -81,10 +76,7 @@ series_rule = SeriesMappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("Programming help", context=context)
+grammar = Grammar("Programming help", context=GlobalDynamicContext())
 grammar.add_rule(series_rule)
 grammar.load()
 
