@@ -1,6 +1,9 @@
 import aenea, dragonfly, proxy_actions, lib.config
 config = lib.config.get_config()
 
+def should_send_to_aenea():
+    return config.get("aenea.enabled", False) == True
+
 class DynamicContext(dragonfly.Context):
     """A context which matches commands against a configured Aenea context or a Dragonfly context depending
     upon whether Aenea is currently enabled."""
@@ -18,7 +21,7 @@ class DynamicContext(dragonfly.Context):
             self._aenea_context = aenea_context
 
     def matches(self, executable, title, handle):
-        if config.get("aenea.enabled", False) == True:
+        if should_send_to_aenea():
             if self._aenea_context:
                 return self._aenea_context.matches(executable, title, handle)
 
@@ -77,7 +80,7 @@ class ProxyBase:
         return new_copy
 
     def __getattr__(self, attribute):
-        if config.get("aenea.enabled", False) == True:
+        if should_send_to_aenea():
             return getattr(self.__dict__["_aenea_action"], attribute)
         else:
             return getattr(self.__dict__["_dragonfly_action"], attribute)
