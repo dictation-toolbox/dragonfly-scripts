@@ -76,7 +76,7 @@ rules = MappingRule(
 
 # This is a Linux-only application, so only enable the grammar if Aenea is enabled.
 if config.get("aenea.enabled", False) == True:
-    context = NixAppContext(executable="terminator") & aenea.global_context
+    context = aenea.global_context & NixAppContext(executable="terminator")
 
     context = None
     grammar = Grammar("Terminator general", context=context)
