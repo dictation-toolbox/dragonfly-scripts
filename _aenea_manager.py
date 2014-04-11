@@ -13,16 +13,26 @@ config = lib.config.get_config()
 import lib.sound as sound
 
 def enable_aenea():
-    config["aenea.enabled"] = True
+    if config.get("aenea.enabled", False) == False:
+        config["aenea.enabled"] = True
 
-    print "\n==> Enabled aenea"
-    sound.play(sound.SND_ACTIVATE)
+        print "\n==> Enabled aenea"
+        sound.play(sound.SND_ACTIVATE)
+    else:
+        print "\nAenea already enabled"
+        sound.play(sound.SND_MESSAGE)
+
+
 
 def disable_aenea():
-    config["aenea.enabled"] = False
+    if config.get("aenea.enabled", False) == True:
+        config["aenea.enabled"] = False
 
-    print "\n==> Disabled aenea"
-    sound.play(sound.SND_DEACTIVATE)
+        print "\n==> Disabled aenea"
+        sound.play(sound.SND_DEACTIVATE)
+    else:
+        print "\nAeena already disabled"
+        sound.play(sound.SND_MESSAGE)
 
 def show_aenea_status():
     if config.get("aenea.enabled", False) == True:
