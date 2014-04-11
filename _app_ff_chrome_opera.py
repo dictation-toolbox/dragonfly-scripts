@@ -13,6 +13,7 @@ from dragonfly import (
 )
 
 from lib.dynamic_aenea import (
+    DynamicAction,
     DynamicContext,
     Key,
 )
@@ -20,7 +21,6 @@ from lib.dynamic_aenea import (
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    import aenea
     from proxy_nicknames import AppContext as NixAppContext
 
 
@@ -56,20 +56,9 @@ mapping = {
    "close find": Key("escape"),
    "find previous [<n>]": Key("s-f3/10:%(n)d"),
    "find next [<n>]": Key("f3/10:%(n)d"),
+
+   "go to tab [<n>]": DynamicAction(Key("c-%(n)d"), Key("a-%(n)d")) # Not supported by Opera.
 }
-
-
-context = None
-if config.get("aenea.enabled", False) == True:
-    mapping.update({
-        # Linux uses alt-key.
-        "go to tab [<n>]": Key("a-%(n)d"),  # Not supported by Opera.
-    })
-else:
-    mapping.update({
-        # Windows uses ctrl-key.
-        "go to tab [<n>]": Key("c-%(n)d"),  # Not supported by Opera.
-    })
 
 nixContext1 = NixAppContext(executable="firefox", title="Firefox")
 nixContext2 = NixAppContext(executable="chrome", title="Chrome")

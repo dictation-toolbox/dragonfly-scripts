@@ -8,6 +8,7 @@ Licensed under the LGPL3.
 from dragonfly import AppContext, Grammar, MappingRule, Dictation, Pause, Function, IntegerRef
 
 from lib.dynamic_aenea import (
+    DynamicAction,
     DynamicContext,
     Key,
     Text,
@@ -37,7 +38,7 @@ mapping = {
     "go to implementation": Key("ca-b"),
     "go to super": Key("c-u"),
     "go to (class|test)": Key("cs-t"),
-    "go back": Key("ca-left"),
+    "go back": DynamicAction(Key("ca-left"), Key("as-left")),
 
     # Project settings.
     "go to project window": Key("a-1"),
@@ -50,7 +51,7 @@ mapping = {
 
     # Search.
     "find in path": Key("cs-f"),
-    "find usages": Key("a-f7"),
+    "find usages": DynamicAction(Key("a-f7"), Key("as-7")),
 
     # Edit.
     "save [file|all]": Key("c-s"),
@@ -93,13 +94,7 @@ mapping = {
 
     # Custom key mappings.
     "(run SSH session|run SSH console|run remote terminal|run remote console)": Key("a-f11/25, enter"),
-    }
-
-if config.get("aenea.enabled", False) == True:
-    mapping.update({
-        "go back": Key("as-left"),
-        "find usages": Key("as-7"),
-    })
+}
 
 idea_context = NixAppContext(executable="java", title="IntelliJ")
 rubymine_context = NixAppContext(executable="java", title="RubyMine")

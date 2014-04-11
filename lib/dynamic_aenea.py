@@ -119,6 +119,16 @@ class Text(ProxyBase):
 
         return new_copy
 
+class DynamicAction(ProxyBase):
+    def __init__(self, dragonfly_action, aenea_action):
+        self._aenea_action = aenea_action
+        self._dragonfly_action = dragonfly_action
+
+    def copy(self):
+        new_copy = DynamicAction(self._dragonfly_action.copy(), self._aenea_action.copy())
+
+        return new_copy
+
 # This is a gigantic hack.  dragonfly.ActionBase performs an `isinstance` check on the supplied action to make
 # sure it is indeed an instance of dragonfly.ActionBase.  Our proxy action implementations do not inherit from
 # dragonfly.ActionBase because we would have to override every method in the inheritance hierarchy rather than
