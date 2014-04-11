@@ -2,23 +2,23 @@ import aenea, dragonfly, proxy_actions, lib.config
 config = lib.config.get_config()
 
 def should_send_to_aenea():
-    return config.get("aenea.enabled", False) == True
+    """Utility function for determining whether commands should be sent to Aenea.  Commands will be sent if
+    Aenea is enabled and the Aenea global context application (the one capturing text on behalf of Aenea) is
+    the foreground window."""
+
+    if config.get("aenea.enabled", False) == True:
+        win = dragonfly.Window.get_foreground()
+
+        return aenea.global_context.matches(win.executable, win.title, win.handle)
+    else:
+        return False
 
 class DynamicContext(dragonfly.Context):
     """A context which matches commands against a configured Aenea context or a Dragonfly context depending
     upon whether Aenea is currently enabled."""
     def __init__(self, dragonfly_context=None, aenea_context=None):
         self._dragonfly_context = dragonfly_context
-
-        if aenea_context is not None and aenea_context != aenea.global_context:
-            # If an Aenea context is provided, make sure it's constrained to the Aenea command window.  We  place
-            # that at the front of the list so it can short-circuit any calls to the Aenea server if the command
-            # window is not in focus.  If the command window is already in the context list, it'll simply be checked
-            # twice, which is harmless.
-            self._aenea_context = aenea.global_context
-
-        else:
-            self._aenea_context = aenea_context
+        self._aenea_context = aenea_context
 
     def matches(self, executable, title, handle):
         if should_send_to_aenea():
