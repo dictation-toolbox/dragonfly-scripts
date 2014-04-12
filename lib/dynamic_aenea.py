@@ -47,11 +47,17 @@ class GlobalDynamicContext(DynamicContext):
         DynamicContext.__init__(self, None, aenea.global_context)
 
 
-
-class ProxyBase:
+class DynamicAction:
     """Base class for dynamic proxy actions. It wraps both Aenea's proxy action implementation as well
     as the Dragonfly default.  The proxy will route calls to one of the two wrapped action classes
     depending on whether Aenea is currently enabled."""
+
+    def __init__(self, dragonfly_action, aenea_action):
+        self._aenea_action = aenea_action
+        self._dragonfly_action = dragonfly_action
+
+    def copy(self):
+        return DynamicAction(self._dragonfly_action.copy(), self._aenea_action.copy())
 
     def __add__(self, other):
         # __add__ is a special case.  Python won't ever call __getattr__ for __add__ and even if it did, we would
@@ -86,48 +92,16 @@ class ProxyBase:
             return getattr(self.__dict__["_dragonfly_action"], attribute)
 
 
-class Key(ProxyBase):
+class Key(DynamicAction):
     def __init__(self, spec=None, static=False):
-        self._spec = spec
-        self._static = static
-
-        self._aenea_action = proxy_actions.ProxyKey(spec, static)
-        self._dragonfly_action = dragonfly.Key(spec, static)
-
-    def copy(self):
-        new_copy = Key(self._spec, self._static)
-        new_copy._aenea_action = self._aenea_action.copy()
-        new_copy._dragonfly_action = self._dragonfly_action.copy()
-
-        return new_copy
+        DynamicAction.__init__(self, dragonfly.Key(spec, static), proxy_actions.ProxyKey(spec, static))
 
 
-class Text(ProxyBase):
+class Text(DynamicAction):
     def __init__(self, spec=None, static=False, pause=0.02, autofmt=False):
-        self._spec = spec
-        self._static = static
-        self._pause = pause
-        self._autofmt = autofmt
+        DynamicAction.__init__(self, dragonfly.Text(spec, static, pause, autofmt), proxy_actions.ProxyText(spec, static))
 
-        self._aenea_action = proxy_actions.ProxyText(spec, static)
-        self._dragonfly_action = dragonfly.Text(spec, static, pause, autofmt)
 
-    def copy(self):
-        new_copy = Text(self._spec, self._static, self._pause, self._autofmt)
-        new_copy._aenea_action = self._aenea_action.copy()
-        new_copy._dragonfly_action = self._dragonfly_action.copy()
-
-        return new_copy
-
-class DynamicAction(ProxyBase):
-    def __init__(self, dragonfly_action, aenea_action):
-        self._aenea_action = aenea_action
-        self._dragonfly_action = dragonfly_action
-
-    def copy(self):
-        new_copy = DynamicAction(self._dragonfly_action.copy(), self._aenea_action.copy())
-
-        return new_copy
 
 # This is a gigantic hack.  dragonfly.ActionBase performs an `isinstance` check on the supplied action to make
 # sure it is indeed an instance of dragonfly.ActionBase.  Our proxy action implementations do not inherit from
@@ -140,7 +114,7 @@ import __builtin__
 
 if not hasattr(__builtin__, "isinstance_orig"):
     def _isinstance(instance, klass):
-        if klass is dragonfly.ActionBase and isinstance_orig(instance, ProxyBase):
+        if klass is dragonfly.ActionBase and isinstance_orig(instance, DynamicAction):
             return True
 
         return isinstance_orig(instance, klass)
