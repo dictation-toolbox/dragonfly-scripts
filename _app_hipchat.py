@@ -13,10 +13,7 @@ from lib.dynamic_aenea import (
     Text,
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import AppContext as NixAppContext
+from proxy_nicknames import AppContext as NixAppContext
 
 hipchat_config = Config("HipChat")
 hipchat_config.usernames = Section("Username Mappings")
