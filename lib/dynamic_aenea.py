@@ -64,26 +64,22 @@ class DynamicAction:
         # want to override it.  Unlike most of the calls we proxy, which are called when the rule is executed, __add__
         # is called when the rule is constructed.  Since the Aenea enabled state can change after rule construction,
         # we have to execute the call on both actions so they're in the proper state for later on.
-        #
-        # Finally, dragonfly.ActionBase's implementation (the one we're ultimately delegating to) returns a new
-        # object with the chained actions, so we need to store that newly created action if we appear on the LHS
-        # of __add__.  We return a copy so if our action ends up being added with other actions multiple times,
-        # each addition is independent and idempotent.  I.e., this operation should not modify the callee.
-        new_copy = self.copy()
 
-        # We don't need to chain together proxy actions since new_copy itself will proxy both actions.  So, if we
+
+        # We don't need to chain together proxy actions since the object we return will proxy both actions.  So, if we
         # see that this proxy is being added to another proxy, unroll the other one to its composite actions and chain
         # those together.  Otherwise, there's multiple branch points for the Aenea enabled check (one at each step in
         # the chain rather than at the starting link) and there's unnecessary objection copying & duplication due
         # to dragonfly.ActionBase also making copies when __add__ is called.
-        if hasattr(other, "_aenea_action"):
-            new_copy._aenea_action = self._aenea_action.__add__(other._aenea_action)
-            new_copy._dragonfly_action = self._dragonfly_action.__add__(other._dragonfly_action)
-        else:
-            new_copy._aenea_action = self._aenea_action.__add__(other)
-            new_copy._dragonfly_action = self._dragonfly_action.__add__(other)
 
-        return new_copy
+        if hasattr(other, "_aenea_action"):
+            new_copy_aenea_action = self._aenea_action.__add__(other._aenea_action)
+            new_copy_dragonfly_action = self._dragonfly_action.__add__(other._dragonfly_action)
+        else:
+            new_copy_aenea_action = self._aenea_action.__add__(other)
+            new_copy_dragonfly_action = self._dragonfly_action.__add__(other)
+
+        return DynamicAction(new_copy_dragonfly_action, new_copy_aenea_action)
 
     def __getattr__(self, attribute):
         if should_send_to_aenea():
