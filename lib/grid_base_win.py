@@ -6,12 +6,8 @@ import time
 from dragonfly import (
     Rectangle,
     Mouse,
-)
-
-from lib.dynamic_aenea import (
     Key,
 )
-
 
 class GridConfig:
     def __init__(self, positionX=0, positionY=0, width=1024, height=768,
