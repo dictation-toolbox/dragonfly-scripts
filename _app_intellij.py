@@ -5,14 +5,18 @@ Licensed under the LGPL3.
 
 """
 
-from dragonfly import AppContext, Grammar, MappingRule, Dictation, Key, Pause, Function, IntegerRef, Text
+from dragonfly import AppContext, Grammar, MappingRule, Dictation, Pause, Function, IntegerRef
+
+from lib.dynamic_aenea import (
+    DynamicAction,
+    DynamicContext,
+    Key,
+    Text,
+)
 
 import lib.format
 
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
-    from proxy_nicknames import AppContext as NixAppContext
+from proxy_nicknames import AppContext as NixAppContext
 
 mapping = {
     # Code execution.
@@ -32,7 +36,7 @@ mapping = {
     "go to implementation": Key("ca-b"),
     "go to super": Key("c-u"),
     "go to (class|test)": Key("cs-t"),
-    "go back": Key("ca-left"),
+    "go back": DynamicAction(Key("ca-left"), Key("as-left")),
 
     # Project settings.
     "go to project window": Key("a-1"),
@@ -45,7 +49,7 @@ mapping = {
 
     # Search.
     "find in path": Key("cs-f"),
-    "find usages": Key("a-f7"),
+    "find usages": DynamicAction(Key("a-f7"), Key("as-7")),
 
     # Edit.
     "save [file|all]": Key("c-s"),
@@ -88,22 +92,15 @@ mapping = {
 
     # Custom key mappings.
     "(run SSH session|run SSH console|run remote terminal|run remote console)": Key("a-f11/25, enter"),
-    }
+}
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    mapping.update({
-        "go back": Key("as-left"),
-        "find usages": Key("as-7"),
-    })
+idea_context = NixAppContext(executable="java", title="IntelliJ")
+rubymine_context = NixAppContext(executable="java", title="RubyMine")
+nixContext = idea_context | rubymine_context
 
-    idea_context = NixAppContext(executable="java", title="IntelliJ")
-    rubymine_context = NixAppContext(executable="java", title="RubyMine")
-    context = idea_context | rubymine_context
-else:
-    idea_context = AppContext(executable="idea")
-    rubymine_context = AppContext(executable="rubymine")
-    context = idea_context | rubymine_context
+idea_context = AppContext(executable="idea")
+rubymine_context = AppContext(executable="rubymine")
+winContext = idea_context | rubymine_context
 
 class CommandRule(MappingRule):
     mapping = mapping
@@ -113,7 +110,7 @@ class CommandRule(MappingRule):
         IntegerRef("n", 1, 50000)
     ]
 
-grammar = Grammar("idea_general", context=context)
+grammar = Grammar("idea_general", context=DynamicContext(winContext, nixContext))
 grammar.add_rule(CommandRule())
 grammar.load()
 

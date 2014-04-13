@@ -27,8 +27,6 @@ from dragonfly import (
 
 import lib.config
 config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    import aenea
 
 import lib.sound as sound
 import dynamics
@@ -237,10 +235,7 @@ series_rule = SeriesMappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("Dynamic manager", context=context)
+grammar = Grammar("Dynamic manager", context=None)
 grammar.add_rule(series_rule)
 grammar.load()
 

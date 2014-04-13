@@ -1,14 +1,14 @@
 import re
 
-from dragonfly import Text  # @UnusedImport
 from dragonfly.actions.keyboard import Keyboard
+
+from lib.dynamic_aenea import (
+    Text,
+)
 
 import lib.format
 import lib.config
 config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Text  # @Reimport
-
 
 specialCharacterTranslations = {
     "?\\question-mark": "?",
