@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     MappingRule,
     IntegerRef,
     Grammar,
@@ -11,11 +9,12 @@ from dragonfly import (
     Choice
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
-    import aenea
+from lib.dynamic_aenea import (
+    GlobalDynamicContext,
+    Key,
+    Text,
+)
+
 
 from lib.text import SCText
 
@@ -212,10 +211,7 @@ series_rule = SeriesMappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("Git commands", context=context)
+grammar = Grammar("Git commands", context=GlobalDynamicContext())
 grammar.add_rule(series_rule)
 grammar.load()
 grammar.disable()

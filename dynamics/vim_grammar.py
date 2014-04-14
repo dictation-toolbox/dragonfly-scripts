@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     Function,
     MappingRule,
     IntegerRef,
@@ -8,11 +6,10 @@ from dragonfly import (
     Dictation
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key  # , Text  # @Reimport
-    import aenea
+from lib.dynamic_aenea import (
+    GlobalDynamicContext,
+    Key,
+)
 
 import lib.sound as sound
 
@@ -71,10 +68,8 @@ commandMode = MappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammarCommand = Grammar("Vim command grammar", context=context)
+
+grammarCommand = Grammar("Vim command grammar", context=GlobalDynamicContext())
 grammarCommand.add_rule(commandMode)
 grammarCommand.load()
 grammarCommand.disable()
@@ -94,10 +89,7 @@ insertMode = MappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammarInsert = Grammar("Vim insert grammar", context=context)
+grammarInsert = Grammar("Vim insert grammar", context=GlobalDynamicContext())
 grammarInsert.add_rule(insertMode)
 grammarInsert.load()
 grammarInsert.disable()

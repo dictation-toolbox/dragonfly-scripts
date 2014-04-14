@@ -9,14 +9,14 @@ from dragonfly import (
     AppContext,
     IntegerRef,
     Grammar,
-    Key,  # @UnusedImport
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key  # @Reimport
-    from proxy_nicknames import AppContext as NixAppContext
+from lib.dynamic_aenea import (
+    DynamicContext,
+    Key,
+)
+
+from proxy_nicknames import AppContext as NixAppContext
 
 
 rules = MappingRule(
@@ -66,16 +66,14 @@ rules = MappingRule(
         "n": 1
     }
 )
-context = None
 winContext1 = AppContext(executable="javaw", title="Eclipse")
 winContext2 = AppContext(executable="eclipse", title="Eclipse")
 winContext = winContext1 | winContext2
-if config.get("aenea.enabled", False) == True:
-    nixContext = NixAppContext(executable="java", title="Eclipse")
-    context = winContext | nixContext
-else:
-    context = winContext
-grammar = Grammar("Eclipse", context=context)
+
+nixContext = NixAppContext(executable="java", title="Eclipse")
+
+
+grammar = Grammar("Eclipse", context=DynamicContext(winContext, nixContext))
 grammar.add_rule(rules)
 grammar.load()
 

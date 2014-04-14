@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     Function,
     MappingRule,
     Grammar,
@@ -8,11 +6,11 @@ from dragonfly import (
     IntegerRef
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
-    import aenea
+from lib.dynamic_aenea import (
+    GlobalDynamicContext,
+    Key,
+    Text,
+)
 
 import lib.format
 from lib.text import SCText
@@ -117,10 +115,7 @@ rules = MappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("JavaScript grammar", context=context)
+grammar = Grammar("JavaScript grammar", context=GlobalDynamicContext())
 grammar.add_rule(rules)
 grammar.load()
 grammar.disable()

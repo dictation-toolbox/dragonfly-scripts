@@ -1,6 +1,4 @@
 from dragonfly import (
-    Text,  # @UnusedImport
-    Key,  # @UnusedImport
     Function,
     MappingRule,
     IntegerRef,
@@ -8,11 +6,11 @@ from dragonfly import (
     Dictation
 )
 
-import lib.config
-config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key, Text  # @Reimport
-    import aenea
+from lib.dynamic_aenea import (
+    GlobalDynamicContext,
+    Key,
+    Text,
+)
 
 from lib.text import SCText
 import lib.format
@@ -140,10 +138,7 @@ rules = MappingRule(
     }
 )
 
-context = None
-if config.get("aenea.enabled", False) == True:
-    context = aenea.global_context
-grammar = Grammar("Python grammar", context=context)
+grammar = Grammar("Python grammar", context=GlobalDynamicContext())
 grammar.add_rule(rules)
 grammar.load()
 grammar.disable()
