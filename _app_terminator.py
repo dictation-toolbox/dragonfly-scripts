@@ -78,7 +78,6 @@ rules = MappingRule(
 if config.get("aenea.enabled", False) == True:
     context = aenea.global_context & NixAppContext(executable="terminator")
 
-    context = None
     grammar = Grammar("Terminator general", context=context)
     grammar.add_rule(rules)
     grammar.load()
