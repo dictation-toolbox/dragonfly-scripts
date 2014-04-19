@@ -28,13 +28,14 @@ def directory_up(n):
 rules = MappingRule(
     mapping={
         # Commands and keywords:
-        "sudo apt get update": Text("sudo apt-get update"),
         "apt cache search": Text("apt-cache search "),
         "apt cache search <text>": SCText("apt-cache search %(text)s"),
-        "sudo apt get install": Text("sudo apt-get install "),
-        "sudo apt get install <text>": SCText("sudo apt-get install %(text)s"),
         "apt get install": Text("apt-get install "),
         "apt get install <text>": SCText("apt-get install %(text)s"),
+        "apt get update": Text("apt-get update") + Key("enter"),
+        "sudo apt get install": Text("sudo apt-get install "),
+        "sudo apt get install <text>": SCText("sudo apt-get install %(text)s"),
+        "sudo apt get update": Text("sudo apt-get update") + Key("enter"),
         "background": Text("bg "),
         "(cat|C A T)": Text("cat "),
         "(cat|C A T) <text>": SCText("cat %(text)s"),
