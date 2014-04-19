@@ -34,19 +34,6 @@ if config.get("aenea.enabled", False) == True:
 import  lib.grid_base_win
 
 
-"""
-Error loading _mouse_grid from C:\NatLink\NatLink\MacroSystem\_mouse_grid.py
-Traceback (most recent call last):
-  File "C:\NatLink\NatLink\MacroSystem\core\natlinkmain.py", line 324, in loadFile
-    imp.load_module(modName,fndFile,fndName,fndDesc)
-  File "C:\NatLink\NatLink\MacroSystem\_mouse_grid.py", line 161, in <module>
-    grammarNavigation = Grammar("Grid navigation", context=GlobalDynamicContext)
-  File "C:\Python27\lib\site-packages\dragonfly\grammar\grammar_base.py", line 74, in __init__
-    assert isinstance(context, Context) or context is None
-AssertionError
-"""
-
-
 def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
               pos7=None, pos8=None, pos9=None, action=None):
     if should_send_to_aenea():
