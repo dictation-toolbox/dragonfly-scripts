@@ -98,22 +98,23 @@ class Text(DynamicAction):
         DynamicAction.__init__(self, dragonfly.Text(spec, static, pause, autofmt), proxy_actions.ProxyText(spec, static))
 
 
-
 # This is a gigantic hack.  dragonfly.ActionBase performs an `isinstance` check on the supplied action to make
 # sure it is indeed an instance of dragonfly.ActionBase.  Our proxy action implementations do not inherit from
 # dragonfly.ActionBase because we would have to override every method in the inheritance hierarchy rather than
 # allowing for dynamic dispatch.  So, in order to fool isinstance, we have to override the built-in method.
 # The override specifically looks for the case where our proxy actions are compared to dragonfly.ActionBase
 # and allows for normal `isinstance` processing in all other situations.
-
 import __builtin__
 
 if not hasattr(__builtin__, "isinstance_orig"):
+    isinstance_orig = __builtin__.isinstance
+    __builtin__.isinstance_orig = isinstance_orig
+
     def _isinstance(instance, klass):
-        if klass is dragonfly.ActionBase and isinstance_orig(instance, DynamicAction):
+        if klass is dragonfly.ActionBase and isinstance_orig(instance,
+                DynamicAction):
             return True
 
         return isinstance_orig(instance, klass)
 
-    __builtin__.isinstance_orig = __builtin__.isinstance
     __builtin__.isinstance = _isinstance
