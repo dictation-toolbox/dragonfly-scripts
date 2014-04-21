@@ -21,44 +21,97 @@ from dragonfly import (
 #     AppContext,
 )
 
+from lib.dynamic_aenea import (
+    GlobalDynamicContext,
+    should_send_to_aenea,
+)
+
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    import aenea
-#     from proxy_nicknames import AppContext as NixAppContext
-    from lib.grid_base_x import (
-        set_grammar_reference,  # @UnusedImport
-        left_click,  # @UnusedImport
-        right_click,  # @UnusedImport
-        double_click,  # @UnusedImport
-        control_click,  # @UnusedImport
-        shift_click,  # @UnusedImport
-        mouse_mark,  # @UnusedImport
-        mouse_drag,  # @UnusedImport
-        go,  # @UnusedImport
-        mouse_grid,  # @UnusedImport
-        hide_grids,  # @UnusedImport
-        mouse_pos  # @UnusedImport
-    )
-    unload_grids = lambda: None  # Dummy method.
-    context = aenea.global_context
-else:
-    from lib.grid_base_win import (
-        set_grammar_reference,  # @Reimport
-        left_click,  # @Reimport
-        right_click,  # @Reimport
-        double_click,  # @Reimport
-        control_click,  # @Reimport
-        shift_click,  # @Reimport
-        mouse_mark,  # @Reimport
-        mouse_drag,  # @Reimport
-        go,  # @Reimport
-        mouse_grid,  # @Reimport
-        hide_grids,  # @Reimport
-        mouse_pos,  # @Reimport
-        unload_grids
-    )
-    context = None
+    import lib.grid_base_x
+
+import  lib.grid_base_win
+
+
+def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
+              pos7=None, pos8=None, pos9=None, action=None):
+    if should_send_to_aenea():
+        lib.grid_base_x.mouse_pos(pos1, pos2, pos3, pos4, pos5, pos6, pos7,
+            pos8, pos9, action)
+    else:
+        lib.grid_base_win.mouse_pos(pos1, pos2, pos3, pos4, pos5, pos6, pos7,
+            pos8, pos9, action)
+
+
+def left_click():
+    if should_send_to_aenea():
+        lib.grid_base_x.left_click()
+    else:
+        lib.grid_base_win.left_click()
+
+
+def right_click():
+    if should_send_to_aenea():
+        lib.grid_base_x.right_click()
+    else:
+        lib.grid_base_win.right_click()
+
+
+def double_click():
+    if should_send_to_aenea():
+        lib.grid_base_x.double_click()
+    else:
+        lib.grid_base_win.double_click()
+
+
+def control_click():
+    if should_send_to_aenea():
+        lib.grid_base_x.control_click()
+    else:
+        lib.grid_base_win.control_click()
+
+
+def shift_click():
+    if should_send_to_aenea():
+        lib.grid_base_x.shift_click()
+    else:
+        lib.grid_base_win.shift_click()
+
+
+def mouse_mark():
+    if should_send_to_aenea():
+        lib.grid_base_x.mouse_mark()
+    else:
+        lib.grid_base_win.mouse_mark()
+
+
+def mouse_drag():
+    if should_send_to_aenea():
+        lib.grid_base_x.mouse_drag()
+    else:
+        lib.grid_base_win.mouse_drag()
+
+
+def hide_grids():
+    if should_send_to_aenea():
+        lib.grid_base_x.hide_grids()
+    else:
+        lib.grid_base_win.hide_grids()
+
+
+def go():
+    if should_send_to_aenea():
+        lib.grid_base_x.go()
+    else:
+        lib.grid_base_win.go()
+
+
+def unload_grids():
+    if should_send_to_aenea():
+        pass  # The grid Windows are on the server side, no need to unload.
+    else:
+        lib.grid_base_win.unload_grids()
 
 
 actions = {
@@ -105,7 +158,7 @@ navigate_rule = MappingRule(
 )
 
 # Use global context, and activate/deactivate grammar dynamically.
-grammarNavigation = Grammar("Grid navigation", context=context)
+grammarNavigation = Grammar("Grid navigation", context=GlobalDynamicContext())
 grammarNavigation.add_rule(navigate_rule)  # Add the top-level rule.
 grammarNavigation.load()  # Load the grammar.
 grammarNavigation.disable()
@@ -113,9 +166,16 @@ grammarNavigation.disable()
 
 def mouse_grid_start(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
     pos6=None, pos7=None, pos8=None, pos9=None, action=None):
-    set_grammar_reference(grammarNavigation)
-    grammarNavigation.enable()
-    mouse_grid(pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, action)
+    if should_send_to_aenea():
+        lib.grid_base_x.set_grammar_reference(grammarNavigation)
+        grammarNavigation.enable()
+        lib.grid_base_x.mouse_grid(pos1, pos2, pos3, pos4, pos5, pos6, pos7,
+            pos8, pos9, action)
+    else:
+        lib.grid_base_win.set_grammar_reference(grammarNavigation)
+        grammarNavigation.enable()
+        lib.grid_base_win.mouse_grid(pos1, pos2, pos3, pos4, pos5, pos6, pos7,
+            pos8, pos9, action)
 
 init_rule = MappingRule(
     mapping={
@@ -141,7 +201,7 @@ init_rule = MappingRule(
     }
 )
 
-grammarInit = Grammar("Grid init", context=context)
+grammarInit = Grammar("Grid init", context=GlobalDynamicContext())
 grammarInit.add_rule(init_rule)
 grammarInit.load()
 
