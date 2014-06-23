@@ -332,12 +332,15 @@ def squash_text(text):
 
 def squash_count(n):
     """Formats n words to the left of the cursor with whitespace removed.
-    Note that word count differs between editors and programming languages.
+    Excepting spaces immediately after comma, colon and percent chars.
+
+    Note: Word count differs between editors and programming languages.
     The examples are all from Eclipse/Python.
 
     Example:
     "'my new variable' *pause* 'squash 3'" => "mynewvariable".
     "'my<tab>new variable' *pause* 'squash 3'" => "mynewvariable".
+    "( foo = bar, fee = fye )", 'squash 9'" => "(foo=bar, fee=fye)"
 
     """
     saveText = _get_clipboard_text()
@@ -348,6 +351,7 @@ def squash_count(n):
         newText = ''.join(text.split(' '))
         if endSpace:
             newText = newText + ' '
+        newText = _expand_after_special_chars(newText)
         newText = newText.replace("%", "%%")  # Escape any format chars.
         Text(newText).execute()
     else:  # Failed to get text from clipboard.
@@ -369,14 +373,7 @@ def expand_count(n):
     cutText = _select_and_cut_text(n)
     if cutText:
         endSpace = cutText.endswith(' ')
-        reg = re.compile(r'[:,%][a-zA-Z0-9_\"\']')
-        hit = reg.search(cutText)
-        count = 0
-        while hit and count < 10:
-            cutText = cutText[:hit.start() + 1] + ' ' + \
-                cutText[hit.end() - 1:]
-            hit = reg.search(cutText)
-            count += 1
+        cutText = _expand_after_special_chars(cutText)
         reg = re.compile(
             r'([a-zA-Z0-9_\"\'\)][=\+\-\*/\%]|[=\+\-\*/\%][a-zA-Z0-9_\"\'\(])')
         hit = reg.search(cutText)
@@ -394,6 +391,17 @@ def expand_count(n):
     else:  # Failed to get text from clipboard.
         Key('c-v').execute()  # Restore cut out text.
     _set_clipboard_text(saveText)
+
+
+def _expand_after_special_chars(text):
+    reg = re.compile(r'[:,%][a-zA-Z0-9_\"\']')
+    hit = reg.search(text)
+    count = 0
+    while hit and count < 10:
+        text = text[:hit.start() + 1] + ' ' + text[hit.end() - 1:]
+        hit = reg.search(text)
+        count += 1
+    return text
 
 
 def uppercase_text(text):

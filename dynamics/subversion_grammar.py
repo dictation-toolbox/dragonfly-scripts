@@ -56,7 +56,16 @@ svncmd = {
 }
 
 svnopt = {
-
+    "force": "--force",
+    "help": "--help",
+    "message": "--message",
+    "non-recursive": "--non-recursive",
+    "password": "--password",
+    "quiet": "--quiet",
+    "revision": "--revision",
+    "username": "--username",
+    "verbose": "--verbose",
+    "version": "--version",
 }
 
 svn = "(subversion|S V N) "
