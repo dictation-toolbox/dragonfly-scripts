@@ -53,6 +53,7 @@ rules = MappingRule(
         "save file": Key("c-s"),
         "save all": Key("cs-s"),
         "show file menu": Key("apps"),
+        "show content assist": Key("c-space"),
         "show system menu": Key("a-minus"),
         "show shortcuts": Key("cs-l"),
         "show file properties": Key("a-enter"),
