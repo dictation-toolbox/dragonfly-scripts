@@ -30,6 +30,8 @@ rules = MappingRule(
         # Commands and keywords:
         "apt cache search": Text("apt-cache search "),
         "apt cache search <text>": SCText("apt-cache search %(text)s"),
+        "apt cache show": Text("apt-cache show "),
+        "apt cache show <text>": SCText("apt-get show %(text)s"),
         "apt get install": Text("apt-get install "),
         "apt get install <text>": SCText("apt-get install %(text)s"),
         "apt get update": Text("apt-get update") + Key("enter"),
