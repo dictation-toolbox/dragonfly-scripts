@@ -60,7 +60,9 @@ rules = MappingRule(
         "[go to] end of line": Key("c-e"),
         "[go to] start of line": Key("c-a"),
         "grep": Text("grep "),
+        "grep invert": Text("grep -v "),
         "grep <text>": SCText("grep %(text)s"),
+        "grep invert <text>": SCText("grep -v %(text)s"),
         "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "history": Text("history "),
