@@ -55,7 +55,7 @@ commandMode = MappingRule(
         "save [file]": Key("colon, w, enter"),
         "save and exit": Key("colon, x, space"),
         "save as": Key("colon, w, space"),
-        "undo": Key("u"),
+        "undo": Function(enable_command_mode) + Key("u"),
         "yank [(line|lines)]": Key("d, d"),
         "<text>": Function(illegal_command),
     },

@@ -30,6 +30,8 @@ rules = MappingRule(
         # Commands and keywords:
         "apt cache search": Text("apt-cache search "),
         "apt cache search <text>": SCText("apt-cache search %(text)s"),
+        "apt cache show": Text("apt-cache show "),
+        "apt cache show <text>": SCText("apt-get show %(text)s"),
         "apt get install": Text("apt-get install "),
         "apt get install <text>": SCText("apt-get install %(text)s"),
         "apt get update": Text("apt-get update") + Key("enter"),
@@ -60,7 +62,9 @@ rules = MappingRule(
         "[go to] end of line": Key("c-e"),
         "[go to] start of line": Key("c-a"),
         "grep": Text("grep "),
+        "grep invert": Text("grep -v "),
         "grep <text>": SCText("grep %(text)s"),
+        "grep invert <text>": SCText("grep -v %(text)s"),
         "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "history": Text("history "),
@@ -83,7 +87,7 @@ rules = MappingRule(
         "pipe": Text(" | "),
         "ping": Text("ping "),
         "(print working directory|P W D)": Text("pwd") + Key("enter"),
-        "P S": Text("ps -ef"),
+        "([list] processes [list]|P S)": Text("ps -ef"),
         "(R M|remove file)": Text("rm "),
         "(R M|remove file) <text>": SCText("rm %(text)s"),
         "remove (directory|dir|folder|recursive)": Text("rm -rf "),
