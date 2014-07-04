@@ -13,7 +13,7 @@ from lib.dynamic_aenea import (
 )
 
 from lib.text import SCText
-
+import lib.format
 
 DYN_MODULE_NAME = "bash"
 INCOMPATIBLE_MODULES = []
@@ -57,6 +57,8 @@ rules = MappingRule(
         "(D P K G|D package) list": Text("dpkg -l "),
         "exit": Text("exit"),
         "foreground": Text("fg "),
+        "find process": Text("ps aux | grep -i "),
+        "find process <text>": Text("ps aux | grep -i ") + Function(lib.format.snake_case_text),
         "find": Text("find . -name "),
         "find <text>": SCText("find . -name %(text)s"),
         "[go to] end of line": Key("c-e"),
