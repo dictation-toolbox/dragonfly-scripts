@@ -153,7 +153,8 @@ def format_lower_case(text):
     words = strip_dragon_info(text)
     for word in words:
         if newText != "" and newText[-1:].isalnum() and word[-1:].isalnum():
-            word = " " + word  # Adds spacing between normal words.
+            if newText[-1:] != "." and word[0:1] != ".":
+                word = " " + word  # Adds spacing between normal words.
         newText += word.lower()
     return newText
 
