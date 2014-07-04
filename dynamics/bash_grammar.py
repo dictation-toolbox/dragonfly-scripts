@@ -13,7 +13,7 @@ from lib.dynamic_aenea import (
 )
 
 from lib.text import SCText
-
+import lib.format
 
 DYN_MODULE_NAME = "bash"
 INCOMPATIBLE_MODULES = []
@@ -53,10 +53,12 @@ rules = MappingRule(
         "(cron|cron tab|crontab) reset": Text("crontab -r"),
         "diff": Text("diff "),
         "directory up <n> [times]": Function(directory_up),
-        "D P K G": Text("dpkg "),
-        "D P K G list": Text("dpkg -l "),
+        "(D P K G|D package)": Text("dpkg "),
+        "(D P K G|D package) list": Text("dpkg -l "),
         "exit": Text("exit"),
         "foreground": Text("fg "),
+        "find process": Text("ps aux | grep -i "),
+        "find process <text>": Text("ps aux | grep -i ") + Function(lib.format.snake_case_text),
         "find": Text("find . -name "),
         "find <text>": SCText("find . -name %(text)s"),
         "[go to] end of line": Key("c-e"),
@@ -66,7 +68,7 @@ rules = MappingRule(
         "grep <text>": SCText("grep %(text)s"),
         "grep invert <text>": SCText("grep -v %(text)s"),
         "grep recursive": Text("grep -rn ") +  Key("dquote/3, dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
-        "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") +  SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
+        "grep recursive <text>": Text("grep -rn ") + Key("dquote/3") + SCText("%(text)s") + Key("dquote/3") + Text(" *") + Key("left/3:3"),  # @IgnorePep8
         "history": Text("history "),
         "ifconfig": Text("ifconfig "),
         "(iptables|I P tables) list": Text("iptables -L"),
