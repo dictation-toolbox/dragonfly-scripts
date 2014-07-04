@@ -6,12 +6,12 @@ config = Config("capistrano")
 config.cmd = Section("helpers")
 config.cmd.map = Item(
     {
-        "cap deploy migrations to <text>": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations"),
-        "cap deploy migrations to <text> with filter": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER="),
-        "cap deploy migrations to <text> with filter roles": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER_ROLES="),
-        "cap deploy migrations to <text> with assets": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations"),
-        "cap deploy migrations to <text> with assets with filter": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER="),
-        "cap deploy migrations to <text> with assets with filter roles": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER_ROLES="),
+        "cap deploy [with] migrations to <text>": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations"),
+        "cap deploy [with] migrations to <text> with filter": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER="),
+        "cap deploy [with] migrations to <text> with filter roles": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER_ROLES="),
+        "cap deploy [with] migrations to <text> with assets": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations"),
+        "cap deploy [with] migrations to <text> with assets with filter": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER="),
+        "cap deploy [with] migrations to <text> with assets with filter roles": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy:migrations FILTER_ROLES="),
 
         "cap deploy to <text>": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy"),
         "cap deploy to <text> with filter": Text("SKIP_ASSETS=true RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap deploy FILTER="),
@@ -33,6 +33,10 @@ config.cmd.map = Item(
         "cap rubber add role to <text>": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap rubber:roles:add ROLES= ALIAS=") + Function(lib.format.lowercase_text),
         "cap rubber create staging <text>": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap rubber:create_staging"),
         "cap rubber destroy staging <text>": Text("RUBBER_ENV=") + Function(lib.format.lowercase_text) + Text(" cap rubber:destroy_staging"),
+        "cap rubber monit start": Text("cap rubber:monit:start RUBBER_ENV="),
+        "cap rubber monit stop": Text("cap rubber:monit:stop RUBBER_ENV="),
+        "cap rubber (postgres|PostgreSQL) start": Text("cap rubber:postgresql:start RUBBER_ENV="),
+        "cap rubber (postgres|PostgreSQL) stop": Text("cap rubber:postgresql:stop RUBBER_ENV="),
         }
 )
 
