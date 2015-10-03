@@ -16,7 +16,7 @@ from lib.dynamic_aenea import (
 
 import lib.format
 
-from proxy_nicknames import AppContext as NixAppContext
+from aenea.proxy_contexts import ProxyAppContext as NixAppContext
 
 mapping = {
     # Code execution.
@@ -48,6 +48,7 @@ mapping = {
     "run terminal": Key("a-f12"),
 
     # Search.
+    "find text": Key("c-f"),
     "find in path": Key("cs-f"),
     "find usages": DynamicAction(Key("a-f7"), Key("as-7")),
 
@@ -61,6 +62,8 @@ mapping = {
     "go to line <n>": Key("c-g/25") + Text("%(n)d") + Key("enter"),
     "[go to] start of line": Key("home"),
     "[go to] end of line": Key("end"),
+    "implement method": Key("c-i"),
+    "override method": Key("c-o"),
 
     # Window handling.
     "next tab": Key("a-right"),

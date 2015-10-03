@@ -89,3 +89,5 @@ if not aeneaPath:
     aeneaPath = os.path.split(path)[:-1]
 if not aeneaPath in sys.path:
     sys.path.insert(0, aeneaPath)
+
+import _aenea

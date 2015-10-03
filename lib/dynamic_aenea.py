@@ -1,4 +1,4 @@
-import aenea, dragonfly, proxy_actions, lib.config
+import aenea, dragonfly, aenea.proxy_actions, lib.config
 config = lib.config.get_config()
 
 def should_send_to_aenea():
@@ -9,7 +9,7 @@ def should_send_to_aenea():
     if config.get("aenea.enabled", False) == True:
         win = dragonfly.Window.get_foreground()
 
-        return aenea.global_context.matches(win.executable, win.title, win.handle)
+        return aenea.ProxyPlatformContext('linux').matches(win.executable, win.title, win.handle)
     else:
         return False
 
@@ -44,7 +44,7 @@ class GlobalDynamicContext(DynamicContext):
     """A dynamic context implementation that allows commands to be processed in any remote application if Aenea is
     enabled and any local application if Aenea is disabled."""
     def __init__(self):
-        DynamicContext.__init__(self, None, aenea.global_context)
+        DynamicContext.__init__(self, None, aenea.ProxyPlatformContext('linux'))
 
 
 class DynamicAction:
@@ -90,12 +90,12 @@ class DynamicAction:
 
 class Key(DynamicAction):
     def __init__(self, spec=None, static=False):
-        DynamicAction.__init__(self, dragonfly.Key(spec, static), proxy_actions.ProxyKey(spec, static))
+        DynamicAction.__init__(self, dragonfly.Key(spec, static), aenea.ProxyKey(spec, static))
 
 
 class Text(DynamicAction):
     def __init__(self, spec=None, static=False, pause=0.02, autofmt=False):
-        DynamicAction.__init__(self, dragonfly.Text(spec, static, pause, autofmt), proxy_actions.ProxyText(spec, static))
+        DynamicAction.__init__(self, dragonfly.Text(spec, static, pause, autofmt), aenea.ProxyText(spec, static))
 
 
 # This is a gigantic hack.  dragonfly.ActionBase performs an `isinstance` check on the supplied action to make

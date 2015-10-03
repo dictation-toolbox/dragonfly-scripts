@@ -12,9 +12,8 @@ from dragonfly import AppContext, Function, Grammar, IntegerRef, Key, MappingRul
 import lib.config
 config = lib.config.get_config()
 if config.get("aenea.enabled", False) == True:
-    from proxy_nicknames import Key  # @Reimport
-    from proxy_nicknames import AppContext as NixAppContext
-    import aenea
+    from aenea import Key  # @Reimport
+    from aenea.proxy_contexts import ProxyAppContext as NixAppContext
 
 rules = MappingRule(
     mapping = {

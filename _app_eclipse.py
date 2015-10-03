@@ -16,7 +16,7 @@ from lib.dynamic_aenea import (
     Key,
 )
 
-from proxy_nicknames import AppContext as NixAppContext
+from aenea.proxy_contexts import ProxyAppContext as NixAppContext
 
 
 rules = MappingRule(

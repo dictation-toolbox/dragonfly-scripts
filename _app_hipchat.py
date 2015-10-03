@@ -13,7 +13,7 @@ from lib.dynamic_aenea import (
     Text,
 )
 
-from proxy_nicknames import AppContext as NixAppContext
+from aenea.proxy_contexts import ProxyAppContext as NixAppContext
 
 hipchat_config = Config("HipChat")
 hipchat_config.usernames = Section("Username Mappings")

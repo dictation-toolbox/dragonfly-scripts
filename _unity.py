@@ -21,8 +21,8 @@ if config.get("aenea.enabled", False) == True:
         Choice
     )
 
-    from proxy_nicknames import Key, Mouse
-    from proxy_actions import communication
+    from aenea import Key, Mouse
+    #from proxy_actions import communication
     import aenea
 
     def window_direction(winDirection):
@@ -113,7 +113,7 @@ if config.get("aenea.enabled", False) == True:
             "show window menu": Key("a-space"),
             # Window control
             "close window": Key("a-f4"),
-            "minimize window": Key("ca-KP_Insert"),
+            #"minimize window": Key("ca-KP_Insert"),
             "maximize window": Key("cw-up"),
             "restore window": Key("cw-down"),
             "move window": Key("a-f7"),
@@ -148,7 +148,7 @@ if config.get("aenea.enabled", False) == True:
         }
     )
 
-    grammar = Grammar("Unity desktop grammar", context=aenea.global_context)
+    grammar = Grammar("Unity desktop grammar", context=aenea.ProxyPlatformContext('linux'))
     grammar.add_rule(rules)
     grammar.load()
 
