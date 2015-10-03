@@ -45,3 +45,7 @@ _my_commands.py
 aenea.json
 config.json
 junk.py
+
+# Grammar config files.
+_app_hipchat.txt
+_fastmail.txt
