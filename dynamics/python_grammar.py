@@ -18,6 +18,7 @@ import lib.format
 DYN_MODULE_TYPE = "programming_language"
 DYN_MODULE_NAME = "python"
 INCOMPATIBLE_MODULES = [
+    'java',
     'javascript',
     'ruby',
     'html',

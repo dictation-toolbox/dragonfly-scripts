@@ -20,6 +20,7 @@ DYN_MODULE_NAME = "html"
 INCOMPATIBLE_MODULES = [
     'python',
     'ruby',
+    'java',
     'javascript',
     'css'
 ]
