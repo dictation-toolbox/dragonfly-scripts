@@ -41,6 +41,7 @@ _vocola_main.py
 # Ignore personal, work and junk files.
 _work.py
 _personal.py
+_my_commands.py
 aenea.json
 config.json
 junk.py
