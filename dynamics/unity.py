@@ -9,9 +9,12 @@ Licensed under LGPL3
 """
 import lib.config
 config = lib.config.get_config()
-if config.get("aenea.enabled", False) == True:
-    print("Loading Unity grammar...")
 
+DYN_MODULE_TYPE = "window_manager"
+DYN_MODULE_NAME = "unity"
+INCOMPATIBLE_MODULES = []
+
+if config.get("aenea.enabled", False) == True:
     from dragonfly import (
         Function,
         MappingRule,
@@ -151,6 +154,32 @@ if config.get("aenea.enabled", False) == True:
     grammar = Grammar("Unity desktop grammar", context=aenea.ProxyPlatformContext('linux'))
     grammar.add_rule(rules)
     grammar.load()
+    grammar.disable()
+
+    def dynamic_enable():
+        global grammar
+        if grammar.enabled:
+            return False
+        else:
+            grammar.enable()
+            return True
+
+
+    def dynamic_disable():
+        global grammar
+        if grammar.enabled:
+            grammar.disable()
+            return True
+        else:
+            return False
+
+
+    def is_enabled():
+        global grammar
+        if grammar.enabled:
+            return True
+        else:
+            return False
 
     # Unload function which will be called at unload time.
     def unload():
