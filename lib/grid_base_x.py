@@ -3,7 +3,7 @@ import Tkinter as tk
 from Tkconstants import *  # @UnusedWildImport
 import time
 
-from proxy_actions import communication
+import aenea.communications
 
 
 class GridConfig:
@@ -247,7 +247,7 @@ def mouse_grid(pos1=None, pos2=None, pos3=None, pos4=None, pos5=None,
         attributes["pos9"] = pos9
     if action:
         attributes["action"] = action
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
 
 
 def hide_grids(excludePosition=None):
@@ -258,7 +258,7 @@ def hide_grids(excludePosition=None):
 
     """
     params = {"do": "hide_grids"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -297,13 +297,13 @@ def mouse_pos(pos1, pos2=None, pos3=None, pos4=None, pos5=None, pos6=None,
         attributes["pos9"] = pos9
     if action:
         attributes["action"] = action
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
 
 
 def go():
     """Places the mouse at the grid coordinates. Hides the grid."""
     params = {"do": "go"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -313,7 +313,7 @@ def left_click():
 
     """
     params = {"do": "left_click"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -323,7 +323,7 @@ def right_click():
 
     """
     params = {"do": "right_click"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -333,7 +333,7 @@ def double_click():
 
     """
     params = {"do": "double_click"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -343,7 +343,7 @@ def control_click():
 
     """
     params = {"do": "control_click"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -353,7 +353,7 @@ def shift_click():
 
     """
     params = {"do": "shift_click"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -363,7 +363,7 @@ def mouse_mark():
 
     """
     params = {"do": "mouse_mark"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
 
 
@@ -373,5 +373,5 @@ def mouse_drag():
 
     """
     params = {"do": "mouse_drag"}
-    communication.server.mouse_grid_dispatcher(params)
+    communications.server.mouse_grid_dispatcher(params)
     disable_navigation_grammar()
