@@ -10,6 +10,8 @@ from lib.dynamic_aenea import (
     Text,
 )
 
+from lib.text import specialCharacterTranslations, specialCharacterTranslationsRe
+
 
 letterMap = {
     "A\\letter": "alpha",
@@ -57,10 +59,11 @@ def strip_dragon_info(text):
     newWords = []
     words = str(text).split(" ")
     for word in words:
-        if word.startswith("\\backslash"):
-            word = "\\"  # Backslash requires special handling.
-        elif word.find("\\") > -1:
-            word = word[:word.find("\\")]  # Remove spoken form info.
+        word = specialCharacterTranslationsRe.sub(lambda m: specialCharacterTranslations[m.group()], word)
+
+        backslash_index = word.find("\\")
+        if backslash_index > -1:
+            word = word[:backslash_index]  # Remove spoken form info.
         newWords.append(word)
     return newWords
 

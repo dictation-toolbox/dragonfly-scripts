@@ -38,12 +38,14 @@ specialCharacterTranslations = {
     "=\\equals-sign": "=",
     "+\\plus-sign": "+",
     "-\\minus-sign": "-",
-    "--\dash": "-",
-    "-\hyphen": "-",
-    "\"\right-double-quote": "\"",
-    "\"\left-double-quote": "\"",
+    "--\\dash": "-",
+    "\x96\\dash": "-",
+    "-\\hyphen": "-",
+    "\"\\right-double-quote": "\"",
+    "\"\\left-double-quote": "\"",
 }
 
+specialCharacterTranslationsRe = re.compile('|'.join(re.escape(key) for key in specialCharacterTranslations.keys()))
 
 class SCText(Text):  # Special Characters Text.
     def __init__(self, spec=None, static=False, pause=0.02, autofmt=False):
